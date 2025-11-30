@@ -1,18 +1,36 @@
 #pragma once
 
-#include "config.h"
+#include "utils/config.h"
+#include "synthesis/modules/master.h"
 
-#include <bass24/c/bass.h>
+#include <portaudio/portaudio.h>
 
 #include <cstdint>
 
+namespace standalone {
+	class SoundEngine {
+	public:
+		SoundEngine();
+	private:
+		typedef struct
+		{
+			;
+		}
+		BufferLoaderData;
 
-class SoundEngine {
-public:
-	SoundEngine();
-	void play_buffer(short* buffer);
-	~SoundEngine();
+		BufferLoaderData data{};
+		static Master master;
 
-private:
-	static DWORD CALLBACK get_next_buffer(HSTREAM handle, int16_t* buffer, DWORD length, void* user);
-};
+		void pa_init();
+		void pa_check_error(const PaError& error);
+		static int load_buffer(
+			const void* in_buf_,
+			void* out_buf_,
+			unsigned long buffer_size,
+			const PaStreamCallbackTimeInfo* time_info,
+			PaStreamCallbackFlags status_flags,
+			void* data_
+		);
+	};
+
+}

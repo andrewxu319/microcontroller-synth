@@ -71,12 +71,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\MicrocontrollerSynth\src;C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;C:\Users\spagh\Desktop\brain rot\C++\MicrocontrollerSynth\src;C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\MicrocontrollerSynth\src;C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;C:\Users\spagh\Desktop\brain rot\C++\MicrocontrollerSynth\src;C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -84,10 +92,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -98,12 +108,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -112,12 +124,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(ProjectDir)src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
     </Link>
@@ -130,14 +142,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(ProjectDir)src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
     </Link>
@@ -145,10 +157,22 @@
   <ItemGroup>
     <ClCompile Include="src\standalone\sound_engine.cpp" />
     <ClCompile Include="src\standalone\standalone.cpp" />
+    <ClCompile Include="src\synthesis\modules\master.cpp" />
+    <ClCompile Include="src\synthesis\modules\mixer.cpp" />
+    <ClCompile Include="src\synthesis\modules\module.cpp" />
+    <ClCompile Include="src\synthesis\modules\oscillator.cpp" />
+    <ClCompile Include="src\synthesis\synthesizer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\config.h" />
     <ClInclude Include="src\standalone\sound_engine.h" />
+    <ClInclude Include="src\synthesis\modules\master.h" />
+    <ClInclude Include="src\synthesis\modules\mixer.h" />
+    <ClInclude Include="src\synthesis\modules\module.h" />
+    <ClInclude Include="src\synthesis\modules\oscillator.h" />
+    <ClInclude Include="src\synthesis\synthesizer.h" />
+    <ClInclude Include="src\utils\accelerator.h" />
+    <ClInclude Include="src\utils\config.h" />
+    <ClInclude Include="src\utils\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

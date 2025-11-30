@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace Standalone {};
+using namespace standalone;
 
 int main() {
 	std::cout << "ok";
