@@ -10,7 +10,11 @@
 namespace standalone {
 	class SoundEngine {
 	public:
+		static Master master;
+
 		SoundEngine();
+		~SoundEngine();
+		void start_stream();
 	private:
 		typedef struct
 		{
@@ -18,11 +22,11 @@ namespace standalone {
 		}
 		BufferLoaderData;
 
-		BufferLoaderData data{};
-		static Master master;
+		BufferLoaderData data;
+		PaStream* stream;
 
 		void pa_init();
-		void pa_check_error(const PaError& error);
+		void const pa_check_error(const PaError& error) const;
 		static int load_buffer(
 			const void* in_buf_,
 			void* out_buf_,

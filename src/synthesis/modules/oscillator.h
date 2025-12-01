@@ -4,11 +4,11 @@
 
 using namespace synth;
 
-class Oscillator : Module {
+class Oscillator : public Module {
+public:
 	int phase; // in samples
 	int freq;  // in hz
 
-public:
 	Oscillator();
 
 private:

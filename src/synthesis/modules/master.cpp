@@ -9,6 +9,6 @@ Master::Master() : Mixer(NO_BASE_INIT) {
 void Master::generate_buf() {
 	out_buf_to_sound_engine.fill(0.0);
 	for (const auto& input : input_data) {
-		accelerator::vec_add<float, Config::buffer_size>(&input.second.in_buf, out_buf, out_buf);
+		accelerator::vec_add<float, Config::buffer_size>(&input.second.in_buf, &out_buf_to_sound_engine, &out_buf_to_sound_engine);
 	}
 }

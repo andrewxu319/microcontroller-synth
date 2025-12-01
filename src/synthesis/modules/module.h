@@ -16,7 +16,7 @@ namespace synth {
 		};
 
 	public:
-		const int id{};
+		const int id;
 		std::vector<Module*> inputs;
 		std::vector<Module*> outputs;
 		std::unordered_map<int, InputData> input_data{};
@@ -26,8 +26,14 @@ namespace synth {
 		Module(const NoBaseInit); // dummy constructor
 		virtual void generate_buf();
 
+		void add_input(Module* input);
+		void add_output(Module* output);
+		// implement remove input/output
+
 	protected:
 		void update_destination_bufs() const;
-		void init();
+
+	private:
+		static int last_id;
 	};
 }

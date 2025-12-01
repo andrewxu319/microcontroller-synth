@@ -7,6 +7,8 @@ using namespace standalone;
 Master SoundEngine::master{};
 
 SoundEngine::SoundEngine() {
+	BufferLoaderData data{};
+	PaStream* stream{};
 	pa_init();
 }
 
@@ -16,7 +18,6 @@ void SoundEngine::pa_init() {
 	error = Pa_Initialize();
 	pa_check_error(error);
 
-	PaStream* stream;
 	error = Pa_OpenDefaultStream(
 		&stream,
 		0,
@@ -27,26 +28,30 @@ void SoundEngine::pa_init() {
         &SoundEngine::load_buffer,
         &data // communicate with load_buffer through this data structure. avoid sharing complex data structures that can be easily corrupted. avoid locks
 	);
+}
 
-    error = Pa_StartStream(stream);
-    pa_check_error(error);
+SoundEngine::~SoundEngine() {
+	PaError error;
 
-    Pa_Sleep(3000);
+	error = Pa_StopStream(stream);
+	pa_check_error(error);
 
-    error = Pa_StopStream(stream);
-    pa_check_error(error);
-
-    error = Pa_CloseStream(stream);
-    pa_check_error(error);
+	error = Pa_CloseStream(stream);
+	pa_check_error(error);
 
 	error = Pa_Terminate();
 	pa_check_error(error);
 }
 
-void SoundEngine::pa_check_error(const PaError& error) {
+void const SoundEngine::pa_check_error(const PaError& error) const {
 	if (error != paNoError) {
 		printf("PortAudio error: %s\n", Pa_GetErrorText(error));
 	}
+}
+
+void SoundEngine::start_stream() {
+	const PaError error { Pa_StartStream(stream) };
+	pa_check_error(error);
 }
 
 int SoundEngine::load_buffer(
@@ -59,6 +64,7 @@ int SoundEngine::load_buffer(
 ) {
 	BufferLoaderData* data = (BufferLoaderData*)data_;
 
+	master.inputs[0]->generate_buf();
 	master.generate_buf();
 
 	float* out_buf{ (float*)out_buf_ };
