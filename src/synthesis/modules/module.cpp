@@ -27,27 +27,27 @@ Module::Module(const NoBaseInit)
 }
 
 void Module::generate_buf() {
-(*out_buf).fill(0.0);
+	std::fill(out_buf, out_buf + Config::buffer_size, 0.0);
 
-// do stuff here
+	// do stuff here
 
-update_destination_bufs();
+	update_destination_bufs();
 }
 
 void Module::update_destination_bufs() const {
-for (Module* output : outputs) {
-	output->input_data[id].in_buf = *out_buf;
-}
+	for (Module* output : outputs) {
+		memcpy(output->input_data[id].in_buf, out_buf, sizeof(float) * Config::buffer_size);
+	}
 }
 
 void Module::add_input(Module* input) {
-inputs.push_back(input);
-input_data[(*input).id] = InputData{};
+	inputs.push_back(input);
+	input_data[(*input).id] = InputData{};
 }
 
 void Module::add_output(Module* output) {
-outputs.push_back(output);
-if (outputs.size() == 1) {
-	out_buf = &outputs[0]->input_data[id].in_buf; // store actual output buffer in the first output module. access it w a pointer & edit output module's "input" directly
-}
+	outputs.push_back(output);
+	if (outputs.size() == 1) {
+		out_buf = outputs[0]->input_data[id].in_buf; // store actual output buffer in the first output module. access it w a pointer & edit output module's "input" directly
+	}
 }

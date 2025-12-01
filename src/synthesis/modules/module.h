@@ -11,7 +11,7 @@ namespace synth {
 	class Module {
 	protected:
 		struct InputData {
-			buffer in_buf;
+			float in_buf[Config::buffer_size];
 			// add later: a modulation relation (what does it change?)
 		};
 
@@ -20,7 +20,7 @@ namespace synth {
 		std::vector<Module*> inputs;
 		std::vector<Module*> outputs;
 		std::unordered_map<int, InputData> input_data{};
-		buffer* out_buf;
+		float* out_buf;
 
 		Module();
 		Module(const NoBaseInit); // dummy constructor

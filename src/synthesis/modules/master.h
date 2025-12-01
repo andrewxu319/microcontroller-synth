@@ -7,7 +7,7 @@ using namespace synth;
 
 class Master : public Mixer {
 public:
-	buffer out_buf_to_sound_engine{};
+	float* out_buf;
 
 	Master();
 	void generate_buf();

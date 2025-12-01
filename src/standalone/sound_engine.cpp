@@ -21,10 +21,10 @@ void SoundEngine::pa_init() {
 	error = Pa_OpenDefaultStream(
 		&stream,
 		0,
-		2,
+		Config::channels,
 		paFloat32,
 		Config::sample_rate,
-		Config::buffer_size,
+		Config::actual_buffer_size,
         &SoundEngine::load_buffer,
         &data // communicate with load_buffer through this data structure. avoid sharing complex data structures that can be easily corrupted. avoid locks
 	);
@@ -64,11 +64,11 @@ int SoundEngine::load_buffer(
 ) {
 	BufferLoaderData* data = (BufferLoaderData*)data_;
 
+	float* out_buf{ (float*)out_buf_ };
+	master.out_buf = out_buf;
+
 	master.inputs[0]->generate_buf();
 	master.generate_buf();
-
-	float* out_buf{ (float*)out_buf_ };
-	std::copy(master.out_buf_to_sound_engine.begin(), master.out_buf_to_sound_engine.end(), out_buf);
 
     return 0;
 }
