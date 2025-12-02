@@ -1,13 +1,13 @@
 #pragma once
 
-#include <array>
+
 #include <immintrin.h>
 
 #include <chrono>
 using namespace std::chrono;
 
 namespace accelerator {
-	inline void vec_add_float(const float* const in_1, const float* const in_2, float* const out, const size_t len) {
+	inline void vec_add_float32_t(const float32_t* const in_1, const float32_t* const in_2, float32_t* const out, const size_t len) {
 		// if standalone
 
 		//auto start = high_resolution_clock::now();

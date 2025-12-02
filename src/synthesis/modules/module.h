@@ -1,17 +1,17 @@
 #pragma once
 
+#include "utils/includes.h"
+#include "utils/typedefs.h"
 #include "utils/utils.h"
 #include "utils/config.h"
 
-#include <vector>
-#include <array>
 #include <unordered_map>
 
 namespace synth {
 	class Module {
 	protected:
 		struct InputData {
-			float in_buf[Config::buffer_size];
+			float32_t in_buf[config::buffer_size];
 			// add later: a modulation relation (what does it change?)
 		};
 
@@ -20,7 +20,7 @@ namespace synth {
 		std::vector<Module*> inputs;
 		std::vector<Module*> outputs;
 		std::unordered_map<int, InputData> input_data{};
-		float* out_buf;
+		float32_t* out_buf;
 
 		Module();
 		Module(const NoBaseInit); // dummy constructor

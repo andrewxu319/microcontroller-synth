@@ -3,7 +3,7 @@
 #include <cassert>
 #include <algorithm>
 #include <iterator>
-#include <vector>
+
 
 using namespace synth;
 
@@ -27,7 +27,7 @@ Module::Module(const NoBaseInit)
 }
 
 void Module::generate_buf() {
-	std::fill(out_buf, out_buf + Config::buffer_size, 0.0);
+	std::fill(out_buf, out_buf + config::buffer_size, 0.0);
 
 	// do stuff here
 
@@ -36,7 +36,7 @@ void Module::generate_buf() {
 
 void Module::update_destination_bufs() const {
 	for (Module* output : outputs) {
-		memcpy(output->input_data[id].in_buf, out_buf, sizeof(float) * Config::buffer_size);
+		memcpy(output->input_data[id].in_buf, out_buf, sizeof(float32_t) * config::buffer_size);
 	}
 }
 

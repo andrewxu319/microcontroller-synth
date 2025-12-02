@@ -5,8 +5,6 @@
 
 #include <portaudio/portaudio.h>
 
-#include <cstdint>
-
 namespace standalone {
 	class SoundEngine {
 	public:
