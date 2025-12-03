@@ -5,16 +5,21 @@
 #include <iterator>
 
 
-using namespace synth;
+using namespace synthesis;
 
 int Module::last_id{ 0 };
 
-Module::Module() 
-: id(last_id++), // Initialize const member `id`
-  inputs{}, 
-  outputs{}, 
+Module::Module()
+	: Module(vector<Module*>{})
+{}
+
+Module::Module(const vector<Module*>& outputs_)
+	: id{ last_id++ }, // Initialize const member `id`
+	inputs{},
+	outputs{},
 	out_buf{} // Initialize `out_buf` to nullptr
 {
+	add_outputs(outputs_);
 }
 
 Module::Module(const NoBaseInit) 
@@ -27,27 +32,38 @@ Module::Module(const NoBaseInit)
 }
 
 void Module::generate_buf() {
-	std::fill(out_buf, out_buf + config::buffer_size, 0.0);
-
-	// do stuff here
-
-	update_destination_bufs();
+	// do nothing by default
+	;
 }
 
 void Module::update_destination_bufs() const {
 	for (Module* output : outputs) {
-		memcpy(output->input_data[id].in_buf, out_buf, sizeof(float32_t) * config::buffer_size);
+		memcpy(output->in_bufs[id].data, out_buf, sizeof(float32_t) * config::buffer_size);
 	}
 }
 
 void Module::add_input(Module* input) {
-	inputs.push_back(input);
-	input_data[(*input).id] = InputData{};
+	inputs.emplace_back(input);
+	in_bufs[(*input).id] = array_wrapper<float32_t, config::buffer_size>{};
 }
 
+//void Module::add_inputs(vector<Module*> inputs) {
+//	for (const Module* input : inputs) {
+//		add_input(input);
+//	}
+//}
+#include <typeinfo>
+
 void Module::add_output(Module* output) {
+	output->add_input(this);
 	outputs.push_back(output);
 	if (outputs.size() == 1) {
-		out_buf = outputs[0]->input_data[id].in_buf; // store actual output buffer in the first output module. access it w a pointer & edit output module's "input" directly
+		out_buf = outputs[0]->in_bufs[id].data; // store actual output buffer in the first output module. access it w a pointer & edit output module's "input" directly
+	}
+}
+
+void Module::add_outputs(vector<Module*> outputs) {
+	for (Module* output : outputs) {
+		add_output(output);
 	}
 }

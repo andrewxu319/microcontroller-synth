@@ -5,34 +5,27 @@
 
 #include <portaudio/portaudio.h>
 
-namespace standalone {
-	class SoundEngine {
-	public:
-		static Master master;
+using namespace synthesis;
 
-		SoundEngine();
-		~SoundEngine();
-		void start_stream();
-	private:
-		typedef struct
-		{
-			;
-		}
-		BufferLoaderData;
+namespace standalone::sound_engine {
+	typedef struct {} BufferLoaderData;
 
-		BufferLoaderData data;
-		PaStream* stream;
+	extern Master master;
+	extern const BufferLoaderData data;
+	extern PaStream* stream;
+	extern const vector<unique_ptr<Module>>* modules;
 
-		void pa_init();
-		void const pa_check_error(const PaError& error) const;
-		static int load_buffer(
-			const void* in_buf_,
-			void* out_buf_,
-			unsigned long buffer_size,
-			const PaStreamCallbackTimeInfo* time_info,
-			PaStreamCallbackFlags status_flags,
-			void* data_
-		);
-	};
+	void sound_engine_init(vector<unique_ptr<Module>>* const modules_);
+	void sound_engine_close();
+	void start_stream();
 
+	void pa_check_error(const PaError& error);
+	int load_buffer(
+		const void* in_buf_,
+		void* out_buf_,
+		unsigned long buffer_size,
+		const PaStreamCallbackTimeInfo* time_info,
+		PaStreamCallbackFlags status_flags,
+		void* data_
+	);
 }

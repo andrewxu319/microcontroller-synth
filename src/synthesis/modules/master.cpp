@@ -4,6 +4,8 @@
 
 #include <algorithm>
 
+using namespace synthesis;
+
 Master::Master()
 	: Mixer(NO_BASE_INIT),
 	out_buf{}
@@ -11,8 +13,10 @@ Master::Master()
 }
 
 void Master::generate_buf() {
-	std::fill(out_buf, out_buf + config::buffer_size, 0.0f);
-	for (const auto& input : input_data) {
-		accelerator::vec_add_float32_t(input.second.in_buf, out_buf, out_buf, config::buffer_size);
+	fill(out_buf, out_buf + config::buffer_size, 0.0f);
+	for (const auto& in_buf : in_bufs) {
+		accelerator::vec_add_float32_t(in_buf.second.data, out_buf, out_buf, config::buffer_size);
+		// clip between -1.0 and 1.0
 	}
 }
+

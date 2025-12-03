@@ -6,8 +6,9 @@
 #include <fstream>
 #include <cstdio>
 #include <iterator>
+#include <algorithm>
 
-void standalone::file_io::read_wav(const std::string& path, float32_t (&dest)[config::wavetable_resolution]) {
+void standalone::file_io::read_wav(const string& path, float32_t (&dest)[config::wavetable_resolution]) {
 	AudioFile<float32_t> file{};
 	file.load(path);
 
@@ -24,7 +25,12 @@ void standalone::file_io::read_wav(const std::string& path, float32_t (&dest)[co
 		printf("No stereo!\n");
 	}
 
-	for (int i = 0; i < config::wavetable_resolution; i++) {
-		dest[i] = file.samples[0][i];
+	copy(begin(file.samples[0]), end(file.samples[0]), begin(dest)); // [0] because mono wavetables only. 1 channel
+
+	const float32_t max{ *max_element(begin(dest), end(dest)) };
+	if (max != 1.0f) {
+		for (int i = 0; i < config::wavetable_resolution; i++) {
+			dest[i] /= max;
+		}
 	}
 }

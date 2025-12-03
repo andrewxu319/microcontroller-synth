@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils/includes.h"
 #include "utils/typedefs.h"
 #include "utils/config.h"
 
@@ -7,6 +8,6 @@
 
 namespace standalone {
 	namespace file_io {
-		void read_wav(const std::string& path, float32_t(&dest)[config::wavetable_resolution]);
+		void read_wav(const string& path, float32_t(&dest)[config::wavetable_resolution]);
 	}
 }

@@ -2,11 +2,11 @@
 
 #include "module.h"
 
-using namespace synth;
-
-class Mixer : public Module {
-public:
-	Mixer();
-	Mixer(const NoBaseInit); // dummy constructor
-	void generate_buf();
-};
+namespace synthesis {
+	class Mixer : public Module {
+	public:
+		Mixer(const vector<Module*> outputs_);
+		Mixer(const NoBaseInit); // dummy constructor
+		void generate_buf();
+	};
+}

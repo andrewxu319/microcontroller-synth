@@ -1,5 +1,4 @@
-switched to c style arrays to avoid having to copy std::array into the final buffer
+switched to c style arrays to avoid having to copy array into the final buffer
 
 to do
-- make normal oscillator
-- different types of oscillators
+- "control" vs "signal" module?
