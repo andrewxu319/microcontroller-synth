@@ -2,6 +2,7 @@
 
 #include "utils/config.h"
 #include "synthesis/modules/master.h"
+#include "midi/message.h"
 
 #include <portaudio/portaudio.h>
 
@@ -10,10 +11,9 @@ using namespace synthesis;
 namespace standalone::sound_engine {
 	typedef struct {} BufferLoaderData;
 
-	extern Master master;
+	extern Master& master;
 	extern const BufferLoaderData data;
 	extern PaStream* stream;
-	extern const vector<unique_ptr<Module>>* modules;
 
 	void sound_engine_init(vector<unique_ptr<Module>>* const modules_);
 	void sound_engine_close();

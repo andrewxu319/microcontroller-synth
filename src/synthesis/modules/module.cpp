@@ -9,11 +9,7 @@ using namespace synthesis;
 
 int Module::last_id{ 0 };
 
-Module::Module()
-	: Module(vector<Module*>{})
-{}
-
-Module::Module(const vector<Module*>& outputs_)
+Module::Module(const vector<Module*>& outputs_ = vector<Module*>{})
 	: id{ last_id++ }, // Initialize const member `id`
 	inputs{},
 	outputs{},

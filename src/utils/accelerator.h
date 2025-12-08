@@ -4,7 +4,6 @@
 #include <immintrin.h>
 
 #include <chrono>
-using namespace chrono;
 
 namespace accelerator {
 	inline void vec_add_float32_t(const float32_t* const in_1, const float32_t* const in_2, float32_t* const out, const size_t len) {

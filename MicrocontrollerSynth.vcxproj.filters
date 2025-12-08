@@ -45,6 +45,9 @@
     <ClCompile Include="src\synthesis\modules\voice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\standalone\midi_listener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\standalone\sound_engine.h">
@@ -90,6 +93,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\synthesis\modules\voice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\standalone\midi_listener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\midi\message.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

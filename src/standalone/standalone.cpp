@@ -2,6 +2,7 @@
 #include "synthesis/modules/oscillator.h"
 #include "synthesis/modules/voice.h"
 #include "synthesis/modules/voice_manager.h"
+#include "standalone/midi_listener.h"
 
 #include <cstdio>
 
@@ -11,8 +12,10 @@ using namespace synthesis;
 int main() {
 	printf("ok");
 
-	vector<unique_ptr<Module>> modules{};
+	midi_listener::init();
+	midi_listener::open_port(config::midi_port);
 
+	vector<unique_ptr<Module>> modules{};
 	sound_engine::sound_engine_init(&modules);
 	modules.emplace_back(make_unique<VoiceManager>(VoiceManager{}));
 	for (int i{ 0 }; i < config::num_voices; i++) {
@@ -39,8 +42,9 @@ int main() {
 	voice_manager->note_off(77);
 	voice_manager->note_off(82);
 
-	Pa_Sleep(3000);
+	Pa_Sleep(30000);
 
+	midi_listener::close_port();
 	sound_engine::sound_engine_close();
 
 	return 0;

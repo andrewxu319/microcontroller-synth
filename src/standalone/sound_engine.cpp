@@ -3,10 +3,11 @@
 #include <cstdio>  
 
 namespace standalone::sound_engine {
-	Master master{};
+	Master& master{ Master::instance() };
 	const BufferLoaderData data{};
 	PaStream* stream{};
-	const vector<unique_ptr<Module>>* modules{};
+	queue<midi::NoteMessage> note_messages{};
+	queue<midi::CcMessage> cc_messages{};
 
 	void pa_check_error(const PaError& error) {
 		if (error != paNoError) {
@@ -23,16 +24,8 @@ namespace standalone::sound_engine {
 		void* data_
 	) {
 		BufferLoaderData* data = (BufferLoaderData*)data_;
-
 		float32_t* out_buf{ (float32_t*)out_buf_ };
 		master.out_buf = out_buf;
-
-		(*modules)[2]->generate_buf();
-		(*modules)[3]->generate_buf();
-		(*modules)[6]->generate_buf();
-		(*modules)[7]->generate_buf();
-		(*modules)[1]->generate_buf();
-		(*modules)[5]->generate_buf();
 		master.generate_buf();
 
 		return 0;
@@ -40,7 +33,7 @@ namespace standalone::sound_engine {
 
 	void sound_engine_init(vector<unique_ptr<Module>>* const modules_)
 	{
-		modules = modules_;
+		master.instance().modules = modules_;
 
 		PaError error;
 

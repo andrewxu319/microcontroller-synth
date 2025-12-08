@@ -18,7 +18,6 @@ namespace synthesis {
 			// any other messages e.g. modulation bindings should be done in other ways (e.g. have modulation member variables / a map)
 		float32_t* out_buf;
 
-		Module();
 		Module(const vector<Module*>& outputs);
 		Module(const NoBaseInit); // dummy constructor
 		virtual void generate_buf();

@@ -98,7 +98,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,7 +117,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -132,7 +132,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib</AdditionalDependencies>
+      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
     </Link>
@@ -153,13 +153,14 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib</AdditionalDependencies>
+      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\standalone\file_io.cpp" />
+    <ClCompile Include="src\standalone\midi_listener.cpp" />
     <ClCompile Include="src\standalone\sound_engine.cpp" />
     <ClCompile Include="src\standalone\standalone.cpp" />
     <ClCompile Include="src\synthesis\modules\master.cpp" />
@@ -171,8 +172,10 @@
     <ClCompile Include="src\synthesis\synthesizer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\midi\message.h" />
     <ClInclude Include="src\midi\notes.h" />
     <ClInclude Include="src\standalone\file_io.h" />
+    <ClInclude Include="src\standalone\midi_listener.h" />
     <ClInclude Include="src\standalone\sound_engine.h" />
     <ClInclude Include="src\synthesis\modules\master.h" />
     <ClInclude Include="src\synthesis\modules\mixer.h" />
