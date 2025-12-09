@@ -3,7 +3,6 @@
 #include "midi/message.h"
 #include "synthesis/modules/master.h"
 
-#include <chrono>
 #include <thread>
 
 using namespace midi;

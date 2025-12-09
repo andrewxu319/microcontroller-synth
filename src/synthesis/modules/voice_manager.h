@@ -10,8 +10,6 @@ namespace synthesis {
 	class VoiceManager : public Module {
 	public:
 		VoiceManager();
-		VoiceManager(const vector<Module*> outputs_);
-		VoiceManager(const vector<Voice*> outputs_);
 		void add_output(Voice* output);
 		void add_output(Module* output);
 		void note_on(const char note);

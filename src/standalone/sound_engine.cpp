@@ -31,10 +31,8 @@ namespace standalone::sound_engine {
 		return 0;
 	}
 
-	void sound_engine_init(vector<unique_ptr<Module>>* const modules_)
+	void sound_engine_init()
 	{
-		master.instance().modules = modules_;
-
 		PaError error;
 
 		error = Pa_Initialize();

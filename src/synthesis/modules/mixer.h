@@ -5,8 +5,8 @@
 namespace synthesis {
 	class Mixer : public Module {
 	public:
-		Mixer(const vector<Module*> outputs_);
-		Mixer(const NoBaseInit); // dummy constructor
+		Mixer();
+		Mixer(const utils::NoBaseInit); // dummy constructor
 		void generate_buf();
 	};
 }

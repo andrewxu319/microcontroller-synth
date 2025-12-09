@@ -1,5 +1,6 @@
 #include "voice_manager.h"
 #include "utils/config.h"
+#include "master.h"
 
 #include <deque>
 #include <iterator>
@@ -7,25 +8,19 @@
 using namespace synthesis;
 
 VoiceManager::VoiceManager()
-	: VoiceManager(vector<Module*>{}) {
-}
-
-VoiceManager::VoiceManager(const vector<Module*> outputs_)
-	: Module(outputs_), // convert it to a vector of Module*'s
-	active_voices{},
+	: active_voices{},
 	inactive_voices{} { // initialize queue with a vector
 	for (Module* output : outputs) {
 		inactive_voices.emplace(static_cast<Voice*>(output));
 	}
 }
 
-VoiceManager::VoiceManager(const vector<Voice*> outputs_)
-	: VoiceManager(vector<Module*>{ outputs_.begin(), outputs_.end() }) {
-}
-
 void VoiceManager::add_output(Voice* output) {
-	output->add_input(this);
-	outputs.push_back(output);
+	outputs.emplace_back(output);
+	if (Master::instance().topo_sort() == -1) {
+		printf("Action invalid: circular in/out!\n");
+		outputs.pop_back();
+	}
 	inactive_voices.emplace(output);
 	if (outputs.size() == 1) {
 		out_buf = outputs[0]->in_bufs[id].data; // store actual output buffer in the first output module. access it w a pointer & edit output module's "input" directly

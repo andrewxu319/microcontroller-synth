@@ -9,16 +9,15 @@
 
 using namespace synthesis;
 
-Oscillator::Oscillator(const vector<Module*> outputs_, const string& wavetable_path = "zeros")
-	: Module(outputs_), phase{ 0 }, freq{ 0 }, period{ 0 }, wavetable{} {
+Oscillator::Oscillator(const string& wavetable_path = "zeros")
+	: phase{ 0 }, freq{ 0 }, period{ 0 }, wavetable{} {
 	load_wavetable(wavetable_path);
 }
 
 void Oscillator::generate_buf() {
 	if (freq == 0.0f) {
 		fill(out_buf, out_buf + config::buffer_size, 0.0);
-		
-		;
+		return;
 	}
 
 	for (size_t i = 0; i < config::buffer_size; i += 2) {

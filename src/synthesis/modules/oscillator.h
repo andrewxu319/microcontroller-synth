@@ -14,7 +14,7 @@ namespace synthesis {
 		float32_t period; // in samples
 		float32_t wavetable[config::wavetable_resolution];
 
-		Oscillator(const vector<Module*> outputs_, const string& wavetable_path);
+		Oscillator(const string& wavetable_path);
 		void set_freq(const float32_t val);
 		void load_wavetable(const string& path);
 

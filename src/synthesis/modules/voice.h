@@ -10,8 +10,7 @@ namespace synthesis {
 	public:
 		char current_note;
 
-		Voice(const vector<Module*> outputs_);
-		Voice(const vector<Oscillator*> outputs_);
+		Voice();
 		void note_on(const char note);
 		void note_off();
 

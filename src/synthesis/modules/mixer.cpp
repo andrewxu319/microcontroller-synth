@@ -4,9 +4,9 @@
 
 using namespace synthesis;
 
-Mixer::Mixer(const vector<Module*> outputs_) : Module(outputs_) {}
+Mixer::Mixer() {}
 
-Mixer::Mixer(const NoBaseInit _) : Module(NO_BASE_INIT) {} // dummy constructor
+Mixer::Mixer(const utils::NoBaseInit _) : Module(utils::NO_BASE_INIT) {} // dummy constructor
 
 void Mixer::generate_buf() {
 	fill(out_buf, out_buf + config::buffer_size, 0.0);

@@ -2,3 +2,5 @@ switched to c style arrays to avoid having to copy array into the final buffer
 
 to do
 - "control" vs "signal" module?
+- add check to prevent cyclic graph
+- - kahn's algo better for cycle checking

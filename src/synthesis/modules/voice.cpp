@@ -5,16 +5,10 @@
 
 using namespace synthesis;
 
-Voice::Voice(const vector<Module*> outputs_)
-	: Module(outputs_),
-	active{ false },
+Voice::Voice()
+	: active{ false },
 	current_note{ -1 }
 {
-	;
-}
-
-Voice::Voice(const vector<Oscillator*> outputs_)
-	: Voice(vector<Module*>{outputs_.begin(), outputs_.end()}) { // convert it to a vector of Module*'s
 	;
 }
 
