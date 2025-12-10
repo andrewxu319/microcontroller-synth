@@ -14,9 +14,10 @@ namespace synthesis {
 		const int id;
 		vector<Module*> inputs;
 		vector<Module*> outputs;
-		unordered_map<int, utils::array_wrapper<float32_t, config::buffer_size>> in_bufs{};
+		unordered_map<int, utils::array_wrapper<float_s, config::buffer_size>> in_bufs{};
 			// any other messages e.g. modulation bindings should be done in other ways (e.g. have modulation member variables / a map)
-		float32_t* out_buf;
+		float_s* out_buf;
+		static constexpr float_s EMPTY_BUF_MARKER{ numeric_limits<float_s>::min()};
 
 		Module();
 		Module(const utils::NoBaseInit); // dummy constructor

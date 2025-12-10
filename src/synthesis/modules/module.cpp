@@ -1,6 +1,6 @@
 #include "module.h"
 
-#include "master.h"
+#include "synthesis/synthesizer.h"
 
 #include <cassert>
 #include <algorithm>
@@ -35,14 +35,14 @@ void Module::generate_buf() {
 
 void Module::update_destination_bufs() const {
 	for (Module* output : outputs) {
-		memcpy(output->in_bufs[id].data, out_buf, sizeof(float32_t) * config::buffer_size);
+		memcpy(output->in_bufs[id].data, out_buf, sizeof(float_s) * config::buffer_size);
 	}
 }
 
 void Module::add_input(Module* input) {
 	input->add_output(this);
 	inputs.emplace_back(input);
-	in_bufs[input->id] = utils::array_wrapper<float32_t, config::buffer_size>{};
+	in_bufs[input->id] = utils::array_wrapper<float_s, config::buffer_size>{};
 }
 
 //void Module::add_inputs(vector<Module*> inputs) {
@@ -54,7 +54,7 @@ void Module::add_input(Module* input) {
 
 void Module::add_output(Module* output) {
 	outputs.emplace_back(output);
-	if (Master::instance().topo_sort() == -1) {
+	if (synthesis::topo_sort() == -1) {
 		printf("Failed to add output (ID: %d): circular in/out!\n", output->id);
 		outputs.pop_back();
 	}

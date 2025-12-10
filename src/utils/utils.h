@@ -3,6 +3,8 @@
 #include <chrono>
 #include <cstdio>
 
+typedef float float_s; // sample format
+
 namespace utils {
 	enum NoBaseInit {
 		NO_BASE_INIT

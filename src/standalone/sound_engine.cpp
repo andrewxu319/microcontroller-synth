@@ -1,6 +1,6 @@
 #include "sound_engine.h"
 
-#include <cstdio>  
+#include <queue>
 
 namespace standalone::sound_engine {
 	Master& master{ Master::instance() };
@@ -24,7 +24,7 @@ namespace standalone::sound_engine {
 		void* data_
 	) {
 		BufferLoaderData* data = (BufferLoaderData*)data_;
-		float32_t* out_buf{ (float32_t*)out_buf_ };
+		float_s* out_buf{ (float_s*)out_buf_ };
 		master.out_buf = out_buf;
 		master.generate_buf();
 
@@ -38,13 +38,20 @@ namespace standalone::sound_engine {
 		error = Pa_Initialize();
 		pa_check_error(error);
 
-		error = Pa_OpenDefaultStream(
-			&stream,
-			0,
+		const PaStreamParameters output_parameters{
+			Pa_GetDefaultOutputDevice(), // config::audio_device
 			config::channels,
-			paFloat32,
+			paFloat32, // make switch case or something?
+			config::latency,
+			nullptr 
+		};
+		error = Pa_OpenStream(
+			&stream,
+			nullptr,
+			&output_parameters,
 			config::sample_rate,
 			config::actual_buffer_size,
+			0, // flags. clipping on by default
 			&load_buffer,
 			(void*)(&data) // communicate with load_buffer through this data structure. avoid sharing complex data structures that can be easily corrupted. avoid locks
 		);

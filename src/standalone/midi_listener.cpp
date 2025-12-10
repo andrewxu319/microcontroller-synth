@@ -1,7 +1,7 @@
 #include "midi_listener.h"
 
 #include "midi/message.h"
-#include "synthesis/modules/master.h"
+#include "synthesis/synthesizer.h"
 
 #include <thread>
 
@@ -24,6 +24,7 @@ namespace standalone::midi_listener{
 	}
 
 	void send_message(double delta_time, vector<unsigned char>* midi_message, void* user_data) {
+		utils::timer::start();
 		size_t len = midi_message->size(); // bytes
 		//for (unsigned char b : *midi_message) {
 		//	printf("%x ", b);
@@ -34,7 +35,7 @@ namespace standalone::midi_listener{
 		switch ((*midi_message)[0] >> 4) { // integer divide by 16
 		case 0x8:
 			// note off
-			synthesis::Master::instance().note_messages.push(
+			synthesis::note_messages.push(
 				NoteMessage{
 					NoteMessage::NoteFunction::NOTE_OFF,
 					static_cast<uint8_t>((*midi_message)[0] & 0x0f), // mod 16
@@ -45,7 +46,7 @@ namespace standalone::midi_listener{
 			break;
 		case 0x9:
 			// note on
-			synthesis::Master::instance().note_messages.push(
+			synthesis::note_messages.push(
 				NoteMessage{
 					NoteMessage::NoteFunction::NOTE_ON,
 					static_cast<uint8_t>((*midi_message)[0] & 0x0f), // mod 16
@@ -56,7 +57,7 @@ namespace standalone::midi_listener{
 			break;
 		case 0xb:
 			// cc
-			synthesis::Master::instance().cc_messages.push(
+			synthesis::cc_messages.push(
 				CcMessage{
 					(*midi_message)[1],
 					static_cast<uint8_t>((*midi_message)[0] & 0x0f), // mod 16

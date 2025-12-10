@@ -1,3 +1,3 @@
-#pragma once
-
-typedef float float32_t;
+//#pragma once
+//
+//typedef float float_s; 
