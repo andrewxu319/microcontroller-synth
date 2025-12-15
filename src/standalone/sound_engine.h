@@ -21,8 +21,8 @@ namespace standalone::sound_engine {
 
 	void pa_check_error(const PaError& error);
 	int load_buffer(
-		const void* in_buf_,
-		void* out_buf_,
+		const void* __restrict in_buf_,
+		void* __restrict out_buf_,
 		unsigned long buffer_size,
 		const PaStreamCallbackTimeInfo* time_info,
 		PaStreamCallbackFlags status_flags,

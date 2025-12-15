@@ -17,20 +17,20 @@ VoiceManager::VoiceManager()
 	}
 }
 
-void VoiceManager::add_output(Voice* output) {
-	outputs.emplace_back(output);
-	if (synthesis::topo_sort() == -1) {
-		printf("Action invalid: circular in/out!\n");
-		outputs.pop_back();
+int VoiceManager::add_output(Voice* output, bool add_buf) {
+	if (Module::add_output(static_cast<Module*>(output), add_buf) == -1) {
+		return -1;
 	}
 	inactive_voices.emplace_back(output);
-	if (outputs.size() == 1) {
-		out_buf = outputs[0]->in_bufs[id].data; // store actual output buffer in the first output module. access it w a pointer & edit output module's "input" directly
-	}
+	return 0;
 }
 
-void VoiceManager::add_output(Module* output) {
-	add_output(static_cast<Voice*>(output));
+int VoiceManager::add_output(Module* output, bool add_buf) {
+	if (Module::add_output(output, add_buf) == -1) {
+		return -1;
+	}
+	inactive_voices.emplace_back(static_cast<Voice*>(output));
+	return 0;
 }
 
 void VoiceManager::note_on(const uint8_t note, const uint8_t velocity) {

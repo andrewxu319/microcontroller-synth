@@ -20,17 +20,17 @@ namespace synthesis {
 		static constexpr float_s EMPTY_BUF_MARKER{ numeric_limits<float_s>::min()};
 
 		Module();
+		Module(size_t input_limit_);
 		Module(const utils::NoBaseInit); // dummy constructor
 		virtual void generate_buf();
 
-		void add_input(Module* input);
-		//void add_inputs(vector<Module*> inputs);
-		virtual void add_output(Module* output);
-		void add_outputs(const vector<Module*> outputs);
+		virtual int add_input(Module* __restrict input, bool add_buf);
+		int add_output(Module* __restrict output, bool add_buf);
 		// implement remove input/output
 
 	protected:
 		void update_destination_bufs() const;
+		const size_t input_limit;
 
 	private:
 		static int last_id;

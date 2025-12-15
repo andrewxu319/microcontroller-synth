@@ -17,12 +17,13 @@ Oscillator::Oscillator(const string& wavetable_path = "zeros")
 
 void Oscillator::generate_buf() {
 	if (freq == 0.0f) {
+		//memset(out_buf, 0.0f, config::buffer_size * sizeof(float_s));
 		*out_buf = EMPTY_BUF_MARKER; // put marker at start of buffer
 		return;
 	}
 
 	// better way to do this? or just make mono?
-	for (size_t i = 0; i < config::buffer_size; i += 2) {
+	for (size_t i = 0; i < config::buffer_size; i += config::channels) {
 		if (phase >= period * 2) {
 			phase = 0;
 		}
@@ -30,7 +31,9 @@ void Oscillator::generate_buf() {
 		// if lfo, ignore every other sample
 		//*(out_buf + i) = static_cast<float_s>(sin(2.0 * M_PI * (static_cast<double>(freq) / config::sample_rate) * phase));
 		*(out_buf + i) = wavetable[static_cast<size_t>(phase * freq * config::wavetable_resolution / 2 / config::sample_rate)]; // round?
-		*(out_buf + i + 1) = *(out_buf + i);
+		for (size_t j = 1; j < config::channels; j++) {
+			*(out_buf + i + j) = *(out_buf + i);
+		}
 
 		phase++;
 		//printf("%f\n", *(out_buf + i));

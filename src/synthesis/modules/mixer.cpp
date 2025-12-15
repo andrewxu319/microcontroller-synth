@@ -10,6 +10,7 @@ Mixer::Mixer(const utils::NoBaseInit _) : Module(utils::NO_BASE_INIT) {} // dumm
 
 void Mixer::generate_buf() {
 	bool is_empty{ true };
+	memset(out_buf, 0.0f, config::buffer_size * sizeof(float_s));
 	for (const auto& in_buf : in_bufs) {
 		if (in_buf.second.data[0] != EMPTY_BUF_MARKER) {
 			if (is_empty) {
@@ -21,7 +22,6 @@ void Mixer::generate_buf() {
 			}
 		}
 	}
-
 	if (is_empty) {
 		out_buf[0] = EMPTY_BUF_MARKER;
 	}

@@ -94,11 +94,12 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\DSPFilters.lib";$(CoreLibraryDependencies);%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -111,13 +112,14 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\DSPFilters.lib";$(CoreLibraryDependencies);%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -128,11 +130,12 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(ProjectDir)src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\DSPFilters.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
     </Link>
@@ -147,13 +150,14 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(ProjectDir)src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\DSPFilters.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
     </Link>
@@ -163,6 +167,9 @@
     <ClCompile Include="src\standalone\midi_listener.cpp" />
     <ClCompile Include="src\standalone\sound_engine.cpp" />
     <ClCompile Include="src\standalone\standalone.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\delay.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\filter.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\fx.cpp" />
     <ClCompile Include="src\synthesis\modules\master.cpp" />
     <ClCompile Include="src\synthesis\modules\mixer.cpp" />
     <ClCompile Include="src\synthesis\modules\module.cpp" />
@@ -177,6 +184,9 @@
     <ClInclude Include="src\standalone\file_io.h" />
     <ClInclude Include="src\standalone\midi_listener.h" />
     <ClInclude Include="src\standalone\sound_engine.h" />
+    <ClInclude Include="src\synthesis\modules\fx\delay.h" />
+    <ClInclude Include="src\synthesis\modules\fx\filter.h" />
+    <ClInclude Include="src\synthesis\modules\fx\fx.h" />
     <ClInclude Include="src\synthesis\modules\master.h" />
     <ClInclude Include="src\synthesis\modules\mixer.h" />
     <ClInclude Include="src\synthesis\modules\module.h" />
@@ -185,6 +195,7 @@
     <ClInclude Include="src\synthesis\modules\voice_manager.h" />
     <ClInclude Include="src\synthesis\synthesizer.h" />
     <ClInclude Include="src\utils\accelerator.h" />
+    <ClInclude Include="src\utils\circular_array.h" />
     <ClInclude Include="src\utils\config.h" />
     <ClInclude Include="src\utils\includes.h" />
     <ClInclude Include="src\utils\typedefs.h" />

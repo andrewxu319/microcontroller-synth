@@ -3,3 +3,8 @@ switched to c style arrays to avoid having to copy array into the final buffer
 to do
 - "control" vs "signal" module?
 - check for available audio devices
+- "active" state for modules
+
+use mtd for microcontroller?
+
+TODO: MIDI KEYBOARD LATENCY

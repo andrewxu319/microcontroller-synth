@@ -24,7 +24,7 @@ void Master::generate_buf() {
 
 	synthesis::read_messages();
 
-	for (int i{ 0 }; i < modules.size(); i++) {
+	for (size_t i{ 0 }; i < modules.size(); i++) {
 		modules[i]->generate_buf();
 	}
 
@@ -41,7 +41,7 @@ void Master::generate_buf() {
 		}
 	}
 	if (is_empty) {
-		memset(out_buf, 0.0f, config::buffer_size * sizeof(float_s));
+		memset(out_buf, 0, config::buffer_size * sizeof(float_s));
 	}
 
 	//memset(out_buf, 0.0f, config::buffer_size * sizeof(float_s));
@@ -51,7 +51,8 @@ void Master::generate_buf() {
 	//	}
 	//}
 
-	//utils::timer::end();
+	//utils::
+	// ();
 
 	// clip between -1.0 and 1.0
 }

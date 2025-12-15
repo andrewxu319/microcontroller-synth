@@ -6,7 +6,7 @@
 
 namespace synthesis {
 	Master* master{ &Master::instance() };
-	VoiceManager* voice_manager{ static_cast<VoiceManager*>(synthesis::add_module(make_unique<VoiceManager>())) };
+	VoiceManager* voice_manager{};
 	vector<unique_ptr<Module>> modules{};
 	extern queue<midi::NoteMessage> note_messages{};
 	extern queue<midi::CcMessage> cc_messages{};
@@ -88,12 +88,12 @@ namespace synthesis {
 			}
 
 			note_messages.pop();
-			printf("Note message: function %d, channel %d, note %d, velocity %d\n", static_cast<int>(note_message.function), note_message.channel, note_message.note, note_message.velocity);
+			//printf("Note message: function %d, channel %d, note %d, velocity %d\n", static_cast<int>(note_message.function), note_message.channel, note_message.note, note_message.velocity);
 		}
 		while (!cc_messages.empty()) {
 			midi::CcMessage& cc_message{ cc_messages.front() };
 			cc_messages.pop();
-			printf("CC message: function %d, channel %d, value %d\n", cc_message.function, cc_message.channel, cc_message.value);
+			//printf("CC message: function %d, channel %d, value %d\n", cc_message.function, cc_message.channel, cc_message.value);
 		}
 	}
 }

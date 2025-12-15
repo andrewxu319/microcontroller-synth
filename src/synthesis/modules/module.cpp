@@ -5,25 +5,29 @@
 #include <cassert>
 #include <algorithm>
 #include <iterator>
-
+#include <climits>
 
 using namespace synthesis;
 
 int Module::last_id{ 0 };
 
-Module::Module()
+Module::Module() : Module(numeric_limits<size_t>::max()) {}
+
+Module::Module(size_t input_limit)
 	: id{ last_id++ }, // Initialize const member `id`
 	inputs{},
 	outputs{},
-	out_buf{} // Initialize `out_buf` to nullptr
+	out_buf{}, // Initialize `out_buf` to nullptr
+	input_limit{ input_limit }
 {
 }
 
 Module::Module(const utils::NoBaseInit) 
-: id(-1), // Initialize const member `id` with a dummy value
-  inputs{}, 
-  outputs{},
-	out_buf{} // Initialize `out_buf` to nullptr
+	: id(-1), // Initialize const member `id` with a dummy value
+	inputs{}, 
+	outputs{},
+	out_buf{}, // Initialize `out_buf` to nullptr
+	input_limit{ numeric_limits<size_t>::max() }
 {
 // dummy constructor
 }
@@ -39,32 +43,32 @@ void Module::update_destination_bufs() const {
 	}
 }
 
-void Module::add_input(Module* input) {
-	input->add_output(this);
+int Module::add_input(Module* __restrict input, bool add_buf) {
+	if (add_buf && in_bufs.size() >= input_limit) {
+		printf("Failed to add input (ID: %d): max %d inputs!\n", input->id, static_cast<int>(input_limit));
+		return -1;
+	}
+
 	inputs.emplace_back(input);
-	in_bufs[input->id] = utils::array_wrapper<float_s, config::buffer_size>{};
+	if (synthesis::topo_sort() == -1) {
+		printf("Failed to add input (ID: %d): circular in/out!\n", input->id);
+		inputs.pop_back();
+		return -1;
+	}
+	if (add_buf) {
+		in_bufs[input->id] = utils::array_wrapper<float_s, config::buffer_size>{};
+	}
+	return 0;
 }
 
-//void Module::add_inputs(vector<Module*> inputs) {
-//	for (const Module* input : inputs) {
-//		add_input(input);
-//	}
-//}
-#include <typeinfo>
-
-void Module::add_output(Module* output) {
+int Module::add_output(Module* __restrict output, bool add_buf) {
 	outputs.emplace_back(output);
-	if (synthesis::topo_sort() == -1) {
-		printf("Failed to add output (ID: %d): circular in/out!\n", output->id);
+	if (output->add_input(this, add_buf) == -1) {
 		outputs.pop_back();
+		return -1;
 	}
-	if (outputs.size() == 1) {
+	if (add_buf && outputs.size() == 1) {
 		out_buf = outputs[0]->in_bufs[id].data; // store actual output buffer in the first output module. access it w a pointer & edit output module's "input" directly
 	}
-}
-
-void Module::add_outputs(const vector<Module*> outputs) {
-	for (Module* output : outputs) {
-		add_output(output);
-	}
+	return 0;
 }

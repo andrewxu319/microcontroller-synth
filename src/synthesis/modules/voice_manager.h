@@ -12,8 +12,8 @@ namespace synthesis {
 	class VoiceManager : public Module {
 	public:
 		VoiceManager();
-		void add_output(Voice* output);
-		void add_output(Module* output);
+		int add_output(Voice* output, bool add_buf);
+		int add_output(Module* output, bool add_buf);
 		void note_on(const uint8_t note, const uint8_t velocity);
 		void note_off(const uint8_t note);
 

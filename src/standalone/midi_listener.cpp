@@ -24,7 +24,7 @@ namespace standalone::midi_listener{
 	}
 
 	void send_message(double delta_time, vector<unsigned char>* midi_message, void* user_data) {
-		utils::timer::start();
+		//utils::timer::start();
 		size_t len = midi_message->size(); // bytes
 		//for (unsigned char b : *midi_message) {
 		//	printf("%x ", b);

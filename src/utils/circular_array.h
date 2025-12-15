@@ -1,0 +1,73 @@
+#pragma once
+
+#include "includes.h"
+
+namespace utils {
+	template <typename T>
+	class CircularArray {
+	public:
+		CircularArray(const size_t size_)
+			: size{ size_ },
+			data(size, 0.0f),
+			start{ 0 }
+		{
+			;
+		}
+
+		typename vector<T>::iterator begin() {
+			return data.begin() + start;
+		}
+
+		void resize(const size_t size_) {
+			data.resize(size_);
+			if (size_ > size) {
+				data.insert(data.begin() + size, make_move_iterator(data.begin()), make_move_iterator(data.begin() + start));
+			}
+			size = size_;
+		}
+
+		void pop_start_into(vector<T>& dest, const typename vector<T>::iterator dest_location_iter, const int len) {
+			if (start + len <= size) {
+				dest.insert(dest_location_iter, make_move_iterator(data.begin() + start), make_move_iterator(data.begin() + start + len));
+				//fill_n(data.begin() + start, len, 0.0f);
+				// instead of wiping the just-read section, keep it undefined? it will be overriden with add_end
+				start += len;
+			}
+			else {
+				dest.insert(dest_location_iter, make_move_iterator(data.begin() + start), make_move_iterator(data.end()));
+				dest.insert(dest_location_iter + (size - start), make_move_iterator(data.begin()), make_move_iterator(data.begin() + (len - (size - start))));
+				//fill_n(data.begin() + start, size - start, 0.0f);
+				//fill_n(data.begin(), len - (size - start), 0.0f);
+				start = start + len - size;
+			}
+		}
+
+		// return: pointer to first segment, length of first segment, pointer to second segment, length of second segment
+		tuple<T*, size_t, T*, size_t> pop_start_with_pointer(const int len) {
+			const size_t old_start{ start };
+			if (start + len <= size) {
+				start += len;
+				return tuple{ &data.data()[old_start], len, nullptr, 0 };
+			}
+			{
+				start = start + len - size;
+				return tuple{ &data.data()[old_start], size - old_start, data.data(), start};
+			}
+		}
+
+		void push_back(T* source_array, const int len) {
+			if (start >= len) {
+				copy(source_array, source_array + len, data.begin() + start - len);
+			}
+			else {
+				copy(source_array, source_array + (len - start), data.end() - (len - start));
+				copy(source_array + (len - start), source_array + len, data.begin());
+			}
+		}
+
+	private:
+		vector<T> data;
+		size_t size;
+		size_t start;
+	};
+}
