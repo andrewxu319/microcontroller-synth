@@ -8,7 +8,7 @@ namespace utils {
 	public:
 		CircularArray(const size_t size_)
 			: size{ size_ },
-			data(size, 0.0f),
+			data(size_, 0.0f),
 			start{ 0 }
 		{
 			;

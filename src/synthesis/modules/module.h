@@ -28,6 +28,9 @@ namespace synthesis {
 		int add_output(Module* __restrict output, bool add_buf);
 		// implement remove input/output
 
+		virtual void note_on(const uint8_t note, const uint8_t velocity) {};
+		virtual void note_off(const uint8_t note) {};
+
 	protected:
 		void update_destination_bufs() const;
 		const size_t input_limit;

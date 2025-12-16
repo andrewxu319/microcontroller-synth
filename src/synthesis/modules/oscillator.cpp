@@ -11,7 +11,7 @@
 using namespace synthesis;
 
 Oscillator::Oscillator(const string& wavetable_path = "zeros")
-	: phase{ 0 }, freq{ 0 }, period{ 0 }, wavetable{} {
+	: phase{ 0 }, freq{ 0 }, wavetable{}, phase_increment{ 0 }, gain_mod{ nullptr } {
 	load_wavetable(wavetable_path);
 }
 
@@ -23,23 +23,27 @@ void Oscillator::generate_buf() {
 	}
 
 	// better way to do this? or just make mono?
-	for (size_t i = 0; i < config::buffer_size; i += config::channels) {
-		if (phase >= period * 2) {
+	for (size_t i = 0; i < config::buffer_size; i += 1) {
+		if (phase >= config::wavetable_resolution) {
 			phase = 0;
 		}
 
 		// if lfo, ignore every other sample
 		//*(out_buf + i) = static_cast<float_s>(sin(2.0 * M_PI * (static_cast<double>(freq) / config::sample_rate) * phase));
-		*(out_buf + i) = wavetable[static_cast<size_t>(phase * freq * config::wavetable_resolution / 2 / config::sample_rate)]; // round?
+		*(out_buf + i) = wavetable[static_cast<size_t>(phase)]; // round?
 		for (size_t j = 1; j < config::channels; j++) {
 			*(out_buf + i + j) = *(out_buf + i);
 		}
 
-		phase++;
+		phase += phase_increment;
 		//printf("%f\n", *(out_buf + i));
 	}
 
-	accelerator::vec_mult_float_s(out_buf, out_buf, config::buffer_size);
+	accelerator::vec_scal_mult_float_s(out_buf, out_buf, config::buffer_size);
+
+	if (gain_mod) {
+		accelerator::vec_entrywise_mult_float_s(in_bufs[gain_mod->id].data, out_buf, out_buf, config::buffer_size);
+	}
 
 	return;
 }
@@ -50,13 +54,25 @@ void Oscillator::load_wavetable(const string& path) {
 #endif
 }
 
+void Oscillator::note_on(const uint8_t note, const uint8_t velocity) {
+	set_freq(midi::notes[note]); // cant static_cast because of const
+	set_gain(static_cast<float_s>(velocity) / 127);
+	phase = 0; // this is a TEMPORARY solution to fix popping sound at note_on. fix later with adsr. also pretty sure this only works with sine waves
+}
+
+void Oscillator::note_off(const uint8_t note) {
+	if (!gain_mod) {
+		set_freq(0.0f);
+	}
+}
+
 void Oscillator::set_freq(const float_s value) {
 	if (value != 0.0f) {
 		assert(value >= config::sample_rate / config::wavetable_resolution); // don't want to deal with interpolation rn but we might need to down the line
 		assert(value >= 20 && value <= 20000);
 	}
 	freq = value;
-	period = config::sample_rate / freq;
+	phase_increment = freq * config::wavetable_resolution / 2 / config::sample_rate;
 }
 
 void Oscillator::set_gain(const float_s value) {

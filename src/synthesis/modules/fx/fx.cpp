@@ -14,8 +14,8 @@ Fx::Fx()
 void Fx::generate_buf() {
 	// call this at the end
 	// first have the specific fx write the wet output into out_buf
-	accelerator::vec_mult_float_s(out_buf, out_buf, wet, config::buffer_size);
-	accelerator::vec_mult_add_float_s(in_buf->data, out_buf, out_buf, 1.0 - wet, config::buffer_size);
+	accelerator::vec_scal_mult_float_s(out_buf, out_buf, wet, config::buffer_size);
+	accelerator::vec_mult_add_float_s(in_buf->data, out_buf, out_buf, 1.0f - wet, config::buffer_size);
 }
 
 int Fx::add_input(Module* __restrict input, bool add_buf) {

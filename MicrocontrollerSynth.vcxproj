@@ -172,6 +172,8 @@
     <ClCompile Include="src\synthesis\modules\fx\fx.cpp" />
     <ClCompile Include="src\synthesis\modules\master.cpp" />
     <ClCompile Include="src\synthesis\modules\mixer.cpp" />
+    <ClCompile Include="src\synthesis\modules\modulator\envelope.cpp" />
+    <ClCompile Include="src\synthesis\modules\modulator\modulator.cpp" />
     <ClCompile Include="src\synthesis\modules\module.cpp" />
     <ClCompile Include="src\synthesis\modules\oscillator.cpp" />
     <ClCompile Include="src\synthesis\modules\voice.cpp" />
@@ -189,6 +191,8 @@
     <ClInclude Include="src\synthesis\modules\fx\fx.h" />
     <ClInclude Include="src\synthesis\modules\master.h" />
     <ClInclude Include="src\synthesis\modules\mixer.h" />
+    <ClInclude Include="src\synthesis\modules\modulator\envelope.h" />
+    <ClInclude Include="src\synthesis\modules\modulator\modulator.h" />
     <ClInclude Include="src\synthesis\modules\module.h" />
     <ClInclude Include="src\synthesis\modules\oscillator.h" />
     <ClInclude Include="src\synthesis\modules\voice.h" />

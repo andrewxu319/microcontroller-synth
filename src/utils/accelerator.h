@@ -3,7 +3,8 @@
 #include <immintrin.h>
 
 namespace accelerator {
-	inline void vec_add_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) { // in_1 must not equal out
+	// in_1 cannot be the same as out. in_2 can
+	inline void vec_add_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {
 		// if standalone
 		int i{ 0 };
 		for (; i < len - 8; i += 8) { // with regular avx, we can add 8 at once
@@ -23,7 +24,7 @@ namespace accelerator {
 		scalar_reg = _mm256_set1_ps(value);
 	}
 
-	inline void vec_mult_float_s(const float_s* const in, float_s* const out, const int len) {
+	inline void vec_scal_mult_float_s(const float_s* const in, float_s* const out, const int len) {
 		// if standalone
 		int i{ 0 };
 		for (; i < len - 8; i += 8) { // with regular avx, we can add 8 at once
@@ -36,7 +37,7 @@ namespace accelerator {
 		}
 	}
 
-	inline void vec_mult_float_s(const float_s* const in, float_s* const out, const float_s scalar, const int len) {
+	inline void vec_scal_mult_float_s(const float_s* const in, float_s* const out, const float_s scalar, const int len) {
 		// if standalone
 		const __m256 scalar_reg_{ _mm256_set1_ps(scalar) };
 		int i{ 0 };
@@ -47,6 +48,21 @@ namespace accelerator {
 		}
 		for (; i < len; i++) {
 			out[i] = in[i] * scalar;
+		}
+	}
+
+	// in_1 cannot be the same as out. in_2 can
+	inline void vec_entrywise_mult_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {
+		// if standalone
+		int i{ 0 };
+		for (; i < len - 8; i += 8) { // with regular avx, we can add 8 at once
+			const __m256 avx_in_1{ _mm256_loadu_ps(&in_1[i]) }; // change type for int or double if needed. use conditional_t
+			const __m256 avx_in_2{ _mm256_loadu_ps(&in_2[i]) };
+			const __m256 avx_result{ _mm256_mul_ps(avx_in_1, avx_in_2) };
+			_mm256_storeu_ps(&out[i], avx_result);
+		}
+		for (; i < len; i++) {
+			out[i] = in_1[i] * in_2[i];
 		}
 	}
 

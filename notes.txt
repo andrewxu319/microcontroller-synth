@@ -4,6 +4,7 @@ to do
 - "control" vs "signal" module?
 - check for available audio devices
 - "active" state for modules
+- nonlinear adsr
 
 use mtd for microcontroller?
 

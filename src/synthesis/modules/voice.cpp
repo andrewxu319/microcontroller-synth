@@ -15,17 +15,15 @@ Voice::Voice()
 void Voice::note_on(const uint8_t note, const uint8_t velocity) {
 	active = true;
 	current_note = note;
-	for (const Module* output : outputs) {
-		((Oscillator*)output)->set_freq(midi::notes[note]); // cant static_cast because of const
-		((Oscillator*)output)->set_gain(static_cast<float_s>(velocity) / 127);
-		((Oscillator*)output)->phase = 0; // this is a TEMPORARY solution to fix popping sound at note_on. fix later with adsr. also pretty sure this only works with sine waves
+	for (Module* output : outputs) {
+		output->note_on(note, velocity);
 	}
 }
 
 void Voice::note_off() {
 	active = false;
 	current_note = -1;
-	for (const Module* output : outputs) {
-		((Oscillator*)output)->set_freq(0.0f);
+	for (Module* output : outputs) {
+		output->note_off(0);
 	}
 }
