@@ -43,25 +43,23 @@ namespace utils {
 		}
 
 		// return: pointer to first segment, length of first segment, pointer to second segment, length of second segment
-		tuple<T*, size_t, T*, size_t> pop_start_with_pointer(const int len) {
+		T* pop_start_with_pointer(const int len) {
 			const size_t old_start{ start };
-			if (start + len <= size) {
+			if (start + len < size) {
 				start += len;
-				return tuple{ &data.data()[old_start], len, nullptr, 0 };
 			}
-			{
-				start = start + len - size;
-				return tuple{ &data.data()[old_start], size - old_start, data.data(), start};
+			else {
+				start += len - size;
 			}
+			return &data.data()[old_start];
 		}
 
 		void push_back(T* source_array, const int len) {
-			if (start >= len) {
-				copy(source_array, source_array + len, data.begin() + start - len);
+			if (start == 0) {
+				copy(source_array, source_array + len, data.end() - len);
 			}
-			else {
-				copy(source_array, source_array + (len - start), data.end() - (len - start));
-				copy(source_array + (len - start), source_array + len, data.begin());
+			else{
+				copy(source_array, source_array + len, data.begin() + start - len);
 			}
 		}
 
