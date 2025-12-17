@@ -15,9 +15,9 @@ using namespace synthesis;
 int main() {
 	// master, voice_manager, and module are initialized in synthesizer.cpp. maybe theres a better way to structure this?
 
+	sound_engine::sound_engine_init();
 	midi_listener::init();
 	midi_listener::open_port(config::midi_port);
-	sound_engine::sound_engine_init();
 
 	synthesis::voice_manager = static_cast<VoiceManager*>(synthesis::add_module(make_unique<VoiceManager>()));
 	Delay* delay{ static_cast<Delay*>(synthesis::add_module(make_unique<Delay>(Delay{}))) };
@@ -73,7 +73,7 @@ int main() {
 	sound_engine::start_stream();
 
 	while (true) {
-		Pa_Sleep(10);
+		Pa_Sleep(10000);
 	}
 
 	midi_listener::close_port();

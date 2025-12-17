@@ -36,7 +36,6 @@ void Oscillator::generate_buf() {
 		}
 
 		phase += phase_increment;
-		//printf("%f\n", *(out_buf + i));
 	}
 
 	accelerator::vec_scal_mult_float_s(out_buf, out_buf, config::buffer_size);

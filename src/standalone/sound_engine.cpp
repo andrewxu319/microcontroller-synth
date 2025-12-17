@@ -1,5 +1,7 @@
 #include "sound_engine.h"
 
+#include <portaudio/pa_win_wasapi.h>
+
 #include <queue>
 
 namespace standalone::sound_engine {
@@ -45,34 +47,45 @@ namespace standalone::sound_engine {
 		pa_check_error(error);
 
 		PaDeviceIndex device{ Pa_GetDefaultOutputDevice() };
-		for (PaDeviceIndex i{ 0 }; i < Pa_GetHostApiCount(); i++)
+		for (PaDeviceIndex i{ 0 }; i < Pa_GetDeviceCount(); i++)
 		{
-			printf("%d\n", Pa_GetHostApiInfo(Pa_GetDeviceInfo(i)->hostApi)->type);
-			if (Pa_GetHostApiInfo(Pa_GetDeviceInfo(i)->hostApi)->type == paDirectSound) {
-				//device = i;
-			}
+			printf("device %d: type %s, name %s\n", i, Pa_GetHostApiInfo(Pa_GetDeviceInfo(i)->hostApi)->name, Pa_GetDeviceInfo(i)->name);
+			//if (Pa_GetHostApiInfo(Pa_GetDeviceInfo(i)->hostApi)->type == paWASAPI) {
+			//	device = i;
+			//}
 		}
+		device = Pa_GetHostApiInfo(Pa_HostApiTypeIdToHostApiIndex(paWASAPI))->defaultOutputDevice;
 		const PaDeviceInfo* device_info{ Pa_GetDeviceInfo(device) };
-		printf("Using audio device %s: host API %d, max channels %d, default latency %f, sample rate %d\n",
+		config::sample_rate = device_info->defaultSampleRate;
+		config::wavetable_path = string("resources\\wavetables\\32_bit\\") + to_string(config::sample_rate) + string("\\");
+		printf("Using audio device %s: index %d, host API %d, max channels %d, default latency %f, sample rate %d\n",
 			device_info->name,
+			device,
 			Pa_GetHostApiInfo(device_info->hostApi)->type,
 			device_info->maxOutputChannels,
 			device_info->defaultLowOutputLatency,
 			device_info->defaultSampleRate
 		);
 
+		PaWasapiStreamInfo wasapi_info{
+			sizeof(PaWasapiStreamInfo),
+			paWASAPI,
+			1,
+			paWinWasapiThreadPriority
+		};
+
 		const PaStreamParameters output_parameters{
 			device, // config::audio_device
 			config::channels,
 			paFloat32, // make switch case or something?
 			config::latency,
-			nullptr 
+			&wasapi_info
 		};
 		error = Pa_OpenStream(
 			&stream,
 			nullptr,
 			&output_parameters,
-			config::sample_rate,
+			device_info->defaultSampleRate,
 			config::actual_buffer_size,
 			0, // flags. clipping on by default
 			&load_buffer,

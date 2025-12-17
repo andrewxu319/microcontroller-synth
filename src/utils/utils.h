@@ -16,16 +16,30 @@ namespace utils {
 	};
 
 	namespace timer {
-		inline std::chrono::steady_clock::time_point start_time{};
+		static std::chrono::steady_clock::time_point start_time{};
+		static long long count{ 0 };
+		static long long total{ 0 };
 
 		inline void start() {
 			start_time = std::chrono::high_resolution_clock::now();
 		}
 
-		inline void end() {
-			auto stop = std::chrono::high_resolution_clock::now();
-			auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start_time);
-			printf("%ld microseconds\n", static_cast<long>(duration.count()));
+		inline void end(const string_view timer_name) {
+			if (count < 100) {
+				count++;
+				return;
+			}
+			if (count < 2100) {
+				auto stop = std::chrono::high_resolution_clock::now();
+				auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start_time);
+				count++;
+				total += duration.count();
+				//printf("%ld microseconds. count: %d\n", static_cast<long>(duration.count()), count);
+			}
+			if (count == 2100) {
+				printf("%s average: %f\n", timer_name, static_cast<double>(total) / 2000);
+				count++;
+			}
 		}
 	}
 }
