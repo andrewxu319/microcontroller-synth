@@ -11,22 +11,21 @@
 namespace synthesis {
 	class Oscillator : public Module {
 	public:
-		double phase; // in wavetable indices
-		float_s freq;  // in hz
-		float_s gain;
 		float_s wavetable[config::wavetable_resolution];
 		Module* gain_mod;
 
 		Oscillator(const string& wavetable_path);
+		void generate_buf() override;
 		void load_wavetable(const string& path);
-		void note_on(const uint8_t note, const uint8_t velocity);
-		void note_off(const uint8_t note);
+		void note_on(const uint8_t note, const uint8_t velocity) override;
+		void note_off() override;
 		void set_freq(const float_s value);
 		void set_gain(const float_s value);
 
 	private:
+		double phase; // in wavetable indices
 		double phase_increment;
-
-		void generate_buf();
+		float_s freq;  // in hz
+		float_s gain;
 	};
 }

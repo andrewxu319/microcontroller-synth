@@ -23,16 +23,16 @@ namespace synthesis {
 		Module(size_t input_limit_);
 		Module(const utils::NoBaseInit); // dummy constructor
 		virtual void generate_buf();
+		void update_destination_bufs() const;
 
 		virtual int add_input(Module* __restrict input, bool add_buf);
-		int add_output(Module* __restrict output, bool add_buf);
+		virtual int add_output(Module* __restrict output, bool add_buf);
 		// implement remove input/output
 
-		virtual void note_on(const uint8_t note, const uint8_t velocity) {};
-		virtual void note_off(const uint8_t note) {};
+		virtual void note_on(const uint8_t note, const uint8_t velocity);
+		virtual void note_off();
 
 	protected:
-		void update_destination_bufs() const;
 		const size_t input_limit;
 
 	private:

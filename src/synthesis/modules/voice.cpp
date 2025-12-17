@@ -15,15 +15,11 @@ Voice::Voice()
 void Voice::note_on(const uint8_t note, const uint8_t velocity) {
 	active = true;
 	current_note = note;
-	for (Module* output : outputs) {
-		output->note_on(note, velocity);
-	}
+	Module::note_on(note, velocity);
 }
 
 void Voice::note_off() {
 	active = false;
 	current_note = -1;
-	for (Module* output : outputs) {
-		output->note_off(0);
-	}
+	Module::note_off();
 }

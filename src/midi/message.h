@@ -14,7 +14,7 @@ namespace midi {
 	};
 
 	struct CcMessage {
-		uint16_t function;
+		uint8_t function;
 		uint8_t channel;
 		uint8_t value;
 	};

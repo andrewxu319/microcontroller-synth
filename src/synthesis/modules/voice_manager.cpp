@@ -11,10 +11,8 @@ using namespace synthesis;
 
 VoiceManager::VoiceManager()
 	: active_voices{},
-	inactive_voices{} {  // initialize queue with a vector
-	for (Module* output : outputs) {
-		inactive_voices.emplace_back(static_cast<Voice*>(output));
-	}
+	inactive_voices{}  // initialize queue with a vector
+{
 }
 
 int VoiceManager::add_output(Voice* output, bool add_buf) {

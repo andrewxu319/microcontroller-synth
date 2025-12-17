@@ -26,21 +26,22 @@ namespace utils {
 			size = size_;
 		}
 
-		void pop_start_into(vector<T>& dest, const typename vector<T>::iterator dest_location_iter, const int len) {
-			if (start + len <= size) {
-				dest.insert(dest_location_iter, make_move_iterator(data.begin() + start), make_move_iterator(data.begin() + start + len));
-				//fill_n(data.begin() + start, len, 0.0f);
-				// instead of wiping the just-read section, keep it undefined? it will be overriden with add_end
-				start += len;
-			}
-			else {
-				dest.insert(dest_location_iter, make_move_iterator(data.begin() + start), make_move_iterator(data.end()));
-				dest.insert(dest_location_iter + (size - start), make_move_iterator(data.begin()), make_move_iterator(data.begin() + (len - (size - start))));
-				//fill_n(data.begin() + start, size - start, 0.0f);
-				//fill_n(data.begin(), len - (size - start), 0.0f);
-				start = start + len - size;
-			}
-		}
+		// // might be broken. fix
+		//void pop_start_into(vector<T>& dest, const typename vector<T>::iterator dest_location_iter, const int len) {
+		//	if (start + len <= size) {
+		//		dest.insert(dest_location_iter, make_move_iterator(data.begin() + start), make_move_iterator(data.begin() + start + len));
+		//		//fill_n(data.begin() + start, len, 0.0f);
+		//		// instead of wiping the just-read section, keep it undefined? it will be overriden with add_end
+		//		start += len;
+		//	}
+		//	else {
+		//		dest.insert(dest_location_iter, make_move_iterator(data.begin() + start), make_move_iterator(data.end()));
+		//		dest.insert(dest_location_iter + (size - start), make_move_iterator(data.begin()), make_move_iterator(data.begin() + (len - (size - start))));
+		//		//fill_n(data.begin() + start, size - start, 0.0f);
+		//		//fill_n(data.begin(), len - (size - start), 0.0f);
+		//		start = start + len - size;
+		//	}
+		//}
 
 		// return: pointer to first segment, length of first segment, pointer to second segment, length of second segment
 		T* pop_start_with_pointer(const int len) {
@@ -56,11 +57,15 @@ namespace utils {
 
 		void push_back(T* source_array, const int len) {
 			if (start == 0) {
-				copy(source_array, source_array + len, data.end() - len);
+				memcpy(&data[size - 1] - len, source_array, len * sizeof(T));
 			}
 			else{
-				copy(source_array, source_array + len, data.begin() + start - len);
+				memcpy(&data[start - len], source_array, len * sizeof(T));
 			}
+		}
+
+		void reset() {
+			fill(data.begin(), data.end(), 0.0f);
 		}
 
 	private:

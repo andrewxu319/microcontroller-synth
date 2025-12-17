@@ -12,17 +12,26 @@ Delay::Delay()
 	feedback{},
 	delay_time{},
 	delay_frames{ static_cast<size_t>(round(delay_time * config::sample_rate / config::buffer_size)) * config::buffer_size }, // round to the nearest buffer_size
-	delay_buffer{ delay_frames }
+	delay_buffer{ delay_frames },
+	half_life{},
+	silent_in_buffers_elapsed{},
+	silence_threshold{}
 {
-	;
 }
 
 void Delay::generate_buf() {
-	// OPTIMIZE MAX_ELEMENT!!!!!
-	if (in_buf->data[0] == EMPTY_BUF_MARKER || *max_element(out_buf, &out_buf[config::buffer_size - 1]) <= 0.0001) {
+	if (in_buf->data[0] == EMPTY_BUF_MARKER) {
 		memset(out_buf, 0.0f, config::buffer_size * sizeof(float_s));
+		if (silent_in_buffers_elapsed > silence_threshold) return;
+		if (silent_in_buffers_elapsed == silence_threshold) {
+			delay_buffer.reset();
+			silent_in_buffers_elapsed++;
+			return;
+		}
+		silent_in_buffers_elapsed++;
 	}
 	else {
+		silent_in_buffers_elapsed = 0;
 		memcpy(out_buf, in_buf->data, config::buffer_size * sizeof(float_s));
 	}
 	if (wet <= 0.0) return;
@@ -41,8 +50,12 @@ void Delay::set_delay_time(double value) {
 	delay_time = value;
 	delay_frames = static_cast<int>(round(delay_time * config::sample_rate / config::buffer_size)) * config::buffer_size; // round to the nearest buffer_size
 	delay_buffer.resize(delay_frames);
+	half_life = delay_time * log(2.0) / log(1.0 / feedback);
+	silence_threshold = half_life * 14 * config::sample_rate / config::buffer_size;
 }
 
 void Delay::set_feedback(float_s value) {
 	feedback = value;
+	half_life = delay_time * log(2.0) / log(1.0 / feedback);
+	silence_threshold = half_life * 14 * config::sample_rate / config::buffer_size;
 }

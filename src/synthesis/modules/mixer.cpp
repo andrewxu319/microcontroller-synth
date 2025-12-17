@@ -25,6 +25,4 @@ void Mixer::generate_buf() {
 	if (is_empty) {
 		out_buf[0] = EMPTY_BUF_MARKER;
 	}
-
-	update_destination_bufs();
 }

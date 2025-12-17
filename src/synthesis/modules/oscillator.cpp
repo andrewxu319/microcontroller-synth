@@ -23,7 +23,7 @@ void Oscillator::generate_buf() {
 	}
 
 	// better way to do this? or just make mono?
-	for (size_t i = 0; i < config::buffer_size; i += 1) {
+	for (size_t i = 0; i < config::buffer_size; i += config::channels) {
 		if (phase >= config::wavetable_resolution) {
 			phase = 0;
 		}
@@ -31,7 +31,7 @@ void Oscillator::generate_buf() {
 		// if lfo, ignore every other sample
 		//*(out_buf + i) = static_cast<float_s>(sin(2.0 * M_PI * (static_cast<double>(freq) / config::sample_rate) * phase));
 		*(out_buf + i) = wavetable[static_cast<size_t>(phase)]; // round?
-		for (size_t j = 1; j < config::channels; j++) {
+		for (size_t j = 1; j <= config::channels; j++) {
 			*(out_buf + i + j) = *(out_buf + i);
 		}
 
@@ -57,13 +57,10 @@ void Oscillator::load_wavetable(const string& path) {
 void Oscillator::note_on(const uint8_t note, const uint8_t velocity) {
 	set_freq(midi::notes[note]); // cant static_cast because of const
 	set_gain(static_cast<float_s>(velocity) / 127);
-	phase = 0; // this is a TEMPORARY solution to fix popping sound at note_on. fix later with adsr. also pretty sure this only works with sine waves
 }
 
-void Oscillator::note_off(const uint8_t note) {
-	if (!gain_mod) {
-		set_freq(0.0f);
-	}
+void Oscillator::note_off() {
+	set_freq(0.0f);
 }
 
 void Oscillator::set_freq(const float_s value) {
@@ -72,7 +69,7 @@ void Oscillator::set_freq(const float_s value) {
 		assert(value >= 20 && value <= 20000);
 	}
 	freq = value;
-	phase_increment = freq * config::wavetable_resolution / 2 / config::sample_rate;
+	phase_increment = freq * config::wavetable_resolution / config::sample_rate;
 }
 
 void Oscillator::set_gain(const float_s value) {

@@ -19,37 +19,58 @@ Envelope::Envelope()
 }
 
 void Envelope::generate_buf() {
-	if (state == EnvelopeState::off) {
-		memset(out_buf, 0.0f, config::buffer_size * sizeof(float_s));
-	}
-
-	for (int i{ 0 }; i < config::buffer_size; i++) {
-		if (t >= state_durations[static_cast<size_t>(state)] && state != EnvelopeState::off && state != EnvelopeState::sustain) {
-			t = 0;
-			state = static_cast<EnvelopeState>(static_cast<size_t>(state) + 1);
-			switch (state) {
-			case EnvelopeState::decay:
-				delta_gain = (sustain - 1.0) / state_durations[static_cast<size_t>(EnvelopeState::decay)];
-				gain = 1.0;
-				break;
-			case EnvelopeState::sustain:
-				delta_gain = 0;
-				gain = sustain;
-				printf("sustain\n");
-				break;
-			case EnvelopeState::off:
-				delta_gain = 0;
-				gain = 0;
-				memset(&out_buf[i], 0.0f, config::buffer_size * sizeof(float_s) - i);
-				break;
-			default:
-				break;
+	int t{ 0 };
+	while (t < config::buffer_size) {
+		switch (state) {
+		case EnvelopeState::attack:
+			for (; t < config::buffer_size; t++) {
+				if (gain >= 1.0) {
+					state = EnvelopeState::decay;
+					//printf("decay");
+					delta_gain = (sustain - 1.0) / state_durations[static_cast<size_t>(EnvelopeState::decay)];
+					gain = 1.0;
+					break;
+				}
+				gain += delta_gain;
+				out_buf[t] = gain;
 			}
+			break;
+		case EnvelopeState::decay:
+			for (; t < config::buffer_size; t++) {
+				if (gain <= sustain) {
+					state = EnvelopeState::sustain;
+					//printf("sustain\n");
+					gain = sustain;
+					break;
+				}
+				gain += delta_gain;
+				out_buf[t] = gain;
+			}
+			break;
+		case EnvelopeState::sustain:
+			for (; t < config::buffer_size; t++) {
+				out_buf[t] = gain;
+			}
+			break;
+		case EnvelopeState::release:
+			for (; t < config::buffer_size; t++) {
+				if (gain <= 0.0) {
+					state = EnvelopeState::off;
+					//printf("off\n");
+					gain = 0.0;
+					Module::note_off();
+					break;
+				}
+				gain += delta_gain;
+				out_buf[t] = gain;
+			}
+			break;
+		case EnvelopeState::off:
+			memset(&out_buf[t], 0.0f, (config::buffer_size - t) * sizeof(float_s));
+			return;
+		default:
+			break;
 		}
-
-		gain += delta_gain;
-		out_buf[i] = gain;
-		t++;
 	}
 }
 
@@ -57,30 +78,36 @@ void Envelope::note_on(const uint8_t note, const uint8_t velocity) {
 	state = EnvelopeState::attack;
 	delta_gain = 1.0 / state_durations[static_cast<size_t>(EnvelopeState::attack)];
 	t = 0;
+	//printf("attack\n");
+	Module::note_on(note, velocity);
 }
 
-void Envelope::note_off(const uint8_t note) {
+void Envelope::note_off() {
 	state = EnvelopeState::release;
 	delta_gain = -sustain / state_durations[static_cast<size_t>(EnvelopeState::release)];
-	t = 0;
+	//printf("release\n");
 }
 
 void Envelope::set_attack(const double value) {
 	attack = value;
 	state_durations[static_cast<size_t>(EnvelopeState::attack)] = value * config::sample_rate;
+	printf("Attack set: %f\n", value);
 }
 
 void Envelope::set_decay(const double value) {
 	decay = value;
 	state_durations[static_cast<size_t>(EnvelopeState::decay)] = value * config::sample_rate;
+	printf("Decay set: %f\n", value);
 }
 
 void Envelope::set_sustain(const double value) {
 	assert(0.0 <= value && value <= 1.0);
 	sustain = value;
+	printf("Sustain set: %f\n", value);
 }
 
 void Envelope::set_release(const double value) {
 	release = value;
 	state_durations[static_cast<size_t>(EnvelopeState::release)] = value * config::sample_rate;
+	printf("Release set: %f\n", value);
 }

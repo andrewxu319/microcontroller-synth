@@ -26,6 +26,7 @@ void Master::generate_buf() {
 
 	for (size_t i{ 0 }; i < modules.size(); i++) {
 		modules[i]->generate_buf();
+		modules[i]->update_destination_bufs();
 	}
 
 	bool is_empty{ true };
@@ -44,15 +45,7 @@ void Master::generate_buf() {
 		memset(out_buf, 0, config::buffer_size * sizeof(float_s));
 	}
 
-	//memset(out_buf, 0.0f, config::buffer_size * sizeof(float_s));
-	//for (const auto& in_buf : in_bufs) {
-	//	if (in_buf.second.data[0] != EMPTY_BUF_MARKER) {
-	//		accelerator::vec_add_float_s(in_buf.second.data, out_buf, out_buf, config::buffer_size);
-	//	}
-	//}
-
-	//utils::
-	// ();
+	//utils::timer::end();
 
 	// clip between -1.0 and 1.0
 }

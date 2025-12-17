@@ -17,5 +17,8 @@ namespace synthesis {
 		double delay_time;
 		size_t delay_frames;
 		utils::CircularArray<float_s> delay_buffer;
+		double half_life;
+		size_t silent_in_buffers_elapsed;
+		size_t silence_threshold;
 	};
 }

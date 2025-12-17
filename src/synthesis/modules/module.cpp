@@ -37,9 +37,11 @@ void Module::generate_buf() {
 	;
 }
 
-void Module::update_destination_bufs() const {
+void Module::update_destination_bufs() const { // needed if more than one output
 	for (Module* output : outputs) {
-		memcpy(output->in_bufs[id].data, out_buf, sizeof(float_s) * config::buffer_size);
+		if (output->in_bufs.count(id) && output->in_bufs[id].data != out_buf) {
+			memcpy(output->in_bufs[id].data, out_buf, sizeof(float_s) * config::buffer_size);
+		}
 	}
 }
 
@@ -67,8 +69,19 @@ int Module::add_output(Module* __restrict output, bool add_buf) {
 		outputs.pop_back();
 		return -1;
 	}
-	if (add_buf && outputs.size() == 1) {
+	if (outputs.size() == 1 && add_buf) {
 		out_buf = outputs[0]->in_bufs[id].data; // store actual output buffer in the first output module. access it w a pointer & edit output module's "input" directly
 	}
 	return 0;
+}
+
+void Module::note_on(const uint8_t note, const uint8_t velocity) {
+	for (Module* output : outputs) {
+		output->note_on(note, velocity);
+	}
+}
+void Module::note_off() {
+	for (Module* output : outputs) {
+		output->note_off();
+	}
 }

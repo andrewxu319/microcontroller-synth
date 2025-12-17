@@ -9,9 +9,9 @@ namespace synthesis {
 	class Envelope : public Modulator {
 	public:
 		Envelope();
-		void generate_buf();
-		void note_on(const uint8_t note, const uint8_t velocity);
-		void note_off(const uint8_t note);
+		void generate_buf() override;
+		void note_on(const uint8_t note, const uint8_t velocity) override;
+		void note_off() override;
 
 		void set_attack(const double value);
 		void set_decay(const double value);

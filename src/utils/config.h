@@ -8,7 +8,7 @@
 
 namespace config {
 	//constexpr float master_vol{ 0.3 };
-	constexpr int channels{ 2 }; // 2 for stereo
+	constexpr int channels{ 1 }; // 2 for stereo
 	constexpr int sample_rate{ 44100 };
 	constexpr int actual_buffer_size{ 1024 };
 	constexpr int buffer_size{ actual_buffer_size * channels }; // doubled if stereo
