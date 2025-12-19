@@ -37,7 +37,7 @@ namespace utils {
 				//printf("%ld microseconds. count: %d\n", static_cast<long>(duration.count()), count);
 			}
 			if (count == 2100) {
-				printf("%s average: %f\n", timer_name, static_cast<double>(total) / 2000);
+				printf("%s average: %f\n", timer_name.data(), static_cast<double>(total) / 2000);
 				count++;
 			}
 		}

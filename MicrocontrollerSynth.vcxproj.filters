@@ -48,9 +48,6 @@
     <ClCompile Include="src\standalone\midi_listener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\synthesis\modules\fx\filter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\synthesis\modules\fx\delay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

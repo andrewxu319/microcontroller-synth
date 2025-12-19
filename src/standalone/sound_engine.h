@@ -26,6 +26,6 @@ namespace standalone::sound_engine {
 		unsigned long buffer_size,
 		const PaStreamCallbackTimeInfo* time_info,
 		PaStreamCallbackFlags status_flags,
-		void* data_
+		void* __restrict data_
 	);
 }

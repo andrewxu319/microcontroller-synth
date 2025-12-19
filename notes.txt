@@ -8,4 +8,4 @@ to do
 
 use mtd for microcontroller?
 
-TODO: MIDI KEYBOARD LATENCY
+let's do mono for now

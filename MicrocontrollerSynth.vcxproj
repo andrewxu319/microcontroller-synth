@@ -168,7 +168,6 @@
     <ClCompile Include="src\standalone\sound_engine.cpp" />
     <ClCompile Include="src\standalone\standalone.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\delay.cpp" />
-    <ClCompile Include="src\synthesis\modules\fx\filter.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\fx.cpp" />
     <ClCompile Include="src\synthesis\modules\master.cpp" />
     <ClCompile Include="src\synthesis\modules\mixer.cpp" />

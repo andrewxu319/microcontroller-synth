@@ -1,7 +1,5 @@
 #include "sound_engine.h"
 
-#include <portaudio/pa_win_wasapi.h>
-
 #include <queue>
 
 namespace standalone::sound_engine {
@@ -54,7 +52,7 @@ namespace standalone::sound_engine {
 			//	device = i;
 			//}
 		}
-		device = Pa_GetHostApiInfo(Pa_HostApiTypeIdToHostApiIndex(paWASAPI))->defaultOutputDevice;
+		device = Pa_GetHostApiInfo(Pa_HostApiTypeIdToHostApiIndex(config::host_api))->defaultOutputDevice;
 		const PaDeviceInfo* device_info{ Pa_GetDeviceInfo(device) };
 		config::sample_rate = device_info->defaultSampleRate;
 		config::wavetable_path = string("resources\\wavetables\\32_bit\\") + to_string(config::sample_rate) + string("\\");
@@ -67,19 +65,11 @@ namespace standalone::sound_engine {
 			device_info->defaultSampleRate
 		);
 
-		PaWasapiStreamInfo wasapi_info{
-			sizeof(PaWasapiStreamInfo),
-			paWASAPI,
-			1,
-			paWinWasapiThreadPriority
-		};
-
 		const PaStreamParameters output_parameters{
 			device, // config::audio_device
 			config::channels,
 			paFloat32, // make switch case or something?
-			config::latency,
-			&wasapi_info
+			config::latency
 		};
 		error = Pa_OpenStream(
 			&stream,

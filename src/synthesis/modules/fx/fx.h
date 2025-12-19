@@ -10,8 +10,8 @@ namespace synthesis {
 		float_s wet;
 
 		Fx();
-		void generate_buf();
-		int add_input(Module* __restrict input, bool add_buf);
+		void generate_buf() override;
+		int add_input(Module* __restrict input, bool add_buf) override;
 
 	protected:
 		utils::array_wrapper<float_s, config::buffer_size>* in_buf; // signal to be processed. there can be other buffers that provide supplementary info. ONLY ONE ALLOWED
