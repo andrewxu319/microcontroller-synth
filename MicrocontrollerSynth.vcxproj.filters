@@ -54,9 +54,6 @@
     <ClCompile Include="src\synthesis\modules\fx\fx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\synthesis\modules\modulator\modulator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\synthesis\modules\modulator\envelope.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -123,9 +120,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\circular_array.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\synthesis\modules\modulator\modulator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\synthesis\modules\modulator\envelope.h">

@@ -4,8 +4,8 @@
 
 using namespace synthesis;
 
-Fx::Fx()
-	: Module::Module(1),
+Fx::Fx(Module** mods_, const uint8_t num_mods)
+	: Module::Module(mods_, num_mods),
 	wet{ 0 },
 	in_buf{}
 {

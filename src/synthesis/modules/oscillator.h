@@ -12,7 +12,10 @@ namespace synthesis {
 	class Oscillator : public Module {
 	public:
 		float_s wavetable[config::wavetable_resolution];
-		Module* gain_mod;
+		Module* mods[1];
+		enum OscillatorMods {
+			GAIN
+		};
 
 		Oscillator(const string& wavetable_path);
 		void generate_buf() override;

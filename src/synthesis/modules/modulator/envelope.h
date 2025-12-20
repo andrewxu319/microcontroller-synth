@@ -1,12 +1,12 @@
 #pragma once
 
-#include "modulator.h"
+#include "synthesis/modules/module.h"
 #include "utils/includes.h"
 
 #include <functional>
 
 namespace synthesis {
-	class Envelope : public Modulator {
+	class Envelope : public Module {
 	public:
 		Envelope();
 		void generate_buf() override;

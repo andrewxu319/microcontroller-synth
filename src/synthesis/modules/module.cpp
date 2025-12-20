@@ -5,20 +5,17 @@
 #include <cassert>
 #include <algorithm>
 #include <iterator>
-#include <climits>
 
 using namespace synthesis;
 
 int Module::last_id{ 0 };
 
-Module::Module() : Module(numeric_limits<size_t>::max()) {}
-
-Module::Module(size_t input_limit)
+Module::Module(Module** mods_, const uint8_t num_mods)
 	: id{ last_id++ }, // Initialize const member `id`
 	inputs{},
 	outputs{},
 	out_buf{}, // Initialize `out_buf` to nullptr
-	input_limit{ input_limit }
+	mods_ptr{ mods_ }
 {
 }
 
@@ -27,7 +24,7 @@ Module::Module(const utils::NoBaseInit)
 	inputs{}, 
 	outputs{},
 	out_buf{}, // Initialize `out_buf` to nullptr
-	input_limit{ numeric_limits<size_t>::max() }
+	mods_ptr{}
 {
 // dummy constructor
 }
@@ -46,11 +43,6 @@ void Module::update_destination_bufs() const { // needed if more than one output
 }
 
 int Module::add_input(Module* __restrict input, bool add_buf) {
-	if (add_buf && in_bufs.size() >= input_limit) {
-		printf("Failed to add input (ID: %d): max %d inputs!\n", input->id, static_cast<int>(input_limit));
-		return -1;
-	}
-
 	inputs.emplace_back(input);
 	if (synthesis::topo_sort() == -1) {
 		printf("Failed to add input (ID: %d): circular in/out!\n", input->id);
@@ -73,6 +65,11 @@ int Module::add_output(Module* __restrict output, bool add_buf) {
 		out_buf = outputs[0]->in_bufs[id].data; // store actual output buffer in the first output module. access it w a pointer & edit output module's "input" directly
 	}
 	return 0;
+}
+
+void Module::attach_mod(Module* __restrict mod, uint8_t target) {
+	assert(find(inputs.begin(), inputs.end(), mod) != inputs.end());
+	mods_ptr[target] = mod;
 }
 
 void Module::note_on(const uint8_t note, const uint8_t velocity) {

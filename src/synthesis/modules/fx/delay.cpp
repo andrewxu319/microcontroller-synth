@@ -8,7 +8,7 @@
 using namespace synthesis;
 
 Delay::Delay()
-	: 
+	: Fx(),
 	feedback{},
 	delay_time{},
 	delay_frames{ static_cast<size_t>(round(delay_time * config::sample_rate / config::buffer_size)) * config::buffer_size }, // round to the nearest buffer_size

@@ -18,9 +18,9 @@ namespace synthesis {
 			// any other messages e.g. modulation bindings should be done in other ways (e.g. have modulation member variables / a map)
 		float_s* out_buf;
 		static constexpr float_s EMPTY_BUF_MARKER{ numeric_limits<float_s>::min()};
+		Module** mods_ptr;
 
-		Module();
-		Module(size_t input_limit_);
+		Module(Module** mods_ = nullptr, const uint8_t num_mods = 0);
 		Module(const utils::NoBaseInit); // dummy constructor
 		virtual void generate_buf();
 		void update_destination_bufs() const;
@@ -28,12 +28,11 @@ namespace synthesis {
 		virtual int add_input(Module* __restrict input, bool add_buf);
 		virtual int add_output(Module* __restrict output, bool add_buf);
 		// implement remove input/output
+		void attach_mod(Module* __restrict mod, uint8_t target);
+		// detach_mod
 
 		virtual void note_on(const uint8_t note, const uint8_t velocity);
 		virtual void note_off();
-
-	protected:
-		const size_t input_limit;
 
 	private:
 		static int last_id;

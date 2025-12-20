@@ -14,7 +14,7 @@ namespace config {
 	constexpr int actual_buffer_size{ 512 };
 	constexpr int buffer_size{ actual_buffer_size * channels }; // doubled if stereo
 	constexpr double latency{ 0.005 }; // seconds. now sure why but this is the lowest it'll go without sounding weird
-	constexpr int num_voices{ 4 };
+	constexpr int num_voices{ 2 };
 	//constexpr float master_vol{ 0.3 };
 
 	inline string wavetable_path{ string("resources\\wavetables\\32_bit\\") + to_string(sample_rate) + string("\\") };
