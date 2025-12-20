@@ -12,9 +12,11 @@ namespace synthesis {
 		Fx(Module** mods_ = nullptr, const uint8_t num_mods = 0);
 		void generate_buf() override;
 		int add_input(Module* __restrict input, bool add_buf) override;
+		void set_audio_input(Module* __restrict audio_input_);
 
 	protected:
-		utils::array_wrapper<float_s, config::buffer_size>* in_buf; // signal to be processed. there can be other buffers that provide supplementary info. ONLY ONE ALLOWED
+		Module* audio_input;
+		utils::array_wrapper<float_s, config::buffer_size>* audio_in_buf; // signal to be processed. there can be other buffers that provide supplementary info. ONLY ONE ALLOWED
 		// add method to change source
 	};
 }

@@ -12,8 +12,7 @@ namespace synthesis {
 	class Oscillator : public Module {
 	public:
 		float_s wavetable[config::wavetable_resolution];
-		Module* mods[1];
-		enum OscillatorMods {
+		enum Mods {
 			GAIN
 		};
 
@@ -26,6 +25,7 @@ namespace synthesis {
 		void set_gain(const float_s value);
 
 	private:
+		Module* mods[1];
 		double phase; // in wavetable indices
 		double phase_increment;
 		float_s freq;  // in hz

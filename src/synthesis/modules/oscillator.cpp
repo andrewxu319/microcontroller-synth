@@ -39,10 +39,10 @@ void Oscillator::generate_buf() {
 		phase += phase_increment;
 	}
 
-	accelerator::vec_scal_mult_float_s(out_buf, out_buf, config::buffer_size);
+	accelerator::vec_scal_mult_float_s(out_buf, out_buf, gain, config::buffer_size);
 
-	if (mods[OscillatorMods::GAIN]) {
-		accelerator::vec_entrywise_mult_float_s(in_bufs[mods[OscillatorMods::GAIN]->id].data, out_buf, out_buf, config::buffer_size);
+	if (mods[Mods::GAIN]) {
+		accelerator::vec_entrywise_mult_float_s(in_bufs[mods[Mods::GAIN]->id].data, out_buf, out_buf, config::buffer_size);
 	}
 
 	return;
@@ -69,7 +69,5 @@ void Oscillator::set_freq(const float_s value) {
 }
 
 void Oscillator::set_gain(const float_s value) {
-	// input checking? i don't think there's a need yet to cap at -1.0 / 1.0
 	gain = value;
-	accelerator::set_scalar(gain);
 }

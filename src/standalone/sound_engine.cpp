@@ -6,8 +6,6 @@ namespace standalone::sound_engine {
 	Master& master{ Master::instance() };
 	const BufferLoaderData data{};
 	PaStream* stream{};
-	queue<midi::NoteMessage> note_messages{};
-	queue<midi::CcMessage> cc_messages{};
 
 	void pa_check_error(const PaError& error) {
 		if (error != paNoError) {

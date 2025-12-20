@@ -20,7 +20,7 @@ Delay::Delay()
 }
 
 void Delay::generate_buf() {
-	if (in_buf->data[0] == EMPTY_BUF_MARKER) {
+	if (audio_in_buf->data[0] == EMPTY_BUF_MARKER) {
 		memset(out_buf, 0.0f, config::buffer_size * sizeof(float_s));
 		if (silent_in_buffers_elapsed > silence_threshold) return;
 		if (silent_in_buffers_elapsed == silence_threshold) {
@@ -32,7 +32,7 @@ void Delay::generate_buf() {
 	}
 	else {
 		silent_in_buffers_elapsed = 0;
-		memcpy(out_buf, in_buf->data, config::buffer_size * sizeof(float_s));
+		memcpy(out_buf, audio_in_buf->data, config::buffer_size * sizeof(float_s));
 	}
 	if (wet <= 0.0) return;
 
