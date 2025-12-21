@@ -10,11 +10,11 @@
 
 using namespace synthesis;
 
-Oscillator::Oscillator(const string& wavetable_path, const bool unipolar)
+Oscillator::Oscillator(const string& waveform_path, const bool unipolar)
 	: Module(mods, sizeof(mods) / sizeof(Module*)),
-	phase { 0 }, freq{ 0 }, wavetable{}, phase_increment{ 0 }, gain{ 1.0 }, velocity_gain{ 1.0 }
+	phase { 0 }, freq{ 0 }, waveform{}, phase_increment{ 0 }, gain{ 1.0 }, velocity_gain{ 1.0 }
 {
-	load_wavetable(wavetable_path, unipolar);
+	load_waveform(waveform_path, unipolar);
 }
 
 void Oscillator::generate_buf() {
@@ -26,13 +26,22 @@ void Oscillator::generate_buf() {
 
 	// better way to do this? or just make mono?
 	for (size_t i = 0; i < config::buffer_size; i += config::channels) {
-		if (phase >= config::wavetable_resolution) {
+		float_s mod_sum_cents{ 0 };
+		for (const Module* module : mods[Mods::PITCH]) {
+			mod_sum_cents += in_bufs[module->id].data[i];
+		}
+		// pitch shift. at audio rate. uses a linear approximation between semitones https://en.wikipedia.org/wiki/Cent_(music)#Piecewise_linear_approximation
+		const int8_t semitones{ static_cast<int8_t>(static_cast<int16_t>(mod_sum_cents) / 100) };
+		const double effective_freq{ (freq * (pow(pow(2, 1.0 / 12.0), semitones)) * (1.0 + 0.0005946 * (mod_sum_cents - semitones * 100))) };
+		phase_increment = effective_freq * config::waveform_resolution / config::sample_rate;
+
+		if (phase >= config::waveform_resolution) {
 			phase = 0;
 		}
 
 		// if lfo, ignore every other sample
 		//*(out_buf + i) = static_cast<float_s>(sin(2.0 * M_PI * (static_cast<double>(freq) / config::sample_rate) * phase));
-		*(out_buf + i) = wavetable[static_cast<size_t>(phase)]; // round?
+		*(out_buf + i) = waveform[static_cast<size_t>(phase)]; // round?
 		for (size_t j = 1; j <= config::channels; j++) {
 			*(out_buf + i + j) = *(out_buf + i);
 		}
@@ -57,13 +66,13 @@ void Oscillator::generate_buf() {
 	return;
 }
 
-void Oscillator::load_wavetable(const string& path, const bool unipolar) {
+void Oscillator::load_waveform(const string& path, const bool unipolar) {
 #ifdef STANDALONE
-	standalone::file_io::read_wav(config::wavetable_path + path + ".wav", wavetable);
+	standalone::file_io::read_wav(config::waveform_path + path + ".wav", waveform);
 #endif
 	if (unipolar) { // already rescaled to -1 to 1
-		accelerator::vec_scal_add_float_s(wavetable, wavetable, 1.0f, config::buffer_size);
-		accelerator::vec_scal_mult_float_s(wavetable, wavetable, 0.5f, config::buffer_size);
+		accelerator::vec_scal_add_float_s(waveform, waveform, 1.0f, config::buffer_size);
+		accelerator::vec_scal_mult_float_s(waveform, waveform, 0.5f, config::buffer_size);
 	}
 }
 
@@ -79,7 +88,7 @@ void Oscillator::note_off() {
 
 void Oscillator::set_freq(const float_s value) {
 	freq = value;
-	phase_increment = freq * config::wavetable_resolution / config::sample_rate;
+	phase_increment = freq * config::waveform_resolution / config::sample_rate;
 }
 
 void Oscillator::set_gain(const float_s value) {

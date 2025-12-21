@@ -36,27 +36,27 @@ namespace synthesis {
 			for (int i{ 0 }; i < config::actual_buffer_size; i += config::control_rate) {
 				int update_params{ false };
 				if (!mods[Mods::CUTOFF].empty()) {
-					double sum{ cutoff };
+					double mod_sum{ cutoff };
 					for (const Module* module : mods[Mods::CUTOFF]) {
-						sum += in_bufs[module->id].data[i];
+						mod_sum += in_bufs[module->id].data[i];
 					}
-					params[1] = sum;
+					params[1] = mod_sum;
 					update_params = true;
 				}
 				if (!mods[Mods::RESONANCE].empty()) {
-					double sum{ resonance };
+					double mod_sum{ resonance };
 					for (const Module* module : mods[Mods::RESONANCE]) {
-						sum += in_bufs[module->id].data[i];
+						mod_sum += in_bufs[module->id].data[i];
 					}
-					params[2] = sum;
+					params[2] = mod_sum;
 					update_params = true;
 				}
 				else if (!mods[Mods::BAND_WIDTH].empty()) {
-					int sum{ band_width };
+					int mod_sum{ band_width };
 					for (const Module* module : mods[Mods::BAND_WIDTH]) {
-						sum += in_bufs[module->id].data[i];
+						mod_sum += in_bufs[module->id].data[i];
 					}
-					params[2] = sum;
+					params[2] = mod_sum;
 					update_params = true;
 				}
 				if (update_params) {

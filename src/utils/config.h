@@ -18,8 +18,8 @@ namespace config {
 	constexpr uint8_t num_voices{ 4 };
 	//constexpr float master_vol{ 0.3 };
 
-	inline string wavetable_path{ string("resources\\wavetables\\32_bit\\") + to_string(sample_rate) + string("\\") };
-	constexpr int wavetable_resolution{ 2048 };
+	inline string waveform_path{ string("resources\\waveforms\\32_bit\\") + to_string(sample_rate) + string("\\") };
+	constexpr int waveform_resolution{ 2048 };
 
 	constexpr uint8_t midi_port{ 0 };
 }

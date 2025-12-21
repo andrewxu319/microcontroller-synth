@@ -2,9 +2,14 @@ switched to c style arrays to avoid having to copy array into the final buffer
 
 to do
 - "control" vs "signal" module?
-- check for available audio devices
 - "active" state for modules
 - nonlinear adsr
+- interpolation for lfos (might not be needed? if low control rate)
+- delay modulations
+- two separate control rates: fast and slow?
+
+to do (features)
+- pitch shift
 
 use mtd for microcontroller?
 

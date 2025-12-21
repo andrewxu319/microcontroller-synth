@@ -9,24 +9,24 @@
 #include <iterator>
 #include <algorithm>
 
-void standalone::file_io::read_wav(const string& path, float_s (&dest)[config::wavetable_resolution]) {
+void standalone::file_io::read_wav(const string& path, float_s (&dest)[config::waveform_resolution]) {
 	AudioFile<float_s> file{};
 	file.load(path);
 
 	if (file.getSampleRate() != config::sample_rate) {
-		printf("Wrong wavetable sample rate!\n");
+		printf("Wrong waveform sample rate!\n");
 	}
 	if (file.getBitDepth() != 32) {
-		printf("Wrong wavetable float type!\n");
+		printf("Wrong waveform float type!\n");
 	}
-	if (file.getNumSamplesPerChannel() != config::wavetable_resolution) {
-		printf("Wrong wavetable resolution!\n");
+	if (file.getNumSamplesPerChannel() != config::waveform_resolution) {
+		printf("Wrong waveform resolution!\n");
 	}
 	if (file.isStereo()) {
 		printf("No stereo!\n");
 	}
 
-	copy(begin(file.samples[0]), end(file.samples[0]), begin(dest)); // [0] because mono wavetables only. 1 channel
+	copy(begin(file.samples[0]), end(file.samples[0]), begin(dest)); // [0] because mono waveforms only. 1 channel
 
 	const float_s max{ *max_element(begin(dest), end(dest)) };
 	if (max != 1.0f) {

@@ -89,11 +89,11 @@ int main() {
 		osc_sawtooth->attach_mod(envelope, Oscillator::Mods::GAIN);
 		//osc_triangle->attach_mod(envelope, Oscillator::Mods::GAIN);
 
-		Oscillator* gain_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine", true))) };
-		gain_lfo->add_output(osc_sawtooth, true);
-		osc_sawtooth->attach_mod(gain_lfo, Oscillator::Mods::GAIN);
-		gain_lfo->set_freq(5);
-		gain_lfo->set_gain(0.2);
+		Oscillator* pitch_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine", true))) };
+		pitch_lfo->add_output(osc_sawtooth, true);
+		osc_sawtooth->attach_mod(pitch_lfo, Oscillator::Mods::PITCH);
+		pitch_lfo->set_freq(4.64);
+		pitch_lfo->set_gain(10);
 
 		Voice* voice{ static_cast<Voice*>(synthesis::add_module(make_unique<Voice>())) };
 		voice->add_output(envelope, false);
