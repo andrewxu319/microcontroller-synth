@@ -10,7 +10,7 @@ using namespace synthesis;
 
 int Module::last_id{ 0 };
 
-Module::Module(Module** mods_, const uint8_t num_mods)
+Module::Module(vector<Module*>* mods_, const uint8_t num_mods)
 	: id{ last_id++ }, // Initialize const member `id`
 	inputs{},
 	outputs{},
@@ -69,7 +69,7 @@ int Module::add_output(Module* __restrict output, bool add_buf) {
 
 void Module::attach_mod(Module* __restrict mod, uint8_t target) {
 	assert(find(inputs.begin(), inputs.end(), mod) != inputs.end());
-	mods_ptr[target] = mod;
+	mods_ptr[target].emplace_back(mod);
 }
 
 void Module::note_on(const uint8_t note, const uint8_t velocity) {

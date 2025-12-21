@@ -6,7 +6,7 @@
 
 using namespace synthesis;
 
-Fx::Fx(Module** mods_, const uint8_t num_mods)
+Fx::Fx(vector<Module*>* mods_, const uint8_t num_mods)
 	: Module::Module(mods_, num_mods),
 	wet{ 0 },
 	audio_input{},
@@ -18,7 +18,9 @@ void Fx::generate_buf() {
 	// call this at the end
 	// first have the specific fx write the wet output into out_buf
 	accelerator::vec_scal_mult_float_s(out_buf, out_buf, wet, config::buffer_size);
-	accelerator::vec_mult_add_float_s(audio_in_buf->data, out_buf, out_buf, 1.0f - wet, config::buffer_size);
+	if (audio_in_buf->data[0] != EMPTY_BUF_MARKER) {
+		accelerator::vec_mult_add_float_s(audio_in_buf->data, out_buf, out_buf, 1.0f - wet, config::buffer_size);
+	}
 }
 
 int Fx::add_input(Module* __restrict input, bool add_buf) {

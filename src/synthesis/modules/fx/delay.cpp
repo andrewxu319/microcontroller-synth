@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <limits>
 
 using namespace synthesis;
 
@@ -56,6 +57,9 @@ void Delay::set_delay_time(double value) {
 
 void Delay::set_feedback(float_s value) {
 	feedback = value;
+	if (value >= 1.0) {
+		half_life = numeric_limits<double>::max();
+	}
 	half_life = delay_time * log(2.0) / log(1.0 / feedback);
 	silence_threshold = half_life * 14 * config::sample_rate / config::buffer_size;
 }

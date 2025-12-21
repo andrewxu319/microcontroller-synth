@@ -9,7 +9,7 @@ namespace synthesis {
 	public:
 		float_s wet;
 
-		Fx(Module** mods_ = nullptr, const uint8_t num_mods = 0);
+		Fx(vector<Module*>* mods_ = nullptr, const uint8_t num_mods = 0);
 		void generate_buf() override;
 		int add_input(Module* __restrict input, bool add_buf) override;
 		void set_audio_input(Module* __restrict audio_input_);

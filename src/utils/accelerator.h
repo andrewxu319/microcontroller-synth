@@ -32,6 +32,20 @@ namespace accelerator {
 		}
 	}
 
+	inline void vec_scal_add_float_s(const float_s* const in, float_s* const out, const float_s scalar, const int len) {
+		// if standalone
+		const __m256 scalar_reg_{ _mm256_set1_ps(scalar) };
+		int i{ 0 };
+		for (; i < len - 8; i += 8) { // with regular avx, we can add 8 at once
+			const __m256 avx_in{ _mm256_loadu_ps(&in[i]) }; // change type for int or double if needed. use conditional_t
+			const __m256 avx_result{ _mm256_add_ps(avx_in, scalar_reg_) };
+			_mm256_storeu_ps(&out[i], avx_result);
+		}
+		for (; i < len; i++) {
+			out[i] = in[i] + scalar;
+		}
+	}
+
 	// in_1 cannot be the same as out. in_2 can
 	inline void vec_entrywise_mult_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {
 		// if standalone

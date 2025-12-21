@@ -21,25 +21,25 @@ int main() {
 	midi_listener::open_port(config::midi_port);
 
 	synthesis::voice_manager = static_cast<VoiceManager*>(synthesis::add_module(make_unique<VoiceManager>()));
-	//Delay* delay{ static_cast<Delay*>(synthesis::add_module(make_unique<Delay>())) };
-	//delay->add_output(master, true);
-	//delay->wet = 0.5;
-	//delay->set_delay_time(0.5);
-	//delay->set_feedback(0.5);
+	Delay* delay{ static_cast<Delay*>(synthesis::add_module(make_unique<Delay>())) };
+	delay->add_output(master, true);
+	delay->wet = 0.5;
+	delay->set_delay_time(0.5);
+	delay->set_feedback(0.5);
 
 	Filter<Dsp::RBJ::Design::LowPass, 1>* filter{ static_cast<Filter<Dsp::RBJ::Design::LowPass, 1>*>(synthesis::add_module(make_unique<Filter<Dsp::RBJ::Design::LowPass, 1>>())) };
-	filter->add_output(master, true);
-	filter->set_cutoff(5000);
+	filter->add_output(delay, true);
+	filter->set_cutoff(2000);
 	filter->set_resonance(1.25);
 	//filter->set_band_width(100);
 	filter->wet = 1.0;
-	//delay->set_audio_input(filter);
+	delay->set_audio_input(filter);
 
 	Oscillator* filter_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 	filter_lfo->add_output(filter, true);
 	filter->attach_mod(filter_lfo, Filter<Dsp::RBJ::Design::LowPass, 1>::Mods::CUTOFF);
 	filter_lfo->set_freq(0.5);
-	filter_lfo->set_gain(3000);
+	filter_lfo->set_gain(300);
 
 	Mixer* mixer{ static_cast<Mixer*>(synthesis::add_module(make_unique<Mixer>())) };
 	mixer->add_output(filter, true);
@@ -50,6 +50,7 @@ int main() {
 		//osc_sine->add_output(mixer, true);
 		Oscillator* osc_sawtooth{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sawtooth"))) };
 		osc_sawtooth->add_output(mixer, true);
+		osc_sawtooth->set_gain(0);
 		//Oscillator* osc_triangle{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("triangle"))) };
 		//osc_triangle->add_output(mixer, true);
 		Envelope* envelope{ static_cast<Envelope*>(synthesis::add_module(make_unique<Envelope>())) };
@@ -85,8 +86,14 @@ int main() {
 			}
 		);
 		//osc_sine->attach_mod(envelope, Oscillator::Mods::GAIN);
-		//osc_sawtooth->attach_mod(envelope, Oscillator::Mods::GAIN);
+		osc_sawtooth->attach_mod(envelope, Oscillator::Mods::GAIN);
 		//osc_triangle->attach_mod(envelope, Oscillator::Mods::GAIN);
+
+		Oscillator* gain_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine", true))) };
+		gain_lfo->add_output(osc_sawtooth, true);
+		osc_sawtooth->attach_mod(gain_lfo, Oscillator::Mods::GAIN);
+		gain_lfo->set_freq(5);
+		gain_lfo->set_gain(0.2);
 
 		Voice* voice{ static_cast<Voice*>(synthesis::add_module(make_unique<Voice>())) };
 		voice->add_output(envelope, false);

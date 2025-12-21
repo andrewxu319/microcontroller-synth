@@ -57,7 +57,7 @@ namespace utils {
 
 		void push_back(T* source_array, const int len) {
 			if (start == 0) {
-				memcpy(&data[size - 1] - len, source_array, len * sizeof(T));
+				memcpy(&data[size - len], source_array, len * sizeof(T));
 			}
 			else{
 				memcpy(&data[start - len], source_array, len * sizeof(T));

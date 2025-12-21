@@ -1,5 +1,7 @@
 #include "file_io.h"
 
+#include "utils/accelerator.h"
+
 #include <AudioFile/AudioFile.h>
 
 #include <fstream>
@@ -28,8 +30,6 @@ void standalone::file_io::read_wav(const string& path, float_s (&dest)[config::w
 
 	const float_s max{ *max_element(begin(dest), end(dest)) };
 	if (max != 1.0f) {
-		for (int i = 0; i < config::wavetable_resolution; i++) {
-			dest[i] /= max;
-		}
+		accelerator::vec_scal_mult_float_s(dest, dest, 1 / max, config::buffer_size);
 	}
 }

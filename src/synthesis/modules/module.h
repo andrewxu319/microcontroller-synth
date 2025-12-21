@@ -18,9 +18,9 @@ namespace synthesis {
 			// any other messages e.g. modulation bindings should be done in other ways (e.g. have modulation member variables / a map)
 		float_s* out_buf;
 		static constexpr float_s EMPTY_BUF_MARKER{ numeric_limits<float_s>::min()};
-		Module** mods_ptr;
+		vector<Module*>* mods_ptr;
 
-		Module(Module** mods_ = nullptr, const uint8_t num_mods = 0);
+		Module(vector<Module*>* mods_ = nullptr, const uint8_t num_mods = 0);
 		Module(const utils::NoBaseInit); // dummy constructor
 		virtual void generate_buf();
 		void update_destination_bufs() const;

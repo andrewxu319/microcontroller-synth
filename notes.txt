@@ -9,3 +9,6 @@ to do
 use mtd for microcontroller?
 
 let's do mono for now
+
+
+um. there seem to be additive modulators and multiplicative modulators

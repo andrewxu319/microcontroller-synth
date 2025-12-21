@@ -10,10 +10,11 @@
 
 using namespace synthesis;
 
-Oscillator::Oscillator(const string& wavetable_path = "zeros")
+Oscillator::Oscillator(const string& wavetable_path, const bool unipolar)
 	: Module(mods, sizeof(mods) / sizeof(Module*)),
-	phase{ 0 }, freq{ 0 }, wavetable{}, phase_increment{ 0 } {
-	load_wavetable(wavetable_path);
+	phase { 0 }, freq{ 0 }, wavetable{}, phase_increment{ 0 }, gain{ 1.0 }, velocity_gain{ 1.0 }
+{
+	load_wavetable(wavetable_path, unipolar);
 }
 
 void Oscillator::generate_buf() {
@@ -39,24 +40,37 @@ void Oscillator::generate_buf() {
 		phase += phase_increment;
 	}
 
-	accelerator::vec_scal_mult_float_s(out_buf, out_buf, gain, config::buffer_size);
-
-	if (mods[Mods::GAIN]) {
-		accelerator::vec_entrywise_mult_float_s(in_bufs[mods[Mods::GAIN]->id].data, out_buf, out_buf, config::buffer_size);
+	if (!mods[Mods::GAIN].empty()) {
+		float_s* effective_gain_buf{ in_bufs[mods[Mods::GAIN][0]->id].data };
+		for (int i{ 1 }; i < mods[Mods::GAIN].size(); i++) {
+			accelerator::vec_add_float_s(in_bufs[mods[Mods::GAIN][i]->id].data, effective_gain_buf, effective_gain_buf, config::buffer_size);
+		}
+		accelerator::vec_scal_add_float_s(effective_gain_buf, effective_gain_buf, gain, config::buffer_size);
+		accelerator::vec_entrywise_mult_float_s(effective_gain_buf, out_buf, out_buf, config::buffer_size);
+		accelerator::vec_scal_mult_float_s(out_buf, out_buf, velocity_gain, config::buffer_size);
 	}
+	else {
+		accelerator::vec_scal_mult_float_s(out_buf, out_buf, gain * velocity_gain, config::buffer_size);
+	}
+
 
 	return;
 }
 
-void Oscillator::load_wavetable(const string& path) {
+void Oscillator::load_wavetable(const string& path, const bool unipolar) {
 #ifdef STANDALONE
 	standalone::file_io::read_wav(config::wavetable_path + path + ".wav", wavetable);
 #endif
+	if (unipolar) { // already rescaled to -1 to 1
+		accelerator::vec_scal_add_float_s(wavetable, wavetable, 1.0f, config::buffer_size);
+		accelerator::vec_scal_mult_float_s(wavetable, wavetable, 0.5f, config::buffer_size);
+	}
 }
 
 void Oscillator::note_on(const uint8_t note, const uint8_t velocity) {
 	set_freq(midi::notes[note]); // cant static_cast because of const
-	set_gain(static_cast<float_s>(velocity) / 127);
+	velocity_gain = static_cast<float_s>(velocity) / 127;
+	phase = 0;
 }
 
 void Oscillator::note_off() {

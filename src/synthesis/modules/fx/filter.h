@@ -15,7 +15,7 @@
 namespace synthesis {
 	template <class Type, int Channels> // must be rbj. inputs can be mono or stereo (eventually)
 	class Filter : public Fx {
-		Module* mods[3]{};
+		vector<Module*> mods[4]{};
 	public:
 		inline Filter()
 			: Fx(mods, sizeof(mods) / sizeof(Module*))
@@ -35,13 +35,28 @@ namespace synthesis {
 
 			for (int i{ 0 }; i < config::actual_buffer_size; i += config::control_rate) {
 				int update_params{ false };
-				if (mods[Mods::CUTOFF]) {
-					params[1] = cutoff + in_bufs[mods[Mods::CUTOFF]->id].data[i];
+				if (!mods[Mods::CUTOFF].empty()) {
+					double sum{ cutoff };
+					for (const Module* module : mods[Mods::CUTOFF]) {
+						sum += in_bufs[module->id].data[i];
+					}
+					params[1] = sum;
 					update_params = true;
-					printf("%f\n", params[1]);
 				}
-				if (mods[Mods::RESONANCE]) {
-					params[2] = cutoff + in_bufs[mods[Mods::RESONANCE]->id].data[i];
+				if (!mods[Mods::RESONANCE].empty()) {
+					double sum{ resonance };
+					for (const Module* module : mods[Mods::RESONANCE]) {
+						sum += in_bufs[module->id].data[i];
+					}
+					params[2] = sum;
+					update_params = true;
+				}
+				else if (!mods[Mods::BAND_WIDTH].empty()) {
+					int sum{ band_width };
+					for (const Module* module : mods[Mods::BAND_WIDTH]) {
+						sum += in_bufs[module->id].data[i];
+					}
+					params[2] = sum;
 					update_params = true;
 				}
 				if (update_params) {
@@ -75,11 +90,12 @@ namespace synthesis {
 		enum Mods {
 			WET,
 			CUTOFF,
-			RESONANCE
+			RESONANCE,
+			BAND_WIDTH
 		};
 
 	private:
-		Dsp::SmoothedFilterDesign<Type, Channels> filter{ 1024 };
+		Dsp::FilterDesign<Type, Channels> filter{};
 		Dsp::Params params{};
 		double cutoff{};
 		int band_width{};
