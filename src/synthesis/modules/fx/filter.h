@@ -6,6 +6,7 @@
 
 #include "utils/includes.h"
 #include "utils/config.h"
+#include "utils/accelerator.h"
 #include "synthesis/modules/fx/fx.h"
 
 #include "dspfilters/Dsp.h"
@@ -15,17 +16,16 @@
 namespace synthesis {
 	template <class Type, int Channels> // must be rbj. inputs can be mono or stereo (eventually)
 	class Filter : public Fx {
-		vector<Module*> mods[4]{};
 	public:
 		inline Filter()
-			: Fx(mods, sizeof(mods) / sizeof(Module*))
+			: Fx(mods, sizeof(mods) / sizeof(vector<Module*>))
 		{
 			params[0] = config::sample_rate;
 			params[1] = 800;
-			params[2] = 1.25;
+			params[2] = 1.0;
 		}
 
-		inline void generate_buf() {
+		inline void generate_buf() override {
 			if (audio_in_buf->data[0] == EMPTY_BUF_MARKER) {
 				out_buf[0] = EMPTY_BUF_MARKER;
 				return;
@@ -36,27 +36,24 @@ namespace synthesis {
 			for (int i{ 0 }; i < config::actual_buffer_size; i += config::control_rate) {
 				int update_params{ false };
 				if (!mods[Mods::CUTOFF].empty()) {
-					double mod_sum{ cutoff };
+					params[1] = cutoff;
 					for (const Module* module : mods[Mods::CUTOFF]) {
-						mod_sum += in_bufs[module->id].data[i];
+						params[1] += in_bufs[module->id].data[i];
 					}
-					params[1] = mod_sum;
 					update_params = true;
 				}
 				if (!mods[Mods::RESONANCE].empty()) {
-					double mod_sum{ resonance };
+					params[2] = resonance;
 					for (const Module* module : mods[Mods::RESONANCE]) {
-						mod_sum += in_bufs[module->id].data[i];
+						params[2] += in_bufs[module->id].data[i];
 					}
-					params[2] = mod_sum;
 					update_params = true;
 				}
 				else if (!mods[Mods::BAND_WIDTH].empty()) {
-					int mod_sum{ band_width };
+					params[2] = band_width;
 					for (const Module* module : mods[Mods::BAND_WIDTH]) {
-						mod_sum += in_bufs[module->id].data[i];
+						band_width += in_bufs[module->id].data[i];
 					}
-					params[2] = mod_sum;
 					update_params = true;
 				}
 				if (update_params) {
@@ -66,7 +63,7 @@ namespace synthesis {
 				filter.process(config::control_rate, data);
 			}
 
-			Fx::generate_buf();
+			mix_dry_wet(Mods::WET);
 		}
 
 		inline void set_cutoff(double value) {
@@ -100,6 +97,7 @@ namespace synthesis {
 		double cutoff{};
 		int band_width{};
 		double resonance{};
+		vector<Module*> mods[4]{};
 	};
 }
 

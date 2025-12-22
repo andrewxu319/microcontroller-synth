@@ -7,6 +7,7 @@ to do
 - interpolation for lfos (might not be needed? if low control rate)
 - delay modulations
 - two separate control rates: fast and slow?
+- weird phase reset problem
 
 to do (features)
 - pitch shift
@@ -17,3 +18,17 @@ let's do mono for now
 
 
 um. there seem to be additive modulators and multiplicative modulators
+
+
+chorus
+10-30ms. modulate delay time with lfo
+
+flanger
+<10ms delay to cause phase interference. modulate delay time with lfo. comb filtering
+feedback: feed some of the delayed signal back into input. can switch polarity of feedback
+
+phaser
+
+
+
+

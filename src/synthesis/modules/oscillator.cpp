@@ -26,14 +26,16 @@ void Oscillator::generate_buf() {
 
 	// better way to do this? or just make mono?
 	for (size_t i = 0; i < config::buffer_size; i += config::channels) {
-		float_s mod_sum_cents{ 0 };
-		for (const Module* module : mods[Mods::PITCH]) {
-			mod_sum_cents += in_bufs[module->id].data[i];
+		if (!mods[Mods::PITCH].empty()) {
+			float_s mod_sum_cents{ 0 };
+			for (const Module* module : mods[Mods::PITCH]) {
+				mod_sum_cents += in_bufs[module->id].data[i];
+			}
+			// pitch shift. at audio rate. uses a linear approximation between semitones https://en.wikipedia.org/wiki/Cent_(music)#Piecewise_linear_approximation
+			const int8_t semitones{ static_cast<int8_t>(static_cast<int16_t>(mod_sum_cents) / 100) };
+			const double effective_freq{ (freq * (pow(pow(2, 1.0 / 12.0), semitones)) * (1.0 + 0.0005946 * (mod_sum_cents - semitones * 100))) };
+			phase_increment = effective_freq * config::waveform_resolution / config::sample_rate;
 		}
-		// pitch shift. at audio rate. uses a linear approximation between semitones https://en.wikipedia.org/wiki/Cent_(music)#Piecewise_linear_approximation
-		const int8_t semitones{ static_cast<int8_t>(static_cast<int16_t>(mod_sum_cents) / 100) };
-		const double effective_freq{ (freq * (pow(pow(2, 1.0 / 12.0), semitones)) * (1.0 + 0.0005946 * (mod_sum_cents - semitones * 100))) };
-		phase_increment = effective_freq * config::waveform_resolution / config::sample_rate;
 
 		if (phase >= config::waveform_resolution) {
 			phase = 0;
@@ -61,7 +63,6 @@ void Oscillator::generate_buf() {
 	else {
 		accelerator::vec_scal_mult_float_s(out_buf, out_buf, gain * velocity_gain, config::buffer_size);
 	}
-
 
 	return;
 }

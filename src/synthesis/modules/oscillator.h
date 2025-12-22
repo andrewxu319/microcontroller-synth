@@ -32,5 +32,7 @@ namespace synthesis {
 		float_s freq;  // in hz
 		float_s gain;
 		float_s velocity_gain;
+		int8_t transpose; // semitones
+		int8_t tune; // cents
 	};
 }

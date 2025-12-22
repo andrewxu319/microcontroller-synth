@@ -169,6 +169,7 @@
     <ClCompile Include="src\standalone\standalone.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\delay.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\fx.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\phaser.cpp" />
     <ClCompile Include="src\synthesis\modules\master.cpp" />
     <ClCompile Include="src\synthesis\modules\mixer.cpp" />
     <ClCompile Include="src\synthesis\modules\modulator\envelope.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="src\synthesis\modules\fx\delay.h" />
     <ClInclude Include="src\synthesis\modules\fx\filter.h" />
     <ClInclude Include="src\synthesis\modules\fx\fx.h" />
+    <ClInclude Include="src\synthesis\modules\fx\phaser.h" />
     <ClInclude Include="src\synthesis\modules\master.h" />
     <ClInclude Include="src\synthesis\modules\mixer.h" />
     <ClInclude Include="src\synthesis\modules\modulator\envelope.h" />

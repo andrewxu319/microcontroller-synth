@@ -44,7 +44,7 @@ void Delay::generate_buf() {
 	//}
 	delay_buffer.push_back(out_buf, config::buffer_size);
 
-	Fx::generate_buf();
+	mix_dry_wet(0); // Mods::WET
 }
 
 void Delay::set_delay_time(double value) {
