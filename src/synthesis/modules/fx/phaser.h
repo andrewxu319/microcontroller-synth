@@ -5,7 +5,6 @@
 #include "utils/includes.h"
 #include "utils/config.h"
 #include "synthesis/modules/fx/fx.h"
-#include "synthesis/modules/oscillator.h"
 
 #include "dspfilters/Dsp.h"
 
@@ -16,17 +15,21 @@ namespace synthesis {
 		void generate_buf() override;
 		void set_stages(const uint8_t value);
 		void set_center_freq(const double value);
+		void set_feedback(const float_s value);
 
 		enum Mods {
 			WET,
-			CENTER_FREQ
+			CENTER_FREQ,
+			FEEDBACK
 		};
 
 	private:
-		vector<Module*> mods[2];
+		vector<Module*> mods[3];
 		vector<Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>> all_pass_filters; // MONO FOR NOW
+		vector<Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>> feedback_filters; // MONO FOR NOW
 		Dsp::Params params;
 		uint8_t stages;
 		uint16_t center;
+		float_s feedback;
 	};
 }

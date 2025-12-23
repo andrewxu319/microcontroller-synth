@@ -51,6 +51,7 @@ namespace standalone::sound_engine {
 			//}
 		}
 		device = Pa_GetHostApiInfo(Pa_HostApiTypeIdToHostApiIndex(config::host_api))->defaultOutputDevice;
+		device = 14;
 		const PaDeviceInfo* device_info{ Pa_GetDeviceInfo(device) };
 		config::sample_rate = device_info->defaultSampleRate;
 		config::waveform_path = string("resources\\waveforms\\32_bit\\") + to_string(config::sample_rate) + string("\\");
