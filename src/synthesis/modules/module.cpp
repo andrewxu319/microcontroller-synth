@@ -1,6 +1,7 @@
 #include "module.h"
 
 #include "synthesis/synthesizer.h"
+#include "utils/accelerator.h"
 
 #include <cassert>
 #include <algorithm>
@@ -80,5 +81,18 @@ void Module::note_on(const uint8_t note, const uint8_t velocity) {
 void Module::note_off() {
 	for (Module* output : outputs) {
 		output->note_off();
+	}
+}
+
+float_s* Module::get_mod_sum(const uint8_t mod) {
+	if (!mods_ptr[mod].empty()) {
+		float_s* mod_sum{ in_bufs[mods_ptr[mod][0]->id].data };
+		for (size_t i{ 1 }; i < mods_ptr[mod].size(); i++) {
+			accelerator::vec_add_float_s(in_bufs[mods_ptr[mod][i]->id].data, mod_sum, mod_sum, config::buffer_size);
+		}
+		return mod_sum;
+	}
+	else {
+		return nullptr;
 	}
 }

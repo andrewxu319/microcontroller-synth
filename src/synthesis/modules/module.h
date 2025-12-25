@@ -24,6 +24,7 @@ namespace synthesis {
 		Module(const utils::NoBaseInit); // dummy constructor
 		virtual void generate_buf();
 		void update_destination_bufs() const;
+		float_s* get_mod_sum(const uint8_t mod);
 
 		virtual int add_input(Module* __restrict input, bool add_buf);
 		virtual int add_output(Module* __restrict output, bool add_buf);

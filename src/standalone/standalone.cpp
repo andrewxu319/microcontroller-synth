@@ -7,6 +7,7 @@
 #include "synthesis/modules/fx/delay.h"
 #include "synthesis/modules//fx/phaser.h"
 #include "synthesis/modules//fx/flanger.h"
+#include "synthesis/modules//fx/chorus.h"
 #include "synthesis/modules/modulator/envelope.h"
 #include "standalone/midi_listener.h"
 
@@ -57,21 +58,34 @@ int main() {
 	//phaser_lfo->add_output(phaser, true);
 	//phaser->attach_mod(phaser_lfo, Phaser::Mods::WET);
 
-	Flanger* flanger{ static_cast<Flanger*>(synthesis::add_module(make_unique<Flanger>())) };
-	flanger->add_output(master, true);
-	flanger->wet = 1.0;
-	flanger->set_offset(6);
+	//Flanger* flanger{ static_cast<Flanger*>(synthesis::add_module(make_unique<Flanger>())) };
+	//flanger->add_output(master, true);
+	//flanger->wet = 1.0;
+	//flanger->set_offset(6);
 
-	Oscillator* flanger_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
-	flanger_lfo->load_waveform("sine");
-	flanger_lfo->set_freq(0.5);
-	flanger_lfo->set_gain(5);
-	flanger_lfo->add_output(flanger, true);
-	flanger->attach_mod(flanger_lfo, Flanger::Mods::OFFSET);
+	//Oscillator* flanger_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
+	//flanger_lfo->load_waveform("sine");
+	//flanger_lfo->set_freq(0.5);
+	//flanger_lfo->set_gain(5);
+	//flanger_lfo->add_output(flanger, true);
+	//flanger->attach_mod(flanger_lfo, Flanger::Mods::OFFSET);
+
+	Chorus* chorus{ static_cast<Chorus*>(synthesis::add_module(make_unique<Chorus>())) };
+	chorus->add_output(master, true);
+	chorus->wet = 1.0;
+	chorus->set_delay(300);
+	chorus->set_voice_count(6);
+
+	//Oscillator* chorus_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
+	//chorus_lfo->load_waveform("sine");
+	//chorus_lfo->set_freq(0.5);
+	//chorus_lfo->set_gain(0);
+	//chorus_lfo->add_output(chorus, true);
+	//chorus->attach_mod(chorus_lfo, Chorus::Mods::DELAY);
 
 	Mixer* mixer{ static_cast<Mixer*>(synthesis::add_module(make_unique<Mixer>())) };
-	mixer->add_output(flanger, true);
-	flanger->set_audio_input(mixer);
+	mixer->add_output(chorus, true);
+	chorus->set_audio_input(mixer);
 
 	for (int i{ 0 }; i < config::num_voices; i++) {
 		//Oscillator* osc_sine{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };

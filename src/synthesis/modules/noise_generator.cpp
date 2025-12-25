@@ -2,6 +2,7 @@
 
 #include "utils/config.h"
 #include "utils/accelerator.h"
+#include "utils/rng.h"
 
 #include <cassert>
 
@@ -16,7 +17,7 @@ NoiseGenerator::NoiseGenerator(const bool unipolar)
 void NoiseGenerator::generate_buf() {
 	// better way to do this? or just make mono?
 	for (size_t i = 0; i < config::buffer_size; i += config::channels) {
-		*(out_buf + i) = rng_dist(rng_engine);
+		*(out_buf + i) = utils::rng_normal(0.0, 0.3333);
 		for (size_t j = 1; j <= config::channels; j++) {
 			*(out_buf + i + j) = *(out_buf + i);
 		}

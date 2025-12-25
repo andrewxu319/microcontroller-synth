@@ -20,7 +20,6 @@ namespace synthesis {
 	private:
 		vector<Module*> mods[2];
 		utils::CircularArray<float_s> memory_buffer;
-		size_t silent_in_buffers_elapsed;
 		size_t offset;
 	};
 }

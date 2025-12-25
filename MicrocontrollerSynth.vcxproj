@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -167,6 +167,7 @@
     <ClCompile Include="src\standalone\midi_listener.cpp" />
     <ClCompile Include="src\standalone\sound_engine.cpp" />
     <ClCompile Include="src\standalone\standalone.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\chorus.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\delay.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\flanger.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\fx.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="src\standalone\file_io.h" />
     <ClInclude Include="src\standalone\midi_listener.h" />
     <ClInclude Include="src\standalone\sound_engine.h" />
+    <ClInclude Include="src\synthesis\modules\fx\chorus.h" />
     <ClInclude Include="src\synthesis\modules\fx\delay.h" />
     <ClInclude Include="src\synthesis\modules\fx\filter.h" />
     <ClInclude Include="src\synthesis\modules\fx\flanger.h" />
@@ -205,6 +207,7 @@
     <ClInclude Include="src\utils\circular_array.h" />
     <ClInclude Include="src\utils\config.h" />
     <ClInclude Include="src\utils\includes.h" />
+    <ClInclude Include="src\utils\rng.h" />
     <ClInclude Include="src\utils\typedefs.h" />
     <ClInclude Include="src\utils\utils.h" />
   </ItemGroup>

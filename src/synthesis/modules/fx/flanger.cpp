@@ -19,7 +19,6 @@ void Flanger::generate_buf() {
 		return;
 	}
 
-	silent_in_buffers_elapsed = 0;
 	memcpy(out_buf, audio_in_buf->data, config::buffer_size * sizeof(float_s));
 
 	if (wet <= 0.0) return;
