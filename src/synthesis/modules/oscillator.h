@@ -24,9 +24,10 @@ namespace synthesis {
 		void note_off() override;
 		void set_freq(const float_s value);
 		void set_gain(const float_s value);
+		void set_phase(const double value);
 
 	private:
-		vector<Module*> mods[2];
+		vector<float_s*> mods[2];
 		double phase; // in waveform indices
 		double phase_increment;
 		float_s freq;  // in hz

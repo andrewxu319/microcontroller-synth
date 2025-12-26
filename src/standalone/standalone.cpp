@@ -40,7 +40,7 @@ int main() {
 
 	//Oscillator* filter_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 	//filter_lfo->add_output(filter, true);
-	//filter->attach_mod(filter_lfo, Filter<Dsp::RBJ::Design::LowPass, 1>::Mods::WET);
+	//filter->attach_mod(filter_lfo->out_buf, Filter<Dsp::RBJ::Design::LowPass, 1>::Mods::WET);
 	//filter_lfo->set_freq(0.5);
 	//filter_lfo->set_gain(0.5);
 
@@ -56,7 +56,7 @@ int main() {
 	//phaser_lfo->set_freq(0.5);
 	//phaser_lfo->set_gain(0.5);
 	//phaser_lfo->add_output(phaser, true);
-	//phaser->attach_mod(phaser_lfo, Phaser::Mods::WET);
+	//phaser->attach_mod(phaser_lfo->out_buf, Phaser::Mods::WET);
 
 	//Flanger* flanger{ static_cast<Flanger*>(synthesis::add_module(make_unique<Flanger>())) };
 	//flanger->add_output(master, true);
@@ -68,7 +68,7 @@ int main() {
 	//flanger_lfo->set_freq(0.5);
 	//flanger_lfo->set_gain(5);
 	//flanger_lfo->add_output(flanger, true);
-	//flanger->attach_mod(flanger_lfo, Flanger::Mods::OFFSET);
+	//flanger->attach_mod(flanger_lfo->out_buf, Flanger::Mods::OFFSET);
 
 	Chorus* chorus{ static_cast<Chorus*>(synthesis::add_module(make_unique<Chorus>())) };
 	chorus->add_output(master, true);
@@ -76,12 +76,12 @@ int main() {
 	chorus->set_delay(300);
 	chorus->set_voice_count(6);
 
-	//Oscillator* chorus_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
-	//chorus_lfo->load_waveform("sine");
-	//chorus_lfo->set_freq(0.5);
-	//chorus_lfo->set_gain(0);
-	//chorus_lfo->add_output(chorus, true);
-	//chorus->attach_mod(chorus_lfo, Chorus::Mods::DELAY);
+	Oscillator* chorus_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
+	chorus_lfo->load_waveform("sine");
+	chorus_lfo->set_freq(1);
+	chorus_lfo->set_gain(0.5);
+	chorus_lfo->add_output(chorus, true);
+	chorus->attach_mod(chorus_lfo->out_buf, Chorus::Mods::FREQ_RANGE);
 
 	Mixer* mixer{ static_cast<Mixer*>(synthesis::add_module(make_unique<Mixer>())) };
 	mixer->add_output(chorus, true);
@@ -128,13 +128,13 @@ int main() {
 				target->set_release(0.5 * pow(2, 0.0181102362 * x) - 0.499);
 			}
 		);
-		//osc_sine->attach_mod(envelope, Oscillator::Mods::GAIN);
-		osc_sawtooth->attach_mod(envelope, Oscillator::Mods::GAIN);
-		//osc_triangle->attach_mod(envelope, Oscillator::Mods::GAIN);
+		//osc_sine->attach_mod(envelope->out_buf, Oscillator::Mods::GAIN);
+		osc_sawtooth->attach_mod(envelope->out_buf, Oscillator::Mods::GAIN);
+		//osc_triangle->attach_mod(envelope->out_buf, Oscillator::Mods::GAIN);
 
 		//Oscillator* pitch_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine", true))) };
 		//pitch_lfo->add_output(osc_sawtooth, true);
-		//osc_sawtooth->attach_mod(pitch_lfo, Oscillator::Mods::PITCH);
+		//osc_sawtooth->attach_mod(pitch_lfo->out_buf, Oscillator::Mods::PITCH);
 		//pitch_lfo->set_freq(4.64);
 		//pitch_lfo->set_gain(10);
 

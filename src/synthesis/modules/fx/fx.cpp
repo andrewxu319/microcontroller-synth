@@ -6,7 +6,7 @@
 
 using namespace synthesis;
 
-Fx::Fx(vector<Module*>* mods_, const uint8_t num_mods)
+Fx::Fx(vector<float_s*>* mods_, const uint8_t num_mods)
 	: Module::Module(mods_, num_mods),
 	wet{ 0 },
 	audio_input{},
@@ -22,9 +22,9 @@ void Fx::mix_dry_wet(const uint8_t wet_mod) {
 		}
 	}
 	else {
-		float_s* effective_wet_buf{ in_bufs[mods_ptr[wet_mod][0]->id].data };
+		float_s* effective_wet_buf{ (*mods_ptr)[0] };
 		for (int i{ 1 }; i < mods_ptr[wet_mod].size(); i++) {
-			accelerator::vec_add_float_s(in_bufs[mods_ptr[wet_mod][i]->id].data, effective_wet_buf, effective_wet_buf, config::buffer_size);
+			accelerator::vec_add_float_s((*mods_ptr)[i], effective_wet_buf, effective_wet_buf, config::buffer_size);
 		}
 		accelerator::vec_scal_add_float_s(effective_wet_buf, effective_wet_buf, wet, config::buffer_size);
 		accelerator::vec_entrywise_mult_float_s(effective_wet_buf, out_buf, out_buf, config::buffer_size);

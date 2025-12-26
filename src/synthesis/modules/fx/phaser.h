@@ -24,7 +24,7 @@ namespace synthesis {
 		};
 
 	private:
-		vector<Module*> mods[3];
+		vector<float_s*> mods[3];
 		vector<Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>> all_pass_filters; // MONO FOR NOW
 		vector<Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>> feedback_filters; // MONO FOR NOW
 		Dsp::Params params;

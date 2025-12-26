@@ -11,7 +11,7 @@ using namespace synthesis;
 
 int Module::last_id{ 0 };
 
-Module::Module(vector<Module*>* mods_, const uint8_t num_mods)
+Module::Module(vector<float*>* mods_, const uint8_t num_mods)
 	: id{ last_id++ }, // Initialize const member `id`
 	inputs{},
 	outputs{},
@@ -68,8 +68,18 @@ int Module::add_output(Module* __restrict output, bool add_buf) {
 	return 0;
 }
 
-void Module::attach_mod(Module* __restrict mod, uint8_t target) {
-	assert(find(inputs.begin(), inputs.end(), mod) != inputs.end());
+void Module::attach_mod(float_s* __restrict mod, uint8_t target) {
+	// // turning this off because chorus effect requires mod buffers that are not out_buf's
+	//bool found{ false };
+	//for (const Module* input : inputs) {
+	//	if (mod == input->out_buf) {
+	//		found = true;
+	//	}
+	//}
+	//if (!found) {
+	//	printf("Invalid modulator: not an input!\n");
+	//}
+
 	mods_ptr[target].emplace_back(mod);
 }
 
@@ -84,11 +94,11 @@ void Module::note_off() {
 	}
 }
 
-float_s* Module::get_mod_sum(const uint8_t mod) {
-	if (!mods_ptr[mod].empty()) {
-		float_s* mod_sum{ in_bufs[mods_ptr[mod][0]->id].data };
-		for (size_t i{ 1 }; i < mods_ptr[mod].size(); i++) {
-			accelerator::vec_add_float_s(in_bufs[mods_ptr[mod][i]->id].data, mod_sum, mod_sum, config::buffer_size);
+float_s* Module::sum_mods(const uint8_t target) {
+	if (!mods_ptr[target].empty()) {
+		float_s* mod_sum{ mods_ptr[target][0] };
+		for (size_t i{ 1 }; i < mods_ptr[target].size(); i++) {
+			accelerator::vec_add_float_s(mods_ptr[target][i], mod_sum, mod_sum, config::buffer_size);
 		}
 		return mod_sum;
 	}

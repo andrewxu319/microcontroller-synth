@@ -11,17 +11,15 @@
 namespace synthesis {
 	class NoiseGenerator : public Module {
 	public:
-		float_s waveform[config::waveform_resolution];
 		enum Mods {
 			GAIN
 		};
 
 		NoiseGenerator(const bool unipolar = false);
 		void generate_buf() override;
-		void load_waveform(const string& path, const bool unipolar = false);
 
 	private:
-		vector<Module*> mods[1];
+		vector<float_s*> mods[1];
 		float_s gain;
 	};
 }

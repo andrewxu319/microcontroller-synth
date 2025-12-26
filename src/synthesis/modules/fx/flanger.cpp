@@ -5,7 +5,7 @@
 using namespace synthesis;
 
 Flanger::Flanger()
-	: Fx(mods, sizeof(mods) / sizeof(vector<Module*>)),
+	: Fx(mods, sizeof(mods) / sizeof(vector<float_s*>)),
 	memory_buffer{ 5 * config::buffer_size },
 	offset{}
 {
@@ -32,10 +32,7 @@ void Flanger::generate_buf() {
 		accelerator::vec_add_float_s(get<2>(subarray_ptrs), out_buf + get<1>(subarray_ptrs), out_buf + get<1>(subarray_ptrs), get<3>(subarray_ptrs));
 	}
 	else {
-		float_s* effective_offset{ in_bufs[mods[Mods::OFFSET][0]->id].data };
-		for (size_t i{ 1 }; i < mods[Mods::OFFSET].size(); i++) {
-			accelerator::vec_add_float_s(in_bufs[mods[Mods::OFFSET][i]->id].data, effective_offset, effective_offset, config::buffer_size);
-		}
+		float_s* effective_offset{ sum_mods(Mods::OFFSET)};
 		accelerator::vec_scal_add_float_s(effective_offset, effective_offset, offset, config::buffer_size);
 		//for (size_t i{ 0 }; i < config::buffer_size; i++) {
 		//	out_buf[i] += memory_buffer.get(memory_buffer.size - config::buffer_size + i - effective_offset[i]);

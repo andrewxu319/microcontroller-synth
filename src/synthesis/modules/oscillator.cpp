@@ -11,7 +11,7 @@
 using namespace synthesis;
 
 Oscillator::Oscillator(const string& waveform_path, const bool unipolar)
-	: Module(mods, sizeof(mods) / sizeof(Module*)),
+	: Module(mods, sizeof(mods) / sizeof(vector<float_s*>)),
 	phase { 0 }, freq{ 0 }, waveform{}, phase_increment{ 0 }, gain{ 1.0 }, velocity_gain{ 1.0 }
 {
 	load_waveform(waveform_path, unipolar);
@@ -28,8 +28,8 @@ void Oscillator::generate_buf() {
 	for (size_t i = 0; i < config::buffer_size; i += config::channels) {
 		if (!mods[Mods::PITCH].empty()) {
 			float_s mod_sum_cents{ 0 };
-			for (const Module* module : mods[Mods::PITCH]) {
-				mod_sum_cents += in_bufs[module->id].data[i];
+			for (const float_s* mod : mods[Mods::PITCH]) {
+				mod_sum_cents += mod[i];
 			}
 			// pitch shift. at audio rate. uses a linear approximation between semitones https://en.wikipedia.org/wiki/Cent_(music)#Piecewise_linear_approximation
 			const int8_t semitones{ static_cast<int8_t>(static_cast<int16_t>(mod_sum_cents) / 100) };
@@ -52,10 +52,7 @@ void Oscillator::generate_buf() {
 	}
 
 	if (!mods[Mods::GAIN].empty()) {
-		float_s* effective_gain_buf{ in_bufs[mods[Mods::GAIN][0]->id].data };
-		for (int i{ 1 }; i < mods[Mods::GAIN].size(); i++) {
-			accelerator::vec_add_float_s(in_bufs[mods[Mods::GAIN][i]->id].data, effective_gain_buf, effective_gain_buf, config::buffer_size);
-		}
+		float_s* effective_gain_buf{ sum_mods(Mods::GAIN) };
 		accelerator::vec_scal_add_float_s(effective_gain_buf, effective_gain_buf, gain, config::buffer_size);
 		accelerator::vec_entrywise_mult_float_s(effective_gain_buf, out_buf, out_buf, config::buffer_size);
 		accelerator::vec_scal_mult_float_s(out_buf, out_buf, velocity_gain, config::buffer_size);
@@ -94,4 +91,9 @@ void Oscillator::set_freq(const float_s value) {
 
 void Oscillator::set_gain(const float_s value) {
 	gain = value;
+}
+
+void Oscillator::set_phase(const double value) {
+	assert(value >= 0.0 && value <= 1.0);
+	phase = value * config::waveform_resolution;
 }

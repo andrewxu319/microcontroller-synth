@@ -8,6 +8,7 @@ to do
 - delay modulations
 - two separate control rates: fast and slow?
 - weird phase reset problem
+- ELIMINATE IN_BUFS. use mods and audio_in_buf instead
 
 to do (features)
 - pitch shift

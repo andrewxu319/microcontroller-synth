@@ -7,7 +7,7 @@
 using namespace synthesis;
 
 Phaser::Phaser()
-	: Fx(mods, sizeof(mods) / sizeof(vector<Module*>)),
+	: Fx(mods, sizeof(mods) / sizeof(vector<float_s*>)),
 	all_pass_filters{ Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>{} },
 	feedback_filters{ Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>{} },
 	params{},
@@ -28,13 +28,11 @@ void Phaser::generate_buf() {
 	}
 
 	memcpy(out_buf, audio_in_buf->data, config::buffer_size * sizeof(float_s));
+	float_s* effective_center{ sum_mods(Mods::CENTER_FREQ) };
 
 	for (int i{ 0 }; i < config::actual_buffer_size; i += config::control_rate) {
-		if (!mods[Mods::CENTER_FREQ].empty()) {
-			params[1] = center;
-			for (const Module* module : mods[Mods::CENTER_FREQ]) {
-				params[1] += in_bufs[module->id].data[i];
-			}
+		if (effective_center) {
+			params[1] = center + effective_center[i];
 			for (int j{ 0 }; j < stages; j++) {
 				all_pass_filters[j].setParams(params);
 			}

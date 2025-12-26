@@ -18,7 +18,7 @@ namespace synthesis {
 		};
 
 	private:
-		vector<Module*> mods[2];
+		vector<float_s*> mods[2];
 		utils::CircularArray<float_s> memory_buffer;
 		size_t offset;
 	};

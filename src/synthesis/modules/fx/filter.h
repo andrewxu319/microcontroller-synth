@@ -18,7 +18,7 @@ namespace synthesis {
 	class Filter : public Fx {
 	public:
 		inline Filter()
-			: Fx(mods, sizeof(mods) / sizeof(vector<Module*>))
+			: Fx(mods, sizeof(mods) / sizeof(vector<float_s*>))
 		{
 			params[0] = config::sample_rate;
 			params[1] = 800;
@@ -32,28 +32,23 @@ namespace synthesis {
 			}
 
 			memcpy(out_buf, audio_in_buf->data, config::buffer_size * sizeof(float_s));
+			
+			float_s* effective_cutoff{ sum_mods(Mods::CUTOFF) };
+			float_s* effective_resonance{ sum_mods(Mods::RESONANCE) };
+			float_s* effective_band_width{ sum_mods(Mods::BAND_WIDTH) };
 
 			for (int i{ 0 }; i < config::actual_buffer_size; i += config::control_rate) {
 				int update_params{ false };
-				if (!mods[Mods::CUTOFF].empty()) {
-					params[1] = cutoff;
-					for (const Module* module : mods[Mods::CUTOFF]) {
-						params[1] += in_bufs[module->id].data[i];
-					}
+				if (effective_cutoff) {
+					params[1] = cutoff + effective_cutoff[i];
 					update_params = true;
 				}
-				if (!mods[Mods::RESONANCE].empty()) {
-					params[2] = resonance;
-					for (const Module* module : mods[Mods::RESONANCE]) {
-						params[2] += in_bufs[module->id].data[i];
-					}
+				if (effective_resonance) {
+					params[2] = resonance + effective_resonance[i];
 					update_params = true;
 				}
-				else if (!mods[Mods::BAND_WIDTH].empty()) {
-					params[2] = band_width;
-					for (const Module* module : mods[Mods::BAND_WIDTH]) {
-						band_width += in_bufs[module->id].data[i];
-					}
+				if (effective_band_width) {
+					params[2] = band_width + effective_band_width[i];
 					update_params = true;
 				}
 				if (update_params) {
@@ -97,7 +92,7 @@ namespace synthesis {
 		double cutoff{};
 		int band_width{};
 		double resonance{};
-		vector<Module*> mods[4]{};
+		vector<float_s*> mods[4]{};
 	};
 }
 

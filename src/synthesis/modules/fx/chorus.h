@@ -13,7 +13,7 @@ namespace synthesis {
 		void generate_buf() override;
 		void set_delay(const double value);
 		void set_voice_count(const uint8_t value);
-		void attach_mod(Module* __restrict mod, uint8_t target);
+		void attach_mod(float_s* __restrict mod, uint8_t target);
 
 		enum Mods {
 			WET,
@@ -25,9 +25,16 @@ namespace synthesis {
 		};
 
 	private:
-		vector<Module*> mods[6];
+		struct ChorusVoice {
+			unique_ptr<Oscillator> lfo;
+			float_s* effective_delay;
+			float_s lfo_gain_offset[config::buffer_size];
+			float_s lfo_freq_offset[config::buffer_size];
+		};
+
+		vector<float_s*> mods[6];
 		utils::CircularArray<float_s> memory_buffer;
-		vector<Oscillator> lfos; // delay, detune
+		vector<ChorusVoice> voices;
 		uint8_t num_voices;
 		double range_proportion_to_increment;
 	public:
