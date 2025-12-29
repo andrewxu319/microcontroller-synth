@@ -24,39 +24,44 @@ int main() {
 	midi_listener::open_port(config::midi_port);
 
 	synthesis::voice_manager = static_cast<VoiceManager*>(synthesis::add_module(make_unique<VoiceManager>()));
-	//Delay* delay{ static_cast<Delay*>(synthesis::add_module(make_unique<Delay>())) };
-	//delay->add_output(master, true);
-	//delay->wet = 0.5;
-	//delay->set_delay_time(0.5);
-	//delay->set_feedback(0.5);
 
-	//Filter<Dsp::RBJ::Design::LowPass, 1>* filter{ static_cast<Filter<Dsp::RBJ::Design::LowPass, 1>*>(synthesis::add_module(make_unique<Filter<Dsp::RBJ::Design::LowPass, 1>>())) };
-	//filter->add_output(master, true);
-	//filter->set_cutoff(20);
-	//filter->set_resonance(1.25);
-	////filter->set_band_width(100);
-	//filter->wet = 1.0;
-	////delay->set_audio_input(filter);
+	Delay* delay{ static_cast<Delay*>(synthesis::add_module(make_unique<Delay>())) };
+	delay->add_output(master, Master::BufTypes::AUDIO);
+	delay->wet = 0.5;
+	delay->set_delay_time(0.5);
+	delay->set_feedback(0.5);
+
+	//Oscillator* delay_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
+	//delay_lfo->add_output(delay, true);
+	//delay->attach_mod(delay_lfo->get_out_buf(), Delay::BufTypes::FEEDBACK);
+	//delay_lfo->set_freq(1);
+	//delay_lfo->set_gain(0.25);
+
+	Filter<Dsp::RBJ::Design::LowPass, 1>* filter{ static_cast<Filter<Dsp::RBJ::Design::LowPass, 1>*>(synthesis::add_module(make_unique<Filter<Dsp::RBJ::Design::LowPass, 1>>())) };
+	filter->add_output(delay, Delay::BufTypes::AUDIO);
+	filter->set_cutoff(2000);
+	filter->set_resonance(1.25);
+	//filter->set_band_width(100);
+	filter->wet = 1.0;
 
 	//Oscillator* filter_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 	//filter_lfo->add_output(filter, true);
-	//filter->attach_mod(filter_lfo->out_buf, Filter<Dsp::RBJ::Design::LowPass, 1>::Mods::WET);
+	//filter->attach_mod(filter_lfo->get_out_buf(), Filter<Dsp::RBJ::Design::LowPass, 1>::BufTypes::WET);
 	//filter_lfo->set_freq(0.5);
 	//filter_lfo->set_gain(0.5);
 
-	//Phaser* phaser{ static_cast<Phaser*>(synthesis::add_module(make_unique<Phaser>())) };
-	//phaser->add_output(master, true);
-	//phaser->wet = 0.5;
-	//phaser->set_center_freq(1000);
-	//phaser->set_stages(12);
-	//phaser->set_feedback(0.0);
+	Phaser* phaser{ static_cast<Phaser*>(synthesis::add_module(make_unique<Phaser>())) };
+	phaser->wet = 0.5;
+	phaser->set_center_freq(1000);
+	phaser->set_stages(12);
+	phaser->set_feedback(0.0);
+	phaser->add_output(filter, Filter<Dsp::RBJ::Design::LowPass, 1>::BufTypes::AUDIO);
 
-	//Oscillator* phaser_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
-	//phaser_lfo->load_waveform("sine");
-	//phaser_lfo->set_freq(0.5);
-	//phaser_lfo->set_gain(0.5);
-	//phaser_lfo->add_output(phaser, true);
-	//phaser->attach_mod(phaser_lfo->out_buf, Phaser::Mods::WET);
+	Oscillator* phaser_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
+	phaser_lfo->load_waveform("sine");
+	phaser_lfo->set_freq(0.5);
+	phaser_lfo->set_gain(0.5);
+	phaser_lfo->add_output(phaser, Phaser::BufTypes::WET);
 
 	//Flanger* flanger{ static_cast<Flanger*>(synthesis::add_module(make_unique<Flanger>())) };
 	//flanger->add_output(master, true);
@@ -68,37 +73,35 @@ int main() {
 	//flanger_lfo->set_freq(0.5);
 	//flanger_lfo->set_gain(5);
 	//flanger_lfo->add_output(flanger, true);
-	//flanger->attach_mod(flanger_lfo->out_buf, Flanger::Mods::OFFSET);
+	//flanger->attach_mod(flanger_lfo->get_out_buf(), Flanger::BufTypes::OFFSET);
 
 	Chorus* chorus{ static_cast<Chorus*>(synthesis::add_module(make_unique<Chorus>())) };
-	chorus->add_output(master, true);
 	chorus->wet = 1.0;
-	chorus->set_delay(300);
+	chorus->set_delay(30);
 	chorus->set_voice_count(6);
+	chorus->add_output(phaser, Phaser::BufTypes::AUDIO);
 
 	Oscillator* chorus_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 	chorus_lfo->load_waveform("sine");
 	chorus_lfo->set_freq(1);
 	chorus_lfo->set_gain(0.5);
-	chorus_lfo->add_output(chorus, true);
-	chorus->attach_mod(chorus_lfo->out_buf, Chorus::Mods::FREQ_RANGE);
+	chorus_lfo->add_output(chorus, Chorus::BufTypes::FREQ_RANGE);
 
 	Mixer* mixer{ static_cast<Mixer*>(synthesis::add_module(make_unique<Mixer>())) };
-	mixer->add_output(chorus, true);
-	chorus->set_audio_input(mixer);
+	mixer->add_output(chorus, Chorus::BufTypes::AUDIO);
 
 	for (int i{ 0 }; i < config::num_voices; i++) {
 		//Oscillator* osc_sine{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 		//osc_sine->add_output(mixer, true);
 		//osc_sine->set_gain(0);
 		Oscillator* osc_sawtooth{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sawtooth"))) };
-		osc_sawtooth->add_output(mixer, true);
+		osc_sawtooth->add_output(mixer, Mixer::BufTypes::AUDIO);
 		osc_sawtooth->set_gain(0);
 		//Oscillator* osc_triangle{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("triangle"))) };
 		//osc_triangle->add_output(mixer, true);
 		Envelope* envelope{ static_cast<Envelope*>(synthesis::add_module(make_unique<Envelope>())) };
 		//envelope->add_output(osc_sine, true);
-		envelope->add_output(osc_sawtooth, true);
+		envelope->add_output(osc_sawtooth, Oscillator::BufTypes::GAIN);
 		//envelope->add_output(osc_triangle, true);
 		envelope->set_attack(0.3);
 		envelope->set_decay(0.3);
@@ -128,19 +131,16 @@ int main() {
 				target->set_release(0.5 * pow(2, 0.0181102362 * x) - 0.499);
 			}
 		);
-		//osc_sine->attach_mod(envelope->out_buf, Oscillator::Mods::GAIN);
-		osc_sawtooth->attach_mod(envelope->out_buf, Oscillator::Mods::GAIN);
-		//osc_triangle->attach_mod(envelope->out_buf, Oscillator::Mods::GAIN);
 
 		//Oscillator* pitch_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine", true))) };
 		//pitch_lfo->add_output(osc_sawtooth, true);
-		//osc_sawtooth->attach_mod(pitch_lfo->out_buf, Oscillator::Mods::PITCH);
+		//osc_sawtooth->attach_mod(pitch_lfo->get_out_buf(), Oscillator::BufTypes::PITCH);
 		//pitch_lfo->set_freq(4.64);
 		//pitch_lfo->set_gain(10);
 
 		Voice* voice{ static_cast<Voice*>(synthesis::add_module(make_unique<Voice>())) };
-		voice->add_output(envelope, false);
-		synthesis::voice_manager->add_output(voice, false);
+		voice->add_output(envelope);
+		synthesis::voice_manager->add_output(voice);
 	}
 
 	sound_engine::start_stream();

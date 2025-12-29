@@ -9,25 +9,16 @@
 
 using namespace synthesis;
 
-int Module::last_id{ 0 };
+int Module::last_id{ -1 }; // master is -1
+const float_s Module::empty_buf[config::buffer_size] = { 0.0 };
 
-Module::Module(vector<float*>* mods_, const uint8_t num_mods)
+Module::Module(vector<const float*>* in_bufs_)
 	: id{ last_id++ }, // Initialize const member `id`
 	inputs{},
 	outputs{},
-	out_buf{}, // Initialize `out_buf` to nullptr
-	mods_ptr{ mods_ }
+	in_bufs{ in_bufs_ },
+	out_buf{} // Initialize `out_buf` to nullptr
 {
-}
-
-Module::Module(const utils::NoBaseInit) 
-	: id(-1), // Initialize const member `id` with a dummy value
-	inputs{}, 
-	outputs{},
-	out_buf{}, // Initialize `out_buf` to nullptr
-	mods_ptr{}
-{
-// dummy constructor
 }
 
 void Module::generate_buf() {
@@ -35,52 +26,30 @@ void Module::generate_buf() {
 	;
 }
 
-void Module::update_destination_bufs() const { // needed if more than one output
-	for (Module* output : outputs) {
-		if (output->in_bufs.count(id) && output->in_bufs[id].data != out_buf) {
-			memcpy(output->in_bufs[id].data, out_buf, sizeof(float_s) * config::buffer_size);
-		}
-	}
-}
-
-int Module::add_input(Module* __restrict input, bool add_buf) {
+int Module::add_input(Module* __restrict input, const uint8_t buf_type) { // -1 means no buffer
 	inputs.emplace_back(input);
 	if (synthesis::topo_sort() == -1) {
 		printf("Failed to add input (ID: %d): circular in/out!\n", input->id);
 		inputs.pop_back();
 		return -1;
 	}
-	if (add_buf) {
-		in_bufs[input->id] = utils::array_wrapper<float_s, config::buffer_size>{};
+	if (buf_type != static_cast<uint8_t>(-1)) {
+		in_bufs[buf_type].emplace_back(input->out_buf);
 	}
 	return 0;
 }
 
-int Module::add_output(Module* __restrict output, bool add_buf) {
+int Module::add_output(Module* __restrict output, const uint8_t buf_type) { // -1 means no buffer
 	outputs.emplace_back(output);
-	if (output->add_input(this, add_buf) == -1) {
+	if (output->add_input(this, buf_type) == -1) {
 		outputs.pop_back();
 		return -1;
 	}
-	if (outputs.size() == 1 && add_buf) {
-		out_buf = outputs[0]->in_bufs[id].data; // store actual output buffer in the first output module. access it w a pointer & edit output module's "input" directly
-	}
 	return 0;
 }
 
-void Module::attach_mod(float_s* __restrict mod, uint8_t target) {
-	// // turning this off because chorus effect requires mod buffers that are not out_buf's
-	//bool found{ false };
-	//for (const Module* input : inputs) {
-	//	if (mod == input->out_buf) {
-	//		found = true;
-	//	}
-	//}
-	//if (!found) {
-	//	printf("Invalid modulator: not an input!\n");
-	//}
-
-	mods_ptr[target].emplace_back(mod);
+void Module::add_buf(const float_s* __restrict buf, uint8_t buf_type) {
+	in_bufs[buf_type].emplace_back(buf);
 }
 
 void Module::note_on(const uint8_t note, const uint8_t velocity) {
@@ -94,15 +63,18 @@ void Module::note_off() {
 	}
 }
 
-float_s* Module::sum_mods(const uint8_t target) {
-	if (!mods_ptr[target].empty()) {
-		float_s* mod_sum{ mods_ptr[target][0] };
-		for (size_t i{ 1 }; i < mods_ptr[target].size(); i++) {
-			accelerator::vec_add_float_s(mods_ptr[target][i], mod_sum, mod_sum, config::buffer_size);
-		}
-		return mod_sum;
+const float_s* Module::get_out_buf() {
+	return out_buf;
+}
+
+bool Module::sum_bufs(const uint8_t buf_type, float_s* dest) {
+	if (in_bufs[buf_type].empty()) {
+		return false;
 	}
-	else {
-		return nullptr;
+
+	memset(dest, 0.0, config::buffer_size * sizeof(float_s));
+	for (const float_s* in_buf : in_bufs[buf_type]) {
+		accelerator::vec_add_float_s(in_buf, dest, dest, config::buffer_size);
 	}
+	return true;
 }

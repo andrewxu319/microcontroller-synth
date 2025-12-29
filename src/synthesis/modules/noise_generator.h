@@ -11,15 +11,17 @@
 namespace synthesis {
 	class NoiseGenerator : public Module {
 	public:
-		enum Mods {
+		enum BufTypes {
 			GAIN
 		};
 
 		NoiseGenerator(const bool unipolar = false);
 		void generate_buf() override;
 
+	protected:
+		vector<const float_s*> in_bufs[1];
+
 	private:
-		vector<float_s*> mods[1];
 		float_s gain;
 	};
 }

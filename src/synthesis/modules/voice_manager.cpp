@@ -15,16 +15,16 @@ VoiceManager::VoiceManager()
 {
 }
 
-int VoiceManager::add_output(Voice* output, bool add_buf) {
-	if (Module::add_output(static_cast<Module*>(output), add_buf) == -1) {
+int VoiceManager::add_output(Voice* __restrict output, const uint8_t buf_type) {
+	if (Module::add_output(static_cast<Module*>(output), buf_type) == -1) {
 		return -1;
 	}
 	inactive_voices.emplace_back(output);
 	return 0;
 }
 
-int VoiceManager::add_output(Module* output, bool add_buf) {
-	if (Module::add_output(output, add_buf) == -1) {
+int VoiceManager::add_output(Module* __restrict output, const uint8_t buf_type) {
+	if (Module::add_output(output, buf_type) == -1) {
 		return -1;
 	}
 	inactive_voices.emplace_back(static_cast<Voice*>(output));

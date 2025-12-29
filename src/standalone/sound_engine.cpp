@@ -67,7 +67,8 @@ namespace standalone::sound_engine {
 		const PaStreamParameters output_parameters{
 			device, // config::audio_device
 			config::channels,
-			paFloat32, // make switch case or something?
+			paFloat32, // make switch case or something
+
 			config::latency
 		};
 		error = Pa_OpenStream(

@@ -12,7 +12,7 @@ namespace synthesis {
 	class Oscillator : public Module {
 	public:
 		float_s waveform[config::waveform_resolution];
-		enum Mods {
+		enum BufTypes {
 			GAIN,
 			PITCH // IN CENTS
 		};
@@ -26,8 +26,10 @@ namespace synthesis {
 		void set_gain(const float_s value);
 		void set_phase(const double value);
 
+	protected:
+		vector<const float_s*> in_bufs[2];
+
 	private:
-		vector<float_s*> mods[2];
 		double phase; // in waveform indices
 		double phase_increment;
 		float_s freq;  // in hz

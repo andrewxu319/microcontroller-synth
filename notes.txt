@@ -9,6 +9,7 @@ to do
 - two separate control rates: fast and slow?
 - weird phase reset problem
 - ELIMINATE IN_BUFS. use mods and audio_in_buf instead
+- make delay work with any delay time
 
 to do (features)
 - pitch shift

@@ -11,9 +11,19 @@ namespace synthesis {
 		void generate_buf();
 		void set_delay_time(double value);
 		void set_feedback(float_s value);
-		float_s feedback;
+
+		enum BufTypes {
+			AUDIO,
+			WET,
+			//DELAY_TIME,
+			FEEDBACK
+		};
+
+	protected:
+		vector<const float_s*> in_bufs[3];
 
 	private:
+		float_s feedback;
 		double delay_time;
 		size_t delay_frames;
 		utils::CircularArray<float_s> delay_buffer;

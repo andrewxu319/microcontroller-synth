@@ -9,7 +9,7 @@
 using namespace synthesis;
 
 NoiseGenerator::NoiseGenerator(const bool unipolar)
-	: Module(mods, sizeof(mods) / sizeof(float_s*)),
+	: Module(in_bufs),
 	gain{ 1.0 }
 {
 }
@@ -23,8 +23,8 @@ void NoiseGenerator::generate_buf() {
 		}
 	}
 
-	if (!mods[Mods::GAIN].empty()) {
-		float_s* effective_gain_buf{ sum_mods(Mods::GAIN) };
+	float_s effective_gain_buf[config::buffer_size];
+	if (sum_bufs(BufTypes::GAIN, effective_gain_buf)) {
 		accelerator::vec_scal_add_float_s(effective_gain_buf, effective_gain_buf, gain, config::buffer_size);
 		accelerator::vec_entrywise_mult_float_s(effective_gain_buf, out_buf, out_buf, config::buffer_size);
 	}

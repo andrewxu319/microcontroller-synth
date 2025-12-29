@@ -9,14 +9,15 @@ namespace synthesis {
 	public:
 		float_s wet;
 
-		Fx(vector<float_s*>* mods_ = nullptr, const uint8_t num_mods = 0);
-		void mix_dry_wet(const uint8_t wet_mod);
-		int add_input(Module* __restrict input, bool add_buf) override;
-		void set_audio_input(Module* __restrict audio_input_);
+		Fx(vector<const float_s*>* in_bufs_ = nullptr);
+		void mix_dry_wet();
+		int add_input(Module* __restrict input, const uint8_t buf_type) override;
 
-	protected:
-		Module* audio_input;
-		utils::array_wrapper<float_s, config::buffer_size>* audio_in_buf; // signal to be processed. there can be other buffers that provide supplementary info. ONLY ONE ALLOWED
+		const float_s* audio_in_buf; // signal to be processed. there can be other buffers that provide supplementary info. ONLY ONE ALLOWED
 		// add method to change source
+
+	private:
+		static constexpr uint8_t AUDIO{ 0 };
+		static constexpr uint8_t WET{ 1 };
 	};
 }

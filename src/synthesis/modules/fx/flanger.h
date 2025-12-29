@@ -12,13 +12,16 @@ namespace synthesis {
 		void generate_buf() override;
 		void set_offset(const double value);
 
-		enum Mods {
+		enum BufTypes {
+			AUDIO,
 			WET,
 			OFFSET
 		};
 
+	protected:
+		vector<const float_s*> in_bufs[3];
+
 	private:
-		vector<float_s*> mods[2];
 		utils::CircularArray<float_s> memory_buffer;
 		size_t offset;
 	};

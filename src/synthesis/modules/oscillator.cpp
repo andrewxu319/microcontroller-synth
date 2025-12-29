@@ -11,7 +11,7 @@
 using namespace synthesis;
 
 Oscillator::Oscillator(const string& waveform_path, const bool unipolar)
-	: Module(mods, sizeof(mods) / sizeof(vector<float_s*>)),
+	: Module(in_bufs),
 	phase { 0 }, freq{ 0 }, waveform{}, phase_increment{ 0 }, gain{ 1.0 }, velocity_gain{ 1.0 }
 {
 	load_waveform(waveform_path, unipolar);
@@ -26,9 +26,9 @@ void Oscillator::generate_buf() {
 
 	// better way to do this? or just make mono?
 	for (size_t i = 0; i < config::buffer_size; i += config::channels) {
-		if (!mods[Mods::PITCH].empty()) {
+		if (!in_bufs[BufTypes::PITCH].empty()) {
 			float_s mod_sum_cents{ 0 };
-			for (const float_s* mod : mods[Mods::PITCH]) {
+			for (const float_s* mod : in_bufs[BufTypes::PITCH]) {
 				mod_sum_cents += mod[i];
 			}
 			// pitch shift. at audio rate. uses a linear approximation between semitones https://en.wikipedia.org/wiki/Cent_(music)#Piecewise_linear_approximation
@@ -51,8 +51,8 @@ void Oscillator::generate_buf() {
 		phase += phase_increment;
 	}
 
-	if (!mods[Mods::GAIN].empty()) {
-		float_s* effective_gain_buf{ sum_mods(Mods::GAIN) };
+	float_s effective_gain_buf[config::buffer_size];
+	if (sum_bufs(BufTypes::GAIN, effective_gain_buf)) {
 		accelerator::vec_scal_add_float_s(effective_gain_buf, effective_gain_buf, gain, config::buffer_size);
 		accelerator::vec_entrywise_mult_float_s(effective_gain_buf, out_buf, out_buf, config::buffer_size);
 		accelerator::vec_scal_mult_float_s(out_buf, out_buf, velocity_gain, config::buffer_size);

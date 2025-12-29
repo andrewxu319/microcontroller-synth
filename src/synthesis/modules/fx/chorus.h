@@ -13,9 +13,10 @@ namespace synthesis {
 		void generate_buf() override;
 		void set_delay(const double value);
 		void set_voice_count(const uint8_t value);
-		void attach_mod(float_s* __restrict mod, uint8_t target);
+		int add_input(Module* __restrict input, const uint8_t buf_type);
 
-		enum Mods {
+		enum BufTypes {
+			AUDIO,
 			WET,
 			DELAY,
 			DELAY_LFO_CENTER,
@@ -32,15 +33,15 @@ namespace synthesis {
 			float_s lfo_freq_offset[config::buffer_size];
 		};
 
-		vector<float_s*> mods[6];
+		vector<const float_s*> in_bufs[7];
 		utils::CircularArray<float_s> memory_buffer;
 		vector<ChorusVoice> voices;
 		uint8_t num_voices;
-		double range_proportion_to_increment;
+		float_s range_proportion_to_increment;
 	public:
-		double delay_center; // lfo amplitude
-		double delay_lfo_center;
-		double delay_lfo_range;
+		float_s delay_center; // lfo amplitude
+		float_s delay_lfo_center;
+		float_s delay_lfo_range;
 		float_s freq_center;
 		float_s freq_range;
 	};

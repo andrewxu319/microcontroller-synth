@@ -14,26 +14,26 @@ namespace synthesis {
 		const int id;
 		vector<Module*> inputs;
 		vector<Module*> outputs;
-		unordered_map<int, utils::array_wrapper<float_s, config::buffer_size>> in_bufs{};
-			// any other messages e.g. modulation bindings should be done in other ways (e.g. have modulation member variables / a map)
-		float_s* out_buf;
 		static constexpr float_s EMPTY_BUF_MARKER{ numeric_limits<float_s>::min()};
-		vector<float_s*>* mods_ptr;
+		vector<const float_s*>* in_bufs;
+		static const float_s empty_buf[config::buffer_size];
 
-		Module(vector<float*>* mods_ = nullptr, const uint8_t num_mods = 0);
-		Module(const utils::NoBaseInit); // dummy constructor
+		Module(vector<const float*>* in_bufs_ = nullptr);
+		const float_s* get_out_buf(); // read-only pointer
 		virtual void generate_buf();
-		void update_destination_bufs() const;
-		float_s* sum_mods(const uint8_t mod);
+		bool sum_bufs(const uint8_t buf_type, float_s* dest);
 
-		virtual int add_input(Module* __restrict input, bool add_buf);
-		virtual int add_output(Module* __restrict output, bool add_buf);
+		virtual int add_input(Module* __restrict input, const uint8_t buf_type = -1);
+		virtual int add_output(Module* __restrict output, const uint8_t buf_type = -1);
 		// implement remove input/output
-		void attach_mod(float_s* __restrict mod, uint8_t target);
-		// detach_mod
+		void add_buf(const float_s* __restrict buf, uint8_t buf_type);
+		// remove_buf
 
 		virtual void note_on(const uint8_t note, const uint8_t velocity);
 		virtual void note_off();
+
+	protected:
+		float_s out_buf[config::buffer_size];
 
 	private:
 		static int last_id;

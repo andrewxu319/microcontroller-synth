@@ -28,6 +28,11 @@ namespace utils {
 			size = size_;
 		}
 
+		// doesn't change underlying vector. call resize() with the known maximum size first
+		void fast_resize(const size_t size_) {
+			size = size_;
+		}
+
 		// // might be broken. fix
 		//void pop_start_into(vector<T>& dest, const typename vector<T>::iterator dest_location_iter, const int len) {
 		//	if (start + len <= size) {

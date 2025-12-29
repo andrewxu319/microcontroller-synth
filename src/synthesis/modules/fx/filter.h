@@ -18,7 +18,7 @@ namespace synthesis {
 	class Filter : public Fx {
 	public:
 		inline Filter()
-			: Fx(mods, sizeof(mods) / sizeof(vector<float_s*>))
+			: Fx(in_bufs)
 		{
 			params[0] = config::sample_rate;
 			params[1] = 800;
@@ -26,29 +26,32 @@ namespace synthesis {
 		}
 
 		inline void generate_buf() override {
-			if (audio_in_buf->data[0] == EMPTY_BUF_MARKER) {
+			if (audio_in_buf[0] == EMPTY_BUF_MARKER) {
 				out_buf[0] = EMPTY_BUF_MARKER;
 				return;
 			}
 
-			memcpy(out_buf, audio_in_buf->data, config::buffer_size * sizeof(float_s));
+			memcpy(out_buf, audio_in_buf, config::buffer_size * sizeof(float_s));
 			
-			float_s* effective_cutoff{ sum_mods(Mods::CUTOFF) };
-			float_s* effective_resonance{ sum_mods(Mods::RESONANCE) };
-			float_s* effective_band_width{ sum_mods(Mods::BAND_WIDTH) };
+			float_s cutoff_buf_sum[config::buffer_size];
+			const bool cutoff_mods{ sum_bufs(BufTypes::CUTOFF, cutoff_buf_sum) };
+			float_s resonance_buf_sum[config::buffer_size];
+			const bool resonance_mods{ sum_bufs(BufTypes::RESONANCE, resonance_buf_sum) };
+			float_s band_width_buf_sum[config::buffer_size];
+			const bool band_width_mods{ sum_bufs(BufTypes::BAND_WIDTH, band_width_buf_sum) };
 
 			for (int i{ 0 }; i < config::actual_buffer_size; i += config::control_rate) {
 				int update_params{ false };
-				if (effective_cutoff) {
-					params[1] = cutoff + effective_cutoff[i];
+				if (cutoff_mods) {
+					params[1] = cutoff + cutoff_buf_sum[i];
 					update_params = true;
 				}
-				if (effective_resonance) {
-					params[2] = resonance + effective_resonance[i];
+				if (resonance_mods) {
+					params[2] = resonance + resonance_buf_sum[i];
 					update_params = true;
 				}
-				if (effective_band_width) {
-					params[2] = band_width + effective_band_width[i];
+				if (band_width_mods) {
+					params[2] = band_width + band_width_buf_sum[i];
 					update_params = true;
 				}
 				if (update_params) {
@@ -58,7 +61,7 @@ namespace synthesis {
 				filter.process(config::control_rate, data);
 			}
 
-			mix_dry_wet(Mods::WET);
+			mix_dry_wet();
 		}
 
 		inline void set_cutoff(double value) {
@@ -79,12 +82,16 @@ namespace synthesis {
 			set_resonance(value);
 		}
 
-		enum Mods {
+		enum BufTypes {
+			AUDIO,
 			WET,
 			CUTOFF,
 			RESONANCE,
 			BAND_WIDTH
 		};
+
+	protected:
+		vector<const float_s*> in_bufs[5]{};
 
 	private:
 		Dsp::FilterDesign<Type, Channels> filter{};
@@ -92,7 +99,6 @@ namespace synthesis {
 		double cutoff{};
 		int band_width{};
 		double resonance{};
-		vector<float_s*> mods[4]{};
 	};
 }
 

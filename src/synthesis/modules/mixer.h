@@ -6,7 +6,13 @@ namespace synthesis {
 	class Mixer : public Module {
 	public:
 		Mixer();
-		Mixer(const utils::NoBaseInit); // dummy constructor
 		void generate_buf();
+
+		enum BufTypes {
+			AUDIO
+		};
+
+	protected:
+		vector<const float_s*> in_bufs[1];
 	};
 }

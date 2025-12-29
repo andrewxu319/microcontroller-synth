@@ -7,13 +7,13 @@
 using namespace synthesis;
 
 Phaser::Phaser()
-	: Fx(mods, sizeof(mods) / sizeof(vector<float_s*>)),
+	: Fx(in_bufs),
 	all_pass_filters{ Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>{} },
 	feedback_filters{ Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>{} },
 	params{},
 	stages{},
 	center{},
-	mods{},
+	in_bufs{},
 	feedback{}
 {
 	params[0] = config::sample_rate;
@@ -22,17 +22,21 @@ Phaser::Phaser()
 }
 
 void Phaser::generate_buf() {
-	if (audio_in_buf->data[0] == EMPTY_BUF_MARKER) {
+	if (audio_in_buf[0] == EMPTY_BUF_MARKER) {
 		out_buf[0] = EMPTY_BUF_MARKER;
 		return;
 	}
 
-	memcpy(out_buf, audio_in_buf->data, config::buffer_size * sizeof(float_s));
-	float_s* effective_center{ sum_mods(Mods::CENTER_FREQ) };
+	memcpy(out_buf, audio_in_buf, config::buffer_size * sizeof(float_s));
+	float_s center_buf_sum[config::buffer_size];
+	const bool center_mods{ sum_bufs(BufTypes::CENTER_FREQ, center_buf_sum) };
+	//for (int j{ 0 }; j < stages; j++) {
+	//	all_pass_filters[j].reset();
+	//}
 
 	for (int i{ 0 }; i < config::actual_buffer_size; i += config::control_rate) {
-		if (effective_center) {
-			params[1] = center + effective_center[i];
+		if (center_mods) {
+			params[1] = center + center_buf_sum[i];
 			for (int j{ 0 }; j < stages; j++) {
 				all_pass_filters[j].setParams(params);
 			}
@@ -44,7 +48,7 @@ void Phaser::generate_buf() {
 		}
 	}
 
-	accelerator::vec_add_float_s(audio_in_buf->data, out_buf, out_buf, config::buffer_size);
+	accelerator::vec_add_float_s(audio_in_buf, out_buf, out_buf, config::buffer_size);
 
 	// // this implementation is wrong
 	// // refer to 12/21 commit for optimized dry wet mix code
@@ -68,7 +72,7 @@ void Phaser::generate_buf() {
 	//	accelerator::vec_add_float_s(feedback_signal, out_buf, out_buf, config::buffer_size);
 	//}
 
-	mix_dry_wet(Mods::WET);
+	mix_dry_wet();
 }
 
 void Phaser::set_center_freq(const double value) {

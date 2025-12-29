@@ -17,14 +17,17 @@ namespace synthesis {
 		void set_center_freq(const double value);
 		void set_feedback(const float_s value);
 
-		enum Mods {
+		enum BufTypes {
+			AUDIO,
 			WET,
 			CENTER_FREQ,
 			FEEDBACK
 		};
 
-	private:
-		vector<float_s*> mods[3];
+	protected:
+		vector<const float_s*> in_bufs[4];
+
+
 		vector<Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>> all_pass_filters; // MONO FOR NOW
 		vector<Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>> feedback_filters; // MONO FOR NOW
 		Dsp::Params params;
