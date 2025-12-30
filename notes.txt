@@ -1,14 +1,10 @@
-switched to c style arrays to avoid having to copy array into the final buffer
-
 to do
 - "control" vs "signal" module?
 - "active" state for modules
 - nonlinear adsr
 - interpolation for lfos (might not be needed? if low control rate)
-- delay modulations
 - two separate control rates: fast and slow?
-- weird phase reset problem
-- ELIMINATE IN_BUFS. use mods and audio_in_buf instead
+- delay modulations
 - make delay work with any delay time
 
 to do (features)
@@ -20,16 +16,6 @@ let's do mono for now
 
 
 um. there seem to be additive modulators and multiplicative modulators
-
-
-chorus
-10-30ms. modulate delay time with lfo
-
-flanger
-<10ms delay to cause phase interference. modulate delay time with lfo. comb filtering
-feedback: feed some of the delayed signal back into input. can switch polarity of feedback
-
-phaser
 
 
 

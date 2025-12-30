@@ -23,11 +23,12 @@ Chorus::Chorus()
 
 void Chorus::generate_buf() {
 	// // how do we detect when the note dies down? can't use delay time because it gets modulated
-	//if (audio_in_buf[0] == EMPTY_BUF_MARKER) {
-	//	memory_buffer.reset();
-	//	out_buf[0] = EMPTY_BUF_MARKER;
-	//	return;
-	//}
+	// // check common delay times
+	if (audio_in_buf[0] == EMPTY_BUF_MARKER) {
+		memory_buffer.reset();
+		out_buf[0] = EMPTY_BUF_MARKER;
+		return;
+	}
 
 	memcpy(out_buf, audio_in_buf, config::buffer_size * sizeof(float_s));
 
@@ -60,10 +61,10 @@ void Chorus::generate_buf() {
 	for (ChorusVoice& voice : voices) {
 		for (size_t i{ 0 }; i < config::buffer_size; i++) {
 			const float_s effective_delay{ delay_center + (delay_mods ? delay_buf_sum[i] : 0.0f) + voice.lfo->get_out_buf()[i] };
-			const float_s delayed_signal_low{ memory_buffer.get(memory_buffer.size - config::buffer_size + i - static_cast<size_t>(effective_delay)) };
-			const float_s delayed_signal_high{ memory_buffer.get(memory_buffer.size - config::buffer_size + i - static_cast<size_t>(effective_delay) - 1) };
-			const float_s decimal_part{ effective_delay - static_cast<size_t>(effective_delay) };
-			const float_s delayed_signal_interpolated{ delayed_signal_low * (1.0f - decimal_part) + delayed_signal_high * decimal_part };
+			const float_s delayed_signal_prev{ memory_buffer.get(memory_buffer.size - config::buffer_size + i - static_cast<size_t>(effective_delay)) };
+			const float_s delayed_signal_next{ memory_buffer.get(memory_buffer.size - config::buffer_size + i - static_cast<size_t>(effective_delay) - 1) };
+			const float_s interpolation_ratio{ effective_delay - static_cast<size_t>(effective_delay) };
+			const float_s delayed_signal_interpolated{ delayed_signal_prev * (1.0f - interpolation_ratio) + delayed_signal_next * interpolation_ratio };
 			out_buf[i] += delayed_signal_interpolated;
 		}
 	}

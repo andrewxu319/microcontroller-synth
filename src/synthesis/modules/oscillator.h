@@ -30,8 +30,9 @@ namespace synthesis {
 		vector<const float_s*> in_bufs[2];
 
 	private:
-		double phase; // in waveform indices
-		double phase_increment;
+	public:
+		float_s phase; // in waveform indices
+		float_s phase_increment;
 		float_s freq;  // in hz
 		float_s gain;
 		float_s velocity_gain;

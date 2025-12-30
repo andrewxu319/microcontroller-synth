@@ -25,26 +25,29 @@ void Oscillator::generate_buf() {
 	}
 
 	// better way to do this? or just make mono?
+	float_s pitch_buf_sum[config::buffer_size];
+	const bool pitch_mods{ sum_bufs(BufTypes::PITCH, pitch_buf_sum) };
 	for (size_t i = 0; i < config::buffer_size; i += config::channels) {
-		if (!in_bufs[BufTypes::PITCH].empty()) {
-			float_s mod_sum_cents{ 0 };
-			for (const float_s* mod : in_bufs[BufTypes::PITCH]) {
-				mod_sum_cents += mod[i];
-			}
-			// pitch shift. at audio rate. uses a linear approximation between semitones https://en.wikipedia.org/wiki/Cent_(music)#Piecewise_linear_approximation
-			const int8_t semitones{ static_cast<int8_t>(static_cast<int16_t>(mod_sum_cents) / 100) };
-			const double effective_freq{ (freq * (pow(pow(2, 1.0 / 12.0), semitones)) * (1.0 + 0.0005946 * (mod_sum_cents - semitones * 100))) };
+		if (pitch_mods) {
+		// pitch shift. at audio rate. uses a linear approximation between semitones https://en.wikipedia.org/wiki/Cent_(music)#Piecewise_linear_approximation
+			const int8_t semitones{ static_cast<int8_t>(static_cast<int16_t>(pitch_buf_sum[i]) / 100) };
+		// below line: todo---vectorize all this math
+			const double effective_freq{ (freq * (pow(pow(2, 1.0 / 12.0), semitones)) * (1.0 + 0.0005946 * (pitch_buf_sum[i] - semitones * 100))) };
 			phase_increment = effective_freq * config::waveform_resolution / config::sample_rate;
 		}
 
 		if (phase >= config::waveform_resolution) {
-			phase = 0;
+			phase -= config::waveform_resolution;
 		}
 
-		// if lfo, ignore every other sample
-		//*(out_buf + i) = static_cast<float_s>(sin(2.0 * M_PI * (static_cast<double>(freq) / config::sample_rate) * phase));
+		// // with interpolation
+		//const float_s prev_sample{ waveform[static_cast<size_t>(phase)] };
+		//const float_s next_sample{ waveform[static_cast<size_t>((phase >= config::waveform_resolution - 1) ? 0 : phase + 1)] };
+		//const float_s interpolation_ratio{ phase - static_cast<uint16_t>(phase) };
+		//*(out_buf + i) = prev_sample * (1.0 - interpolation_ratio) + next_sample * interpolation_ratio;
 		*(out_buf + i) = waveform[static_cast<size_t>(phase)]; // round?
-		for (size_t j = 1; j <= config::channels; j++) {
+
+		for (size_t j = 1; j < config::channels; j++) {
 			*(out_buf + i + j) = *(out_buf + i);
 		}
 
@@ -75,7 +78,28 @@ void Oscillator::load_waveform(const string& path, const bool unipolar) {
 }
 
 void Oscillator::note_on(const uint8_t note, const uint8_t velocity) {
-	set_freq(midi::notes[note]); // cant static_cast because of const
+	const int16_t transposed_note{ note + transpose };
+
+	// // we could do all this, but tbh those frequencies are too extreme to be useful
+	//if (transposed_note < 0) {
+	//	// think of it as a simple interval up, then octave(s) down
+	//	const uint8_t octaves_to_go_down{ static_cast<uint8_t>((-1 - transposed_note) / 12 + 1) };
+	//	const uint8_t semitones_to_go_up{ static_cast<uint8_t>(transpose % 12 + 12) };
+	//	set_freq(midi::notes[note + (semitones_to_go_up == 12 ? 0 : semitones_to_go_up)] / pow(2, octaves_to_go_down));
+	//	// unaccounted hypothetical: note is at the upper end of the midi mapping & transpose is very low => note + semitones_to_go_up is invalid
+	//}
+	//else if (transposed_note > 127) {
+	//	// this might be wrong, fix
+	//	const uint8_t octaves_to_go_up{ static_cast<uint8_t>((transposed_note - 127 - 1) / 12 + 1) };
+	//	const uint8_t semitones_to_go_down{ static_cast<uint8_t>(12 - transpose % 12) };
+	//	set_freq(midi::notes[note - (semitones_to_go_down == 12 ? 0 : semitones_to_go_down)] * pow(2, octaves_to_go_up));
+	//}
+	if (transposed_note >= 0 && transposed_note <= 127) {
+		set_freq(midi::notes[transposed_note]); // cant static_cast because of const
+	}
+	//else {
+	//	set_freq(midi::notes)
+	//}
 	velocity_gain = static_cast<float_s>(velocity) / 127;
 	phase = 0;
 }

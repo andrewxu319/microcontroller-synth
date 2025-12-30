@@ -75,7 +75,13 @@ namespace utils {
 		}
 
 		T get(const size_t index) {
-			return data.data()[(start + index) % size];
+			const size_t start_plus_index{ start + index };
+			if (start_plus_index < size) {
+				return data.data()[start_plus_index];
+			}
+			else {
+				return data.data()[start_plus_index - size];
+			}
 		}
 
 		void push_back(T* source_array, const int len) {
