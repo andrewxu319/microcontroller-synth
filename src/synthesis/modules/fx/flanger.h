@@ -11,18 +11,22 @@ namespace synthesis {
 		Flanger();
 		void generate_buf() override;
 		void set_offset(const double value);
+		void set_feedback(const float_s value);
 
 		enum BufTypes {
 			AUDIO,
 			WET,
-			OFFSET
+			OFFSET,
+			FEEDBACK
 		};
 
 	protected:
-		vector<const float_s*> in_bufs[3];
+		vector<const float_s*> in_bufs[4];
 
 	private:
 		utils::CircularArray<float_s> memory_buffer;
 		size_t offset;
+		float_s feedback;
+		float_s feedback_memory;
 	};
 }

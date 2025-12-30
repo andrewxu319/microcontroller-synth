@@ -76,5 +76,21 @@ bool Module::sum_bufs(const uint8_t buf_type, float_s* dest) {
 	for (const float_s* in_buf : in_bufs[buf_type]) {
 		accelerator::vec_add_float_s(in_buf, dest, dest, config::buffer_size);
 	}
+
+	return true;
+}
+
+bool Module::sum_bufs(const uint8_t buf_type, float_s* dest, const float_s constant) {
+	if (in_bufs[buf_type].empty()) {
+		return false;
+	}
+
+	memset(dest, 0.0, config::buffer_size * sizeof(float_s));
+	for (const float_s* in_buf : in_bufs[buf_type]) {
+		accelerator::vec_add_float_s(in_buf, dest, dest, config::buffer_size);
+	}
+
+	accelerator::vec_scal_add_float_s(dest, dest, constant, config::buffer_size);
+
 	return true;
 }

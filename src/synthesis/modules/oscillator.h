@@ -30,7 +30,6 @@ namespace synthesis {
 		vector<const float_s*> in_bufs[2];
 
 	private:
-	public:
 		float_s phase; // in waveform indices
 		float_s phase_increment;
 		float_s freq;  // in hz
@@ -38,5 +37,7 @@ namespace synthesis {
 		float_s velocity_gain;
 		int8_t transpose; // semitones
 		int8_t tune; // cents
+
+		static double get_semitone_shift_multiplier(const int8_t semitones);
 	};
 }

@@ -57,13 +57,15 @@ void Chorus::generate_buf() {
 	}
 
 	float_s delay_buf_sum[config::buffer_size];
-	const bool delay_mods{ sum_bufs(BufTypes::DELAY, delay_buf_sum) };
+	const bool delay_mods{ sum_bufs(BufTypes::DELAY, delay_buf_sum, delay_center) };
 	for (ChorusVoice& voice : voices) {
 		for (size_t i{ 0 }; i < config::buffer_size; i++) {
-			const float_s effective_delay{ delay_center + (delay_mods ? delay_buf_sum[i] : 0.0f) + voice.lfo->get_out_buf()[i] };
-			const float_s delayed_signal_prev{ memory_buffer.get(memory_buffer.size - config::buffer_size + i - static_cast<size_t>(effective_delay)) };
-			const float_s delayed_signal_next{ memory_buffer.get(memory_buffer.size - config::buffer_size + i - static_cast<size_t>(effective_delay) - 1) };
-			const float_s interpolation_ratio{ effective_delay - static_cast<size_t>(effective_delay) };
+			const float_s effective_delay{ (delay_mods ? delay_buf_sum[i] : 0.0f) + voice.lfo->get_out_buf()[i] };
+			const size_t effective_delay_floored{ static_cast<size_t>(effective_delay) };
+			const size_t index_ceiled{ memory_buffer.size - config::buffer_size + i - effective_delay_floored };
+			const float_s delayed_signal_prev{ memory_buffer.get(index_ceiled) };
+			const float_s delayed_signal_next{ memory_buffer.get(index_ceiled - 1) };
+			const float_s interpolation_ratio{ effective_delay - effective_delay_floored };
 			const float_s delayed_signal_interpolated{ delayed_signal_prev * (1.0f - interpolation_ratio) + delayed_signal_next * interpolation_ratio };
 			out_buf[i] += delayed_signal_interpolated;
 		}
@@ -73,7 +75,7 @@ void Chorus::generate_buf() {
 }
 
 void Chorus::set_delay(const double value) { // in ms
-	delay_center = value * 0.001 * config::sample_rate;
+	delay_center = value * 0.001 * config::sample_rate; // in samples
 }
 
 void Chorus::set_voice_count(const uint8_t value) {

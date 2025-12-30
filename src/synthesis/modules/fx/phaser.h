@@ -27,12 +27,11 @@ namespace synthesis {
 	protected:
 		vector<const float_s*> in_bufs[4];
 
-
 		vector<Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>> all_pass_filters; // MONO FOR NOW
-		vector<Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>> feedback_filters; // MONO FOR NOW
 		Dsp::Params params;
 		uint8_t stages;
 		uint16_t center;
 		float_s feedback;
+		float_s feedback_memory;
 	};
 }

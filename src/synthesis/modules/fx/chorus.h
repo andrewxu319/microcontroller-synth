@@ -39,7 +39,7 @@ namespace synthesis {
 		uint8_t num_voices;
 		float_s range_proportion_to_increment;
 	public:
-		float_s delay_center; // lfo amplitude
+		float_s delay_center; // lfo amplitude. in samples. using float for better modulation
 		float_s delay_lfo_center;
 		float_s delay_lfo_range;
 		float_s freq_center;

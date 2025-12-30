@@ -1,6 +1,7 @@
 #include "sound_engine.h"
 #include "synthesis/synthesizer.h"
 #include "synthesis/modules/oscillator.h"
+#include "synthesis/modules/noise_generator.h"
 #include "synthesis/modules/voice.h"
 #include "synthesis/modules/voice_manager.h"
 #include "synthesis/modules/fx/filter.h"
@@ -53,9 +54,9 @@ int main() {
 	//Phaser* phaser{ static_cast<Phaser*>(synthesis::add_module(make_unique<Phaser>())) };
 	//phaser->wet = 0.5;
 	//phaser->set_center_freq(1000);
-	//phaser->set_stages(12);
-	//phaser->set_feedback(0.0);
-	//phaser->add_output(filter, Filter<Dsp::RBJ::Design::LowPass, 1>::BufTypes::AUDIO);
+	//phaser->set_stages(4);
+	//phaser->set_feedback(0.7);
+	//phaser->add_output(master, Filter<Dsp::RBJ::Design::LowPass, 1>::BufTypes::AUDIO);
 
 	//Oscillator* phaser_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 	//phaser_lfo->load_waveform("sine");
@@ -63,10 +64,16 @@ int main() {
 	//phaser_lfo->set_gain(0.5);
 	//phaser_lfo->add_output(phaser, Phaser::BufTypes::WET);
 
-	//Flanger* flanger{ static_cast<Flanger*>(synthesis::add_module(make_unique<Flanger>())) };
-	//flanger->add_output(phaser, true);
-	//flanger->wet = 1.0;
-	//flanger->set_offset(6);
+	Flanger* flanger{ static_cast<Flanger*>(synthesis::add_module(make_unique<Flanger>())) };
+	flanger->add_output(master, Master::BufTypes::AUDIO);
+	flanger->wet = 1.0;
+	flanger->set_offset(6);
+	synthesis::attach_cc(18,
+		[target = flanger]
+		(const uint8_t x) {
+			target->set_feedback(x * 2 / 127.0 - 1.0);
+		}
+	);
 
 	//Oscillator* flanger_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 	//flanger_lfo->load_waveform("sine");
@@ -79,7 +86,7 @@ int main() {
 	//chorus->wet = 1.0;
 	//chorus->set_delay(30);
 	//chorus->set_voice_count(6);
-	//chorus->add_output(flanger, Phaser::BufTypes::AUDIO);
+	//chorus->add_output(master, Phaser::BufTypes::AUDIO);
 
 	//Oscillator* chorus_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 	//chorus_lfo->load_waveform("sine");
@@ -88,21 +95,23 @@ int main() {
 	//chorus_lfo->add_output(chorus, Chorus::BufTypes::FREQ_RANGE);
 
 	Mixer* mixer{ static_cast<Mixer*>(synthesis::add_module(make_unique<Mixer>())) };
-	mixer->add_output(master, Chorus::BufTypes::AUDIO);
+	mixer->add_output(flanger, Chorus::BufTypes::AUDIO);
 
 	for (int i{ 0 }; i < config::num_voices; i++) {
+		//NoiseGenerator* noise_generator{ static_cast<NoiseGenerator*>(synthesis::add_module(make_unique<NoiseGenerator>())) };
+		//noise_generator->add_output(mixer, Mixer::BufTypes::AUDIO);
+		//noise_generator->set_gain(0);
 		//Oscillator* osc_sine{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 		//osc_sine->add_output(mixer, true);
 		//osc_sine->set_gain(0);
-		Oscillator* osc_sawtooth{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
-		osc_sawtooth->transpose = -12;
+		Oscillator* osc_sawtooth{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sawtooth"))) };
 		osc_sawtooth->add_output(mixer, Mixer::BufTypes::AUDIO);
 		osc_sawtooth->set_gain(0);
 		//Oscillator* osc_triangle{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("triangle"))) };
 		//osc_triangle->add_output(mixer, true);
 		Envelope* envelope{ static_cast<Envelope*>(synthesis::add_module(make_unique<Envelope>())) };
 		//envelope->add_output(osc_sine, true);
-		envelope->add_output(osc_sawtooth, Oscillator::BufTypes::GAIN);
+		envelope->add_output(osc_sawtooth, NoiseGenerator::BufTypes::GAIN);
 		//envelope->add_output(osc_triangle, true);
 		envelope->set_attack(0.3);
 		envelope->set_decay(0.3);

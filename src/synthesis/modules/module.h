@@ -21,7 +21,8 @@ namespace synthesis {
 		Module(vector<const float*>* in_bufs_ = nullptr);
 		const float_s* get_out_buf(); // read-only pointer
 		virtual void generate_buf();
-		bool sum_bufs(const uint8_t buf_type, float_s* dest);
+		bool sum_bufs(const uint8_t buf_type, float_s* dest); // use for control-rate modulations: only adding constant every control_rate samples => don't need vectorization
+		bool sum_bufs(const uint8_t buf_type, float_s* dest, const float_s constant);
 
 		virtual int add_input(Module* __restrict input, const uint8_t buf_type = -1);
 		virtual int add_output(Module* __restrict output, const uint8_t buf_type = -1);

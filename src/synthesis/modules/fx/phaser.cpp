@@ -9,12 +9,12 @@ using namespace synthesis;
 Phaser::Phaser()
 	: Fx(in_bufs),
 	all_pass_filters{ Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>{} },
-	feedback_filters{ Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>{} },
 	params{},
 	stages{},
 	center{},
 	in_bufs{},
-	feedback{}
+	feedback{},
+	feedback_memory{}
 {
 	params[0] = config::sample_rate;
 	params[2] = 1.0;
@@ -29,48 +29,34 @@ void Phaser::generate_buf() {
 
 	memcpy(out_buf, audio_in_buf, config::buffer_size * sizeof(float_s));
 	float_s center_buf_sum[config::buffer_size];
-	const bool center_mods{ sum_bufs(BufTypes::CENTER_FREQ, center_buf_sum) };
-	//for (int j{ 0 }; j < stages; j++) {
-	//	all_pass_filters[j].reset();
-	//}
+	const bool center_mods{ sum_bufs(BufTypes::CENTER_FREQ, center_buf_sum, center) };
+	float_s feedback_buf_sum[config::buffer_size];
+	const bool feedback_mods{ sum_bufs(BufTypes::FEEDBACK, feedback_buf_sum, feedback) };
 
 	for (int i{ 0 }; i < config::actual_buffer_size; i += config::control_rate) {
 		if (center_mods) {
-			params[1] = center + center_buf_sum[i];
+			params[1] = center_buf_sum[i];
 			for (int j{ 0 }; j < stages; j++) {
 				all_pass_filters[j].setParams(params);
 			}
 		}
 
-		float* data[1]{ out_buf + i }; // if mono. data[1] means array of 1 array pointer
-		for (int j{ 0 }; j < stages; j++) {
-			all_pass_filters[j].process(config::control_rate, data);
+		for (int j{ i }; j < i + config::control_rate; j++) {
+			if (feedback_buf_sum) {
+				feedback = feedback_buf_sum[j];
+			}
+			out_buf[j] += feedback_memory * feedback;
+
+			float* data[1]{ out_buf + j }; // if mono. data[1] means array of 1 array pointer
+			for (int k{ 0 }; k < stages; k++) {
+				all_pass_filters[k].process(1, data);
+			}
+
+			feedback_memory = out_buf[j];
 		}
 	}
 
 	accelerator::vec_add_float_s(audio_in_buf, out_buf, out_buf, config::buffer_size);
-
-	// // this implementation is wrong
-	// // refer to 12/21 commit for optimized dry wet mix code
-	//float_s feedback_signal[config::buffer_size]{};
-	//memcpy(feedback_signal, out_buf, config::buffer_size * sizeof(float_s));
-	//float* data[1]{ feedback_signal }; // if mono. data[1] means array of 1 array pointer
-	//for (int i{ 0 }; i < stages; i++) {
-	//	all_pass_filters[i].reset();
-	//	all_pass_filters[i].process(config::buffer_size, data);
-	//}
-	//if (mods[Mods::FEEDBACK].empty()) {
-	//	accelerator::vec_mult_add_float_s(feedback_signal, out_buf, out_buf, feedback, config::buffer_size);
-	//}
-	//else {
-	//	float_s* effective_feedback{ in_bufs[mods[Mods::FEEDBACK][0]->id].data };
-	//	for (int i{ 1 }; i < mods[Mods::FEEDBACK].size(); i++) {
-	//		accelerator::vec_add_float_s(in_bufs[mods[Mods::FEEDBACK][i]->id].data, effective_feedback, effective_feedback, config::buffer_size);
-	//	}
-	//	accelerator::vec_scal_add_float_s(effective_feedback, effective_feedback, feedback, config::buffer_size);
-	//	accelerator::vec_entrywise_mult_float_s(effective_feedback, feedback_signal, feedback_signal, config::buffer_size);
-	//	accelerator::vec_add_float_s(feedback_signal, out_buf, out_buf, config::buffer_size);
-	//}
 
 	mix_dry_wet();
 }
@@ -89,7 +75,6 @@ void Phaser::set_stages(const uint8_t value) {
 	if (value > all_pass_filters.size()) {
 		for (uint8_t i{ stages }; i < value; i++) {
 			all_pass_filters.emplace_back(Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>{all_pass_filters.back()});
-			feedback_filters.emplace_back(Dsp::FilterDesign<Dsp::RBJ::Design::AllPass, 1>{all_pass_filters.back()});
 		}
 	}
 	else {
@@ -99,5 +84,6 @@ void Phaser::set_stages(const uint8_t value) {
 }
 
 void Phaser::set_feedback(const float_s value) {
+	assert(value >= -1.0 && value <= 1.0);
 	feedback = value;
 }

@@ -11,6 +11,7 @@ namespace utils {
 		CircularArray(const size_t size_) // must be multiples of buffer_size. assert later
 			: size{ size_ },
 			data(size_, 0.0f),
+			data_array{ data.data() },
 			start{ 0 }
 		{
 			;
@@ -26,6 +27,7 @@ namespace utils {
 				data.insert(data.begin() + size, make_move_iterator(data.begin()), make_move_iterator(data.begin() + start));
 			}
 			size = size_;
+			data_array = data.data();
 		}
 
 		// doesn't change underlying vector. call resize() with the known maximum size first
@@ -59,7 +61,7 @@ namespace utils {
 			else {
 				start += len - size;
 			}
-			return &data.data()[old_start];
+			return &data_array[old_start];
 		}
 
 		// return: pointer to first segment, length of first segment, pointer to second segment, length of second segment
@@ -67,20 +69,20 @@ namespace utils {
 			const size_t subarray_start_index{ (start + index) % size };
 			const size_t subarray_end_index{ (start + index + len) % size };
 			if (subarray_end_index > subarray_start_index) {
-				return tuple{ &data.data()[subarray_start_index], len, nullptr, 0 };
+				return tuple{ &data_array[subarray_start_index], len, nullptr, 0 };
 			}
 			else {
-				return tuple{ &data.data()[subarray_start_index], size - subarray_start_index, data.data(), subarray_end_index };
+				return tuple{ &data_array[subarray_start_index], size - subarray_start_index, data_array, subarray_end_index };
 			}
 		}
 
 		T get(const size_t index) {
 			const size_t start_plus_index{ start + index };
 			if (start_plus_index < size) {
-				return data.data()[start_plus_index];
+				return data_array[start_plus_index];
 			}
 			else {
-				return data.data()[start_plus_index - size];
+				return data_array[start_plus_index - size];
 			}
 		}
 
@@ -99,6 +101,7 @@ namespace utils {
 
 	private:
 		vector<T> data;
+		T* data_array;
 		size_t start;
 	};
 }

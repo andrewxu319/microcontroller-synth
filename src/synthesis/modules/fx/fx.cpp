@@ -22,8 +22,7 @@ void Fx::mix_dry_wet() {
 	}
 	else {
 		float_s effective_wet_buf[config::buffer_size];
-		sum_bufs(WET, effective_wet_buf);
-		accelerator::vec_scal_add_float_s(effective_wet_buf, effective_wet_buf, wet, config::buffer_size);
+		sum_bufs(WET, effective_wet_buf, wet);
 		accelerator::vec_entrywise_mult_float_s(effective_wet_buf, out_buf, out_buf, config::buffer_size);
 
 		// get 1.0 - wet for dry signal

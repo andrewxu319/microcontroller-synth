@@ -17,6 +17,7 @@ namespace synthesis {
 
 		NoiseGenerator(const bool unipolar = false);
 		void generate_buf() override;
+		void set_gain(const float_s value);
 
 	protected:
 		vector<const float_s*> in_bufs[1];

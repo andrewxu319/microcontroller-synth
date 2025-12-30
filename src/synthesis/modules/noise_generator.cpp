@@ -24,8 +24,7 @@ void NoiseGenerator::generate_buf() {
 	}
 
 	float_s effective_gain_buf[config::buffer_size];
-	if (sum_bufs(BufTypes::GAIN, effective_gain_buf)) {
-		accelerator::vec_scal_add_float_s(effective_gain_buf, effective_gain_buf, gain, config::buffer_size);
+	if (sum_bufs(BufTypes::GAIN, effective_gain_buf, gain)) {
 		accelerator::vec_entrywise_mult_float_s(effective_gain_buf, out_buf, out_buf, config::buffer_size);
 	}
 	else {
@@ -33,4 +32,8 @@ void NoiseGenerator::generate_buf() {
 	}
 
 	return;
+}
+
+void NoiseGenerator::set_gain(const float_s value) {
+	gain = value;
 }
