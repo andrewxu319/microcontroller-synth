@@ -84,6 +84,6 @@ void Phaser::set_stages(const uint8_t value) {
 }
 
 void Phaser::set_feedback(const float_s value) {
-	assert(value >= -1.0 && value <= 1.0);
+	assert(value > -1.0 && value < 1.0);
 	feedback = value;
 }

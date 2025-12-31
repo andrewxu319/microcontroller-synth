@@ -71,7 +71,7 @@ int main() {
 	synthesis::attach_cc(18,
 		[target = flanger]
 		(const uint8_t x) {
-			target->set_feedback(x * 2 / 127.0 - 1.0);
+			target->set_feedback((x * 2 / 127.0 - 1.0) * 0.99);
 		}
 	);
 
