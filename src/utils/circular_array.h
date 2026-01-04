@@ -95,6 +95,15 @@ namespace utils {
 			}
 		}
 
+		void push_back(const float_s value) {
+			if (start == 0) {
+				data[size - 1] = value;
+			}
+			else {
+				data[start - 1] = value;
+			}
+		}
+
 		void reset() {
 			fill(data.begin(), data.end(), 0.0f);
 		}

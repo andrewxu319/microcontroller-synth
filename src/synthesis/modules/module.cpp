@@ -34,7 +34,7 @@ int Module::add_input(Module* __restrict input, const uint8_t buf_type) { // -1 
 		return -1;
 	}
 	if (buf_type != static_cast<uint8_t>(-1)) {
-		in_bufs[buf_type].emplace_back(input->out_buf);
+		add_buf(input->out_buf, buf_type);
 	}
 	return 0;
 }
@@ -63,7 +63,7 @@ void Module::note_off() {
 	}
 }
 
-const float_s* Module::get_out_buf() {
+const float_s* Module::get_out_buf() const {
 	return out_buf;
 }
 

@@ -3,7 +3,7 @@
 #include <chrono>
 #include <cstdio>
 
-typedef float float_s; // sample format
+using float_s = float; // sample format
 
 namespace utils {
 	template <typename T, size_t L>

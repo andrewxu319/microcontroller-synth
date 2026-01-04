@@ -1,3 +1,13 @@
+/*
+difference between this implementation and delay_line:
+delay is designed for fast processing at CONTROL RATE. delay time must be a multiple of buffer_size
+long delay times
+no feedback
+cannot modulate delay time
+
+might end up just using delay_line for this instead
+*/
+
 #include "delay.h"
 
 #include "utils/accelerator.h"
@@ -52,14 +62,12 @@ void Delay::generate_buf() {
 		}
 	}
 	else {
-		for (size_t i{ 0 }; i < config::buffer_size; i += config::control_rate) {
-			//if (delay_time_mod_sum) { // DO LATER
-			//	set_delay_time(delay_time_mod_sum[i] + delay_time);
-			//	//delay_buffer.fast_resize(static_cast<size_t>(round((delay_time_mod_sum[i] + delay_time) * config::sample_rate / config::buffer_size)) * config::buffer_size);
-			//}
-			const float_s* read_start_ptr{ delay_buffer.pop_start_with_pointer(config::control_rate) };
-			accelerator::vec_mult_add_float_s(read_start_ptr, out_buf + i, out_buf + i, feedback, config::control_rate);
-		}
+		//if (delay_time_mod_sum) { // DO LATER. also switch back to control rate
+		//	set_delay_time(delay_time_mod_sum[i] + delay_time);
+		//	//delay_buffer.fast_resize(static_cast<size_t>(round((delay_time_mod_sum[i] + delay_time) * config::sample_rate / config::buffer_size)) * config::buffer_size);
+		//}
+		const float_s* read_start_ptr{ delay_buffer.pop_start_with_pointer(config::buffer_size) };
+		accelerator::vec_mult_add_float_s(read_start_ptr, out_buf, out_buf, feedback, config::buffer_size);
 	}
 
 	delay_buffer.push_back(out_buf, config::buffer_size);

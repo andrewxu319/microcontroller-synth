@@ -60,10 +60,25 @@
     <ClCompile Include="src\synthesis\modules\fx\phaser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\synthesis\modules\fx\flanger.cpp">
+    <ClCompile Include="src\synthesis\modules\noise_generator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\synthesis\modules\noise_generator.cpp">
+    <ClCompile Include="src\synthesis\modules\fx\chorus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\synthesis\modules\fx\reverb\reverb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\synthesis\modules\fx\reverb\schroeder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\synthesis\modules\fx\components\delay_line.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\synthesis\modules\fx\flanger.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\synthesis\modules\fx\components\schroeder_allpass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -96,9 +111,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\includes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\typedefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\standalone\file_io.h">
@@ -141,6 +153,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\synthesis\modules\noise_generator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\synthesis\modules\fx\chorus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\rng.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\synthesis\modules\fx\reverb\reverb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\synthesis\modules\fx\reverb\schroeder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\synthesis\modules\fx\components\delay_line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\synthesis\modules\fx\components\schroeder_allpass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

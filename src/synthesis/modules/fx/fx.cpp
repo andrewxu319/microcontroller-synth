@@ -8,7 +8,7 @@ using namespace synthesis;
 
 Fx::Fx(vector<const float_s*>* in_bufs_)
 	: Module::Module(in_bufs_),
-	wet{ 0 },
+	wet{ 1.0 },
 	audio_in_buf{}
 {
 }

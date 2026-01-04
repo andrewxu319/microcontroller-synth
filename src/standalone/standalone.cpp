@@ -6,9 +6,10 @@
 #include "synthesis/modules/voice_manager.h"
 #include "synthesis/modules/fx/filter.h"
 #include "synthesis/modules/fx/delay.h"
-#include "synthesis/modules//fx/phaser.h"
-#include "synthesis/modules//fx/flanger.h"
-#include "synthesis/modules//fx/chorus.h"
+#include "synthesis/modules/fx/phaser.h"
+#include "synthesis/modules/fx/flanger.h"
+#include "synthesis/modules/fx/chorus.h"
+#include "synthesis/modules/fx/reverb/schroeder.h"
 #include "synthesis/modules/modulator/envelope.h"
 #include "standalone/midi_listener.h"
 
@@ -25,6 +26,10 @@ int main() {
 	midi_listener::open_port(config::midi_port);
 
 	synthesis::voice_manager = static_cast<VoiceManager*>(synthesis::add_module(make_unique<VoiceManager>()));
+
+	Schroeder* reverb{ static_cast<Schroeder*>(synthesis::add_module(make_unique<Schroeder>())) };
+	reverb->add_output(master, Master::BufTypes::AUDIO);
+	reverb->wet = 1.0;
 
 	//Delay* delay{ static_cast<Delay*>(synthesis::add_module(make_unique<Delay>())) };
 	//delay->add_output(master, Master::BufTypes::AUDIO);
@@ -64,16 +69,16 @@ int main() {
 	//phaser_lfo->set_gain(0.5);
 	//phaser_lfo->add_output(phaser, Phaser::BufTypes::WET);
 
-	Flanger* flanger{ static_cast<Flanger*>(synthesis::add_module(make_unique<Flanger>())) };
-	flanger->add_output(master, Master::BufTypes::AUDIO);
-	flanger->wet = 1.0;
-	flanger->set_offset(6);
-	synthesis::attach_cc(18,
-		[target = flanger]
-		(const uint8_t x) {
-			target->set_feedback((x * 2 / 127.0 - 1.0) * 0.99);
-		}
-	);
+	//Flanger* flanger{ static_cast<Flanger*>(synthesis::add_module(make_unique<Flanger>())) };
+	//flanger->add_output(master, Master::BufTypes::AUDIO);
+	//flanger->wet = 1.0;
+	//flanger->set_delay(6);
+	//synthesis::attach_cc(18,
+	//	[target = flanger]
+	//	(const uint8_t x) {
+	//		target->set_feedback((x * 2 / 127.0 - 1.0) * 0.99);
+	//	}
+	//);
 
 	//Oscillator* flanger_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 	//flanger_lfo->load_waveform("sine");
@@ -95,7 +100,7 @@ int main() {
 	//chorus_lfo->add_output(chorus, Chorus::BufTypes::FREQ_RANGE);
 
 	Mixer* mixer{ static_cast<Mixer*>(synthesis::add_module(make_unique<Mixer>())) };
-	mixer->add_output(flanger, Chorus::BufTypes::AUDIO);
+	mixer->add_output(reverb, Chorus::BufTypes::AUDIO);
 
 	for (int i{ 0 }; i < config::num_voices; i++) {
 		//NoiseGenerator* noise_generator{ static_cast<NoiseGenerator*>(synthesis::add_module(make_unique<NoiseGenerator>())) };
@@ -104,7 +109,7 @@ int main() {
 		//Oscillator* osc_sine{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 		//osc_sine->add_output(mixer, true);
 		//osc_sine->set_gain(0);
-		Oscillator* osc_sawtooth{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sawtooth"))) };
+		Oscillator* osc_sawtooth{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 		osc_sawtooth->add_output(mixer, Mixer::BufTypes::AUDIO);
 		osc_sawtooth->set_gain(0);
 		//Oscillator* osc_triangle{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("triangle"))) };
@@ -120,13 +125,13 @@ int main() {
 		synthesis::attach_cc(14, 
 			[target = envelope]
 			(const uint8_t x) {
-				target->set_attack(0.5 * pow(2, 0.0181102362 * x) - 0.499);
+				target->set_attack(pow(2, 0.0181102362 * x - 1) - 0.490); // at least 10ms to avoid popping
 			}
 		);
 		synthesis::attach_cc(15,
 			[target = envelope]
 			(const uint8_t x) {
-				target->set_decay(0.5 * pow(2, 0.0181102362 * x) - 0.499);
+				target->set_decay(pow(2, 0.0181102362 * x - 1) - 0.490); // at least 10ms to avoid popping
 			}
 		);
 		synthesis::attach_cc(16,
@@ -138,7 +143,7 @@ int main() {
 		synthesis::attach_cc(17,
 			[target = envelope]
 			(const uint8_t x) {
-				target->set_release(0.5 * pow(2, 0.0181102362 * x) - 0.499);
+				target->set_release(pow(2, 0.0181102362 * x - 1) - 0.490); // at least 10ms to avoid popping
 			}
 		);
 
