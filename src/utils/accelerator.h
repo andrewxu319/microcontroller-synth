@@ -68,7 +68,7 @@ namespace accelerator {
 		for (; i < len - 8; i += 8) { // with regular avx, we can add 8 at once
 			const __m256 avx_in_1{ _mm256_loadu_ps(&in_1[i]) }; // change type for int or double if needed. use conditional_t
 			const __m256 avx_in_2{ _mm256_loadu_ps(&in_2[i]) };
-			const __m256 avx_result{ _mm256_add_ps(_mm256_mul_ps(avx_in_1, scalar_reg_), avx_in_2) };
+			const __m256 avx_result{ _mm256_fmadd_ps(avx_in_1, scalar_reg_, avx_in_2) };
 			_mm256_storeu_ps(&out[i], avx_result);
 		}
 		for (; i < len; i++) {

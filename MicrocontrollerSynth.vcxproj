@@ -174,6 +174,7 @@
     <ClCompile Include="src\synthesis\modules\fx\flanger.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\fx.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\phaser.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\reverb\luff.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\reverb\reverb.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\reverb\schroeder.cpp" />
     <ClCompile Include="src\synthesis\modules\master.cpp" />
@@ -194,12 +195,14 @@
     <ClInclude Include="src\standalone\sound_engine.h" />
     <ClInclude Include="src\synthesis\modules\fx\chorus.h" />
     <ClInclude Include="src\synthesis\modules\fx\components\delay_line.h" />
+    <ClInclude Include="src\synthesis\modules\fx\components\multichannel_diffuser.h" />
     <ClInclude Include="src\synthesis\modules\fx\components\schroeder_allpass.h" />
     <ClInclude Include="src\synthesis\modules\fx\delay.h" />
     <ClInclude Include="src\synthesis\modules\fx\filter.h" />
     <ClInclude Include="src\synthesis\modules\fx\flanger.h" />
     <ClInclude Include="src\synthesis\modules\fx\fx.h" />
     <ClInclude Include="src\synthesis\modules\fx\phaser.h" />
+    <ClInclude Include="src\synthesis\modules\fx\reverb\luff.h" />
     <ClInclude Include="src\synthesis\modules\fx\reverb\reverb.h" />
     <ClInclude Include="src\synthesis\modules\fx\reverb\schroeder.h" />
     <ClInclude Include="src\synthesis\modules\master.h" />

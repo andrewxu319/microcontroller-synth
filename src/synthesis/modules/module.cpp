@@ -34,7 +34,7 @@ int Module::add_input(Module* __restrict input, const uint8_t buf_type) { // -1 
 		return -1;
 	}
 	if (buf_type != static_cast<uint8_t>(-1)) {
-		add_buf(input->out_buf, buf_type);
+		add_buf(input->get_out_buf(), buf_type);
 	}
 	return 0;
 }

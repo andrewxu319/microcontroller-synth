@@ -10,6 +10,7 @@
 #include "synthesis/modules/fx/flanger.h"
 #include "synthesis/modules/fx/chorus.h"
 #include "synthesis/modules/fx/reverb/schroeder.h"
+#include "synthesis/modules/fx/components/multichannel_diffuser.h"
 #include "synthesis/modules/modulator/envelope.h"
 #include "standalone/midi_listener.h"
 
@@ -27,9 +28,30 @@ int main() {
 
 	synthesis::voice_manager = static_cast<VoiceManager*>(synthesis::add_module(make_unique<VoiceManager>()));
 
-	Schroeder* reverb{ static_cast<Schroeder*>(synthesis::add_module(make_unique<Schroeder>())) };
-	reverb->add_output(master, Master::BufTypes::AUDIO);
-	reverb->wet = 1.0;
+	//Schroeder* reverb{ static_cast<Schroeder*>(synthesis::add_module(make_unique<Schroeder>())) };
+	//reverb->add_output(master, Master::BufTypes::AUDIO);
+	//reverb->wet = 1.0;
+
+	MultichannelDiffuser<8>* diffuser_3{ static_cast<MultichannelDiffuser<8>*>(synthesis::add_module(make_unique<MultichannelDiffuser<8>>(50))) };
+	diffuser_3->set_delay_time(104);
+	diffuser_3->add_output(master, -1);
+	for (uint8_t i{ 0 }; i < 8; i++) {
+		master->add_buf(diffuser_3->get_out_bufs()->data()[i].data(), MultichannelDiffuser<8>::BufTypes::AUDIO);
+	}
+
+	MultichannelDiffuser<8>* diffuser_2{ static_cast<MultichannelDiffuser<8>*>(synthesis::add_module(make_unique<MultichannelDiffuser<8>>(50))) };
+	diffuser_2->set_delay_time(193);
+	diffuser_2->add_output(diffuser_3, -1);
+	for (uint8_t i{ 0 }; i < 8; i++) {
+		diffuser_3->add_buf(diffuser_2->get_out_bufs()->data()[i].data(), MultichannelDiffuser<8>::BufTypes::AUDIO);
+	}
+
+	MultichannelDiffuser<8>* diffuser_1{ static_cast<MultichannelDiffuser<8>*>(synthesis::add_module(make_unique<MultichannelDiffuser<8>>(50))) };
+	diffuser_1->set_delay_time(311);
+	diffuser_1->add_output(diffuser_2, -1);
+	for (uint8_t i{ 0 }; i < 8; i++) {
+		diffuser_2->add_buf(diffuser_1->get_out_bufs()->data()[i].data(), MultichannelDiffuser<8>::BufTypes::AUDIO);
+	}
 
 	//Delay* delay{ static_cast<Delay*>(synthesis::add_module(make_unique<Delay>())) };
 	//delay->add_output(master, Master::BufTypes::AUDIO);
@@ -100,7 +122,10 @@ int main() {
 	//chorus_lfo->add_output(chorus, Chorus::BufTypes::FREQ_RANGE);
 
 	Mixer* mixer{ static_cast<Mixer*>(synthesis::add_module(make_unique<Mixer>())) };
-	mixer->add_output(reverb, Chorus::BufTypes::AUDIO);
+	mixer->add_output(diffuser_1, Chorus::BufTypes::AUDIO);
+	for (uint8_t i{ 1 }; i < 8; i++) {
+		diffuser_1->add_buf(mixer->get_out_buf(), MultichannelDiffuser<8>::BufTypes::AUDIO);
+	}
 
 	for (int i{ 0 }; i < config::num_voices; i++) {
 		//NoiseGenerator* noise_generator{ static_cast<NoiseGenerator*>(synthesis::add_module(make_unique<NoiseGenerator>())) };
@@ -158,6 +183,7 @@ int main() {
 		synthesis::voice_manager->add_output(voice);
 	}
 
+	synthesis::init();
 	sound_engine::start_stream();
 
 	while (true) {

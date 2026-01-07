@@ -81,6 +81,9 @@
     <ClCompile Include="src\synthesis\modules\fx\components\schroeder_allpass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\synthesis\modules\fx\reverb\luff.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\standalone\sound_engine.h">
@@ -171,6 +174,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\synthesis\modules\fx\components\schroeder_allpass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\synthesis\modules\fx\components\multichannel_diffuser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\synthesis\modules\fx\reverb\luff.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

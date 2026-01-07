@@ -18,21 +18,15 @@ SchroederAllpass::SchroederAllpass()
 	delay{}
 { }
 
-void SchroederAllpass::add_buf(const float_s* __restrict buf, uint8_t buf_type) {
-	Fx::add_buf(buf, buf_type);
+void SchroederAllpass::init() {
+	delay_line.add_buf(audio_in_buf, WetOnlyDelayLine::BufTypes::AUDIO);
+	delay_line.audio_in_buf = audio_in_buf;
+	delay_line.set_feedback(feedback);
 
-	if (buf_type == BufTypes::AUDIO && in_bufs[BufTypes::AUDIO].size() == 1) {
-		audio_in_buf = buf;
-
-		delay_line.add_buf(audio_in_buf, WetOnlyDelayLine::BufTypes::AUDIO);
-		delay_line.audio_in_buf = audio_in_buf;
-		delay_line.set_feedback(feedback);
-
-		adder.add_buf(audio_in_buf, Mixer::BufTypes::AUDIO);
-		adder.set_in_buf_gain(audio_in_buf, -feedback);
-		adder.add_buf(delay_line.get_out_buf(), Mixer::BufTypes::AUDIO);
-		adder.set_in_buf_gain(delay_line.get_out_buf(), 1 - feedback * feedback);
-	}
+	adder.add_buf(audio_in_buf, Mixer::BufTypes::AUDIO);
+	adder.set_in_buf_gain(audio_in_buf, -feedback);
+	adder.add_buf(delay_line.get_out_buf(), Mixer::BufTypes::AUDIO);
+	adder.set_in_buf_gain(delay_line.get_out_buf(), 1 - feedback * feedback);
 }
 
 void SchroederAllpass::generate_buf() {

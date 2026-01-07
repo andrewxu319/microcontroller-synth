@@ -83,7 +83,7 @@ void DelayLine::set_feedback(const float_s value) {
 }
 
 void DelayLine::resize(size_t capacity) {
-	memory_buffer.resize(capacity);
+	memory_buffer.resize(capacity * config::buffer_size);
 }
 
 WetOnlyDelayLine::WetOnlyDelayLine(size_t capacity) : DelayLine(capacity) {};

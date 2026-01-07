@@ -16,9 +16,10 @@ namespace synthesis {
 	extern queue<midi::CcMessage> cc_messages;
 	extern array<vector<function<void(uint8_t)>>, 128> cc_mappings;
 
-	extern void read_messages();
+	extern void init();
 	extern Module* add_module(unique_ptr<Module> module);
 	extern int topo_sort();
+	extern void read_messages();
 
 	template <typename Fn>
 	inline void attach_cc(const uint8_t cc, Fn&& fn) {

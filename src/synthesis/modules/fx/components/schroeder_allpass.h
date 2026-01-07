@@ -8,7 +8,7 @@ namespace synthesis {
 	class SchroederAllpass : public Fx {
 	public:
 		SchroederAllpass();
-		void add_buf(const float_s* __restrict buf, uint8_t buf_type);
+		void init();
 		void generate_buf() override;
 
 		void set_feedback(const float_s value);

@@ -2,6 +2,8 @@
 
 #include "includes.h"
 
+#include <cassert>
+
 namespace utils {
 	template <typename T>
 	class CircularArray {
@@ -14,7 +16,7 @@ namespace utils {
 			data_array{ data.data() },
 			start{ 0 }
 		{
-			;
+			assert((size_ % config::buffer_size) == 0);
 		}
 
 		typename vector<T>::iterator begin() {

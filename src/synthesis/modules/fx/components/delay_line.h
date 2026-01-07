@@ -8,11 +8,11 @@
 namespace synthesis {
 	class DelayLine : public Fx {
 	public:
-		DelayLine(size_t capacity); // in multiples of buffer_size
+		DelayLine(size_t capacity = 0); // in multiples of buffer_size
 		void generate_buf() override;
 		void set_delay(const double value_ms);
 		void set_feedback(const float_s value);
-		void resize(size_t capacity);
+		void resize(size_t capacity); // in multiples of buffer_size
 
 		enum BufTypes {
 			AUDIO,
@@ -31,7 +31,7 @@ namespace synthesis {
 
 	class WetOnlyDelayLine : public DelayLine {
 	public:
-		WetOnlyDelayLine(size_t capacity);
+		WetOnlyDelayLine(size_t capacity = 0);
 		void generate_buf() override;
 	};
 }

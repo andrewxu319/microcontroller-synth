@@ -13,6 +13,12 @@ namespace synthesis {
 	extern queue<midi::CcMessage> cc_messages{};
 	array<vector<function<void(uint8_t)>>, 128> cc_mappings{};
 
+	void init() {
+		for (const unique_ptr<Module>& module : modules) {
+			module->init();
+		}
+	}
+
 	Module* add_module(unique_ptr<Module> module) {
 		// must be adding master
 		Module* ret_ptr{ module.get() };

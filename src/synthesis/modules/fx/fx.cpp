@@ -37,8 +37,16 @@ void Fx::mix_dry_wet() {
 int Fx::add_input(Module* __restrict input, const uint8_t buf_type) {
 	assert(in_bufs[0].empty()); // only one audio input alowed
 	const int ret{ Module::add_input(input, buf_type) };
-	if (ret == 0) {
+	if (ret == 0 && buf_type == AUDIO && in_bufs[AUDIO].size() == 1) {
 		audio_in_buf = input->get_out_buf();
 	}
 	return ret;
+}
+
+void Fx::add_buf(const float_s* __restrict buf, uint8_t buf_type) {
+	Module::add_buf(buf, buf_type);
+
+	if (buf_type == AUDIO && in_bufs[AUDIO].size() == 1) {
+		audio_in_buf = buf;
+	}
 }

@@ -3,21 +3,19 @@
 #include "reverb.h"
 
 #include "synthesis/modules/fx/components/delay_line.h"
-#include "synthesis/modules/fx/components/schroeder_allpass.h"
+#include "synthesis/modules/fx/components/multichannel_diffuser.h"
 #include "synthesis/modules/mixer.h"
 
 #include <array>
 
 namespace synthesis {
-	class Schroeder : public Reverb {
+	class Luff : public Reverb {
 	public:
-		Schroeder();
+		Luff();
 		void init() override;
 		void generate_buf() override;
 
 	private:
-		array<WetOnlyDelayLine, 4> delay_lines;
-		Mixer mixer;
-		SchroederAllpass allpass_filters[2];
+		MultichannelDiffuser<8> diffusers[3];
 	};
 }
