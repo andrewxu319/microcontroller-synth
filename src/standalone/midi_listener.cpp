@@ -23,7 +23,7 @@ namespace standalone::midi_listener{
 		}
 	}
 
-	void send_message(double delta_time, vector<unsigned char>* midi_message, void* user_data) {
+	void send_message(double delta_time, vector<unsigned char>* midi_message, void* user_data) { // delta_time unused but required by rtmidi
 		//utils::timer::start();
 		size_t len = midi_message->size(); // bytes
 		//for (unsigned char b : *midi_message) {

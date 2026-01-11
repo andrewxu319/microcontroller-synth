@@ -2,8 +2,6 @@
 
 #include "utils/accelerator.h"
 
-#include <cassert>
-
 using namespace synthesis;
 
 Fx::Fx(vector<const float_s*>* in_bufs_)
@@ -14,7 +12,7 @@ Fx::Fx(vector<const float_s*>* in_bufs_)
 }
 
 void Fx::mix_dry_wet() {
-	if (in_bufs[WET].empty()) {
+	if (in_bufs_ptr[WET].empty()) {
 		accelerator::vec_scal_mult_float_s(out_buf, out_buf, wet, config::buffer_size);
 		if (audio_in_buf[0] != EMPTY_BUF_MARKER) {
 			accelerator::vec_mult_add_float_s(audio_in_buf, out_buf, out_buf, 1.0f - wet, config::buffer_size);
@@ -35,18 +33,25 @@ void Fx::mix_dry_wet() {
 }
 
 int Fx::add_input(Module* __restrict input, const uint8_t buf_type) {
-	assert(in_bufs[0].empty()); // only one audio input alowed
+	assert(in_bufs_ptr[0].empty()); // only one audio input alowed
 	const int ret{ Module::add_input(input, buf_type) };
-	if (ret == 0 && buf_type == AUDIO && in_bufs[AUDIO].size() == 1) {
+	if (ret == 0 && buf_type == AUDIO && in_bufs_ptr[AUDIO].size() == 1) {
 		audio_in_buf = input->get_out_buf();
 	}
 	return ret;
 }
 
+int Fx::add_input(MultichannelModule* __restrict input, const uint8_t buf_type) {
+	if (buf_type != -1) {
+		throw runtime_error("Cannot add multichannel input to fx with specified buffer type. Only one buffer allowed---must add manually.\n");
+	}
+	return add_input(static_cast<Module*>(input), -1);
+}
+
 void Fx::add_buf(const float_s* __restrict buf, uint8_t buf_type) {
 	Module::add_buf(buf, buf_type);
 
-	if (buf_type == AUDIO && in_bufs[AUDIO].size() == 1) {
+	if (buf_type == AUDIO && in_bufs_ptr[AUDIO].size() == 1) {
 		audio_in_buf = buf;
 	}
 }

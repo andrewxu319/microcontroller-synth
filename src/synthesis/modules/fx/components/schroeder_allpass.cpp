@@ -12,21 +12,20 @@ using namespace synthesis;
 SchroederAllpass::SchroederAllpass()
 	: Fx(in_bufs),
 	in_bufs{},
-	delay_line{ 1 }, // PLACEHOLDER VALUE
+	delay_line{ 1, 1 }, // PLACEHOLDER VALUE
 	adder{},
 	feedback{},
 	delay{}
 { }
 
 void SchroederAllpass::init() {
-	delay_line.add_buf(audio_in_buf, WetOnlyDelayLine::BufTypes::AUDIO);
-	delay_line.audio_in_buf = audio_in_buf;
+	delay_line.add_buf(audio_in_buf, WetOnlyDelayLine::BufType::AUDIO);
 	delay_line.set_feedback(feedback);
 
-	adder.add_buf(audio_in_buf, Mixer::BufTypes::AUDIO);
+	adder.add_buf(audio_in_buf, Mixer::BufType::AUDIO);
 	adder.set_in_buf_gain(audio_in_buf, -feedback);
-	adder.add_buf(delay_line.get_out_buf(), Mixer::BufTypes::AUDIO);
-	adder.set_in_buf_gain(delay_line.get_out_buf(), 1 - feedback * feedback);
+	adder.add_buf(delay_line.get_out_bufs()[0].data(), Mixer::BufType::AUDIO);
+	adder.set_in_buf_gain(delay_line.get_out_bufs()[0].data(), 1 - feedback * feedback);
 }
 
 void SchroederAllpass::generate_buf() {
@@ -36,7 +35,7 @@ void SchroederAllpass::generate_buf() {
 }
 
 void SchroederAllpass::set_delay(const double value_ms) {
-	delay = value_ms * 0.001 * config::sample_rate;
+	delay = static_cast<size_t>(value_ms * 0.001 * config::sample_rate);
 }
 
 void SchroederAllpass::set_feedback(const float_s value) {

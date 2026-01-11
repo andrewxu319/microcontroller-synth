@@ -28,7 +28,7 @@ void Master::generate_buf() {
 	}
 
 	bool is_empty{ true };
-	for (const float_s* in_buf : in_bufs[Mixer::BufTypes::AUDIO]) {
+	for (const float_s* in_buf : in_bufs[Mixer::BufType::AUDIO]) {
 		if (in_buf[0] != EMPTY_BUF_MARKER) {
 			if (is_empty) {
 				memcpy(out_buf, in_buf, config::buffer_size * sizeof(float_s)); // first nonempty buffer, we copy it directly

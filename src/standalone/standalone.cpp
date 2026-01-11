@@ -10,6 +10,7 @@
 #include "synthesis/modules/fx/flanger.h"
 #include "synthesis/modules/fx/chorus.h"
 #include "synthesis/modules/fx/reverb/schroeder.h"
+#include "synthesis/modules/fx/reverb/luff.h"
 #include "synthesis/modules/fx/components/multichannel_diffuser.h"
 #include "synthesis/modules/modulator/envelope.h"
 #include "standalone/midi_listener.h"
@@ -29,44 +30,31 @@ int main() {
 	synthesis::voice_manager = static_cast<VoiceManager*>(synthesis::add_module(make_unique<VoiceManager>()));
 
 	//Schroeder* reverb{ static_cast<Schroeder*>(synthesis::add_module(make_unique<Schroeder>())) };
-	//reverb->add_output(master, Master::BufTypes::AUDIO);
+	//reverb->add_output(master, Master::BufType::AUDIO);
 	//reverb->wet = 1.0;
 
-	MultichannelDiffuser<8>* diffuser_3{ static_cast<MultichannelDiffuser<8>*>(synthesis::add_module(make_unique<MultichannelDiffuser<8>>(50))) };
-	diffuser_3->set_delay_time(104);
-	diffuser_3->add_output(master, -1);
-	for (uint8_t i{ 0 }; i < 8; i++) {
-		master->add_buf(diffuser_3->get_out_bufs()->data()[i].data(), MultichannelDiffuser<8>::BufTypes::AUDIO);
-	}
-
-	MultichannelDiffuser<8>* diffuser_2{ static_cast<MultichannelDiffuser<8>*>(synthesis::add_module(make_unique<MultichannelDiffuser<8>>(50))) };
-	diffuser_2->set_delay_time(193);
-	diffuser_2->add_output(diffuser_3, -1);
-	for (uint8_t i{ 0 }; i < 8; i++) {
-		diffuser_3->add_buf(diffuser_2->get_out_bufs()->data()[i].data(), MultichannelDiffuser<8>::BufTypes::AUDIO);
-	}
-
-	MultichannelDiffuser<8>* diffuser_1{ static_cast<MultichannelDiffuser<8>*>(synthesis::add_module(make_unique<MultichannelDiffuser<8>>(50))) };
-	diffuser_1->set_delay_time(311);
-	diffuser_1->add_output(diffuser_2, -1);
-	for (uint8_t i{ 0 }; i < 8; i++) {
-		diffuser_2->add_buf(diffuser_1->get_out_bufs()->data()[i].data(), MultichannelDiffuser<8>::BufTypes::AUDIO);
-	}
+	Luff* luff_reverb{ static_cast<Luff*>(synthesis::add_module(make_unique<Luff>(4))) };
+	luff_reverb->add_output(master, Master::BufType::AUDIO);
+	luff_reverb->wet = 1.0;
+	luff_reverb->set_diffuser_delays({ 20, 40, 80, 160 });
+	luff_reverb->set_feedback(0.85f);
+	luff_reverb->set_feedback_delay_range(100, 200);
+	luff_reverb->set_mixing_matrix(Reverb::MixingMatrix::Householder);
 
 	//Delay* delay{ static_cast<Delay*>(synthesis::add_module(make_unique<Delay>())) };
-	//delay->add_output(master, Master::BufTypes::AUDIO);
+	//delay->add_output(master, Master::BufType::AUDIO);
 	//delay->wet = 0.5;
-	//delay->set_delay_time(0.5);
+	//delay->set_delay(0.5);
 	//delay->set_feedback(0.5);
 
 	//Oscillator* delay_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 	//delay_lfo->add_output(delay, true);
-	//delay->attach_mod(delay_lfo->get_out_buf(), Delay::BufTypes::FEEDBACK);
+	//delay->attach_mod(delay_lfo->get_out_buf(), Delay::BufType::FEEDBACK);
 	//delay_lfo->set_freq(1);
 	//delay_lfo->set_gain(0.25);
 
 	//Filter<Dsp::RBJ::Design::LowPass, 1>* filter{ static_cast<Filter<Dsp::RBJ::Design::LowPass, 1>*>(synthesis::add_module(make_unique<Filter<Dsp::RBJ::Design::LowPass, 1>>())) };
-	//filter->add_output(delay, Delay::BufTypes::AUDIO);
+	//filter->add_output(delay, Delay::BufType::AUDIO);
 	//filter->set_cutoff(2000);
 	//filter->set_resonance(1.25);
 	////filter->set_band_width(100);
@@ -74,7 +62,7 @@ int main() {
 
 	//Oscillator* filter_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 	//filter_lfo->add_output(filter, true);
-	//filter->attach_mod(filter_lfo->get_out_buf(), Filter<Dsp::RBJ::Design::LowPass, 1>::BufTypes::WET);
+	//filter->attach_mod(filter_lfo->get_out_buf(), Filter<Dsp::RBJ::Design::LowPass, 1>::BufType::WET);
 	//filter_lfo->set_freq(0.5);
 	//filter_lfo->set_gain(0.5);
 
@@ -83,16 +71,16 @@ int main() {
 	//phaser->set_center_freq(1000);
 	//phaser->set_stages(4);
 	//phaser->set_feedback(0.7);
-	//phaser->add_output(master, Filter<Dsp::RBJ::Design::LowPass, 1>::BufTypes::AUDIO);
+	//phaser->add_output(master, Filter<Dsp::RBJ::Design::LowPass, 1>::BufType::AUDIO);
 
 	//Oscillator* phaser_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 	//phaser_lfo->load_waveform("sine");
 	//phaser_lfo->set_freq(0.5);
 	//phaser_lfo->set_gain(0.5);
-	//phaser_lfo->add_output(phaser, Phaser::BufTypes::WET);
+	//phaser_lfo->add_output(phaser, Phaser::BufType::WET);
 
 	//Flanger* flanger{ static_cast<Flanger*>(synthesis::add_module(make_unique<Flanger>())) };
-	//flanger->add_output(master, Master::BufTypes::AUDIO);
+	//flanger->add_output(master, Master::BufType::AUDIO);
 	//flanger->wet = 1.0;
 	//flanger->set_delay(6);
 	//synthesis::attach_cc(18,
@@ -107,74 +95,74 @@ int main() {
 	//flanger_lfo->set_freq(0.5);
 	//flanger_lfo->set_gain(5);
 	//flanger_lfo->add_output(flanger, true);
-	//flanger->attach_mod(flanger_lfo->get_out_buf(), Flanger::BufTypes::OFFSET);
+	//flanger->attach_mod(flanger_lfo->get_out_buf(), Flanger::BufType::OFFSET);
 
 	//Chorus* chorus{ static_cast<Chorus*>(synthesis::add_module(make_unique<Chorus>())) };
 	//chorus->wet = 1.0;
 	//chorus->set_delay(30);
 	//chorus->set_voice_count(6);
-	//chorus->add_output(master, Phaser::BufTypes::AUDIO);
+	//chorus->add_output(master, Phaser::BufType::AUDIO);
 
 	//Oscillator* chorus_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 	//chorus_lfo->load_waveform("sine");
 	//chorus_lfo->set_freq(1);
 	//chorus_lfo->set_gain(0.5);
-	//chorus_lfo->add_output(chorus, Chorus::BufTypes::FREQ_RANGE);
+	//chorus_lfo->add_output(chorus, Chorus::BufType::FREQ_RANGE);
 
 	Mixer* mixer{ static_cast<Mixer*>(synthesis::add_module(make_unique<Mixer>())) };
-	mixer->add_output(diffuser_1, Chorus::BufTypes::AUDIO);
-	for (uint8_t i{ 1 }; i < 8; i++) {
-		diffuser_1->add_buf(mixer->get_out_buf(), MultichannelDiffuser<8>::BufTypes::AUDIO);
+	mixer->add_output(luff_reverb, -1);
+	for (uint8_t i{ 0 }; i < 8; i++) {
+		luff_reverb->add_buf(mixer->get_out_buf(), MultichannelDiffuser::BufType::AUDIO);
 	}
 
 	for (int i{ 0 }; i < config::num_voices; i++) {
 		//NoiseGenerator* noise_generator{ static_cast<NoiseGenerator*>(synthesis::add_module(make_unique<NoiseGenerator>())) };
-		//noise_generator->add_output(mixer, Mixer::BufTypes::AUDIO);
+		//noise_generator->add_output(mixer, Mixer::BufType::AUDIO);
 		//noise_generator->set_gain(0);
 		//Oscillator* osc_sine{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
 		//osc_sine->add_output(mixer, true);
 		//osc_sine->set_gain(0);
 		Oscillator* osc_sawtooth{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine"))) };
-		osc_sawtooth->add_output(mixer, Mixer::BufTypes::AUDIO);
+		osc_sawtooth->add_output(mixer, Mixer::BufType::AUDIO);
 		osc_sawtooth->set_gain(0);
 		//Oscillator* osc_triangle{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("triangle"))) };
 		//osc_triangle->add_output(mixer, true);
 		Envelope* envelope{ static_cast<Envelope*>(synthesis::add_module(make_unique<Envelope>())) };
 		//envelope->add_output(osc_sine, true);
-		envelope->add_output(osc_sawtooth, NoiseGenerator::BufTypes::GAIN);
+		envelope->add_output(osc_sawtooth, NoiseGenerator::BufType::GAIN);
 		//envelope->add_output(osc_triangle, true);
-		envelope->set_attack(0.3);
-		envelope->set_decay(0.3);
-		envelope->set_sustain(0.5);
-		envelope->set_release(0.5);
+		envelope->set_attack(0.02f);
+		envelope->set_decay(0.02f);
+		envelope->set_sustain(1.0f);
+		envelope->set_release(0.02f);
 		synthesis::attach_cc(14, 
 			[target = envelope]
 			(const uint8_t x) {
-				target->set_attack(pow(2, 0.0181102362 * x - 1) - 0.490); // at least 10ms to avoid popping
+				target->set_attack(static_cast<float_s>(pow(2, 0.0181102362 * x - 1) - 0.490)); // at least 10ms to avoid popping
 			}
 		);
 		synthesis::attach_cc(15,
 			[target = envelope]
 			(const uint8_t x) {
-				target->set_decay(pow(2, 0.0181102362 * x - 1) - 0.490); // at least 10ms to avoid popping
+				target->set_decay(static_cast<float_s>(pow(2, 0.0181102362 * x - 1) - 0.490)); // at least 10ms to avoid popping
 			}
 		);
 		synthesis::attach_cc(16,
 			[target = envelope]
 			(const uint8_t x) {
-				target->set_sustain(x / 127.0);
+				target->set_sustain(x / 127.0f);
 			}
 		);
 		synthesis::attach_cc(17,
 			[target = envelope]
 			(const uint8_t x) {
-				target->set_release(pow(2, 0.0181102362 * x - 1) - 0.490); // at least 10ms to avoid popping
+				target->set_release(static_cast<float_s>(pow(2, 0.0181102362 * x - 1) - 0.490)); // at least 10ms to avoid popping
 			}
 		);
 
 		//Oscillator* pitch_lfo{ static_cast<Oscillator*>(synthesis::add_module(make_unique<Oscillator>("sine", true))) };
 		//pitch_lfo->add_output(osc_sawtooth, true);
-		//osc_sawtooth->attach_mod(pitch_lfo->get_out_buf(), Oscillator::BufTypes::PITCH);
+		//osc_sawtooth->attach_mod(pitch_lfo->get_out_buf(), Oscillator::BufType::PITCH);
 		//pitch_lfo->set_freq(4.64);
 		//pitch_lfo->set_gain(10);
 

@@ -12,8 +12,8 @@ Mixer::Mixer()
 
 void Mixer::generate_buf() {
 	bool is_empty{ true };
-	memset(out_buf, 0.0f, config::buffer_size * sizeof(float_s));
-	for (const float_s* in_buf : in_bufs[BufTypes::AUDIO]) {
+	memset(out_buf, 0, config::buffer_size * sizeof(float_s));
+	for (const float_s* in_buf : in_bufs[BufType::AUDIO]) {
 		if (in_buf[0] != EMPTY_BUF_MARKER) {
 			if (is_empty) {
 				memcpy(out_buf, in_buf, config::buffer_size * sizeof(float_s)); // first nonempty buffer, we copy it directly
@@ -38,7 +38,7 @@ void Mixer::generate_buf() {
 }
 
 void Mixer::add_buf(const float_s* __restrict buf, uint8_t buf_type) {
-	if (buf_type == BufTypes::AUDIO) {
+	if (buf_type == BufType::AUDIO) {
 		gains[buf] = 1.0;
 	}
 

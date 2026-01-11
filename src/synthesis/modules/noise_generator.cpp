@@ -17,14 +17,14 @@ NoiseGenerator::NoiseGenerator(const bool unipolar)
 void NoiseGenerator::generate_buf() {
 	// better way to do this? or just make mono?
 	for (size_t i = 0; i < config::buffer_size; i += config::channels) {
-		*(out_buf + i) = utils::rng_normal(0.0, 0.3333);
+		*(out_buf + i) = utils::rng_normal(0.0f, 0.3333f);
 		for (size_t j = 1; j <= config::channels; j++) {
 			*(out_buf + i + j) = *(out_buf + i);
 		}
 	}
 
 	float_s effective_gain_buf[config::buffer_size];
-	if (sum_bufs(BufTypes::GAIN, effective_gain_buf, gain)) {
+	if (sum_bufs(BufType::GAIN, effective_gain_buf, gain)) {
 		accelerator::vec_entrywise_mult_float_s(effective_gain_buf, out_buf, out_buf, config::buffer_size);
 	}
 	else {

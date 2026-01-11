@@ -39,14 +39,14 @@ void Chorus::generate_buf() {
 
 	// put these here to avoid repeatedly checking if statement
 	float_s delay_lfo_range_buf_sum[config::buffer_size];
-	if (sum_bufs(BufTypes::DELAY_LFO_RANGE, delay_lfo_range_buf_sum)) {
+	if (sum_bufs(BufType::DELAY_LFO_RANGE, delay_lfo_range_buf_sum)) {
 		for (uint8_t i{ 0 }; i < num_voices; i++) {
 			accelerator::vec_scal_mult_float_s(delay_lfo_range_buf_sum, voices[i].lfo_gain_offset, i * range_proportion_to_increment - 1, config::buffer_size);
 		}
 	}
 
 	float_s freq_range_buf_sum[config::buffer_size];
-	if (sum_bufs(BufTypes::FREQ_RANGE, freq_range_buf_sum)) {
+	if (sum_bufs(BufType::FREQ_RANGE, freq_range_buf_sum)) {
 		for (uint8_t i{ 0 }; i < num_voices; i++) {
 			accelerator::vec_scal_mult_float_s(freq_range_buf_sum, voices[i].lfo_freq_offset, i * range_proportion_to_increment - 1, config::buffer_size);
 		}
@@ -57,7 +57,7 @@ void Chorus::generate_buf() {
 	}
 
 	float_s delay_buf_sum[config::buffer_size];
-	const bool delay_mods{ sum_bufs(BufTypes::DELAY, delay_buf_sum, delay_center) };
+	const bool delay_mods{ sum_bufs(BufType::DELAY, delay_buf_sum, delay_center) };
 	for (ChorusVoice& voice : voices) {
 		for (size_t i{ 0 }; i < config::buffer_size; i++) {
 			const float_s effective_delay{ (delay_mods ? delay_buf_sum[i] : 0.0f) + voice.lfo->get_out_buf()[i] };
@@ -95,9 +95,9 @@ void Chorus::set_voice_count(const uint8_t value) {
 
 	num_voices = value;
 	
-	double delay_counter{ delay_lfo_center - delay_lfo_range }; // 5, 10
+	float_s delay_counter{ delay_lfo_center - delay_lfo_range }; // 5, 10
 	float_s freq_counter{ freq_center - freq_range };
-	range_proportion_to_increment = 2.0 / (num_voices - 1);
+	range_proportion_to_increment = 2.0f / (num_voices - 1);
 	for (uint8_t i{ 0 }; i < num_voices; i++) {
 		voices[i].lfo->set_gain(delay_counter);
 		voices[i].lfo->set_freq(freq_counter);
@@ -108,24 +108,24 @@ void Chorus::set_voice_count(const uint8_t value) {
 
 int Chorus::add_input(Module* __restrict input, const uint8_t buf_type = -1) {
 	switch (buf_type) {
-	case BufTypes::DELAY_LFO_CENTER:
+	case BufType::DELAY_LFO_CENTER:
 		for (ChorusVoice& voice : voices) {
-			voice.lfo->add_input(input, Oscillator::BufTypes::GAIN);
+			voice.lfo->add_input(input, Oscillator::BufType::GAIN);
 		}
 		break;
-	case BufTypes::DELAY_LFO_RANGE:
+	case BufType::DELAY_LFO_RANGE:
 		for (uint8_t i{ 0 }; i < num_voices; i++) {
-			voices[i].lfo->add_buf(voices[i].lfo_gain_offset, Oscillator::BufTypes::GAIN);
+			voices[i].lfo->add_buf(voices[i].lfo_gain_offset, Oscillator::BufType::GAIN);
 		}
 		break;
-	case BufTypes::FREQ:
+	case BufType::FREQ:
 		for (ChorusVoice& voice : voices) {
-			voice.lfo->add_input(input, Oscillator::BufTypes::PITCH);
+			voice.lfo->add_input(input, Oscillator::BufType::PITCH);
 		}
 		break;
-	case BufTypes::FREQ_RANGE:
+	case BufType::FREQ_RANGE:
 		for (uint8_t i{ 0 }; i < num_voices; i++) {
-			voices[i].lfo->add_buf(voices[i].lfo_freq_offset, Oscillator::BufTypes::PITCH);
+			voices[i].lfo->add_buf(voices[i].lfo_freq_offset, Oscillator::BufType::PITCH);
 		}
 		break;
 	default:

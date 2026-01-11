@@ -2,6 +2,8 @@
 
 #include <chrono>
 #include <cstdio>
+#include <cassert>
+#include <stdexcept>
 
 using float_s = float; // sample format
 

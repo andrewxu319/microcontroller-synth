@@ -9,10 +9,10 @@ namespace synthesis {
 	public:
 		Delay();
 		void generate_buf();
-		void set_delay_time(double value);
+		void set_delay(double value);
 		void set_feedback(float_s value);
 
-		enum BufTypes {
+		enum BufType {
 			AUDIO,
 			WET,
 			//DELAY_TIME,

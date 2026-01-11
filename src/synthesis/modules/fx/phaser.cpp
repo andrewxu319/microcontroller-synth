@@ -29,11 +29,11 @@ void Phaser::generate_buf() {
 
 	memcpy(out_buf, audio_in_buf, config::buffer_size * sizeof(float_s));
 	float_s center_buf_sum[config::buffer_size];
-	const bool center_mods{ sum_bufs(BufTypes::CENTER_FREQ, center_buf_sum, center) };
+	const bool center_mods{ sum_bufs(BufType::CENTER_FREQ, center_buf_sum, center) };
 	float_s feedback_buf_sum[config::buffer_size];
-	const bool feedback_mods{ sum_bufs(BufTypes::FEEDBACK, feedback_buf_sum, feedback) };
+	const bool feedback_mods{ sum_bufs(BufType::FEEDBACK, feedback_buf_sum, feedback) };
 
-	for (int i{ 0 }; i < config::actual_buffer_size; i += config::control_rate) {
+	for (int i{ 0 }; i < config::channel_buffer_size; i += config::control_rate) {
 		if (center_mods) {
 			params[1] = center_buf_sum[i];
 			for (int j{ 0 }; j < stages; j++) {
@@ -61,7 +61,7 @@ void Phaser::generate_buf() {
 	mix_dry_wet();
 }
 
-void Phaser::set_center_freq(const double value) {
+void Phaser::set_center_freq(const uint16_t value) {
 	assert(value > 0);
 	center = value;
 	params[1] = value;

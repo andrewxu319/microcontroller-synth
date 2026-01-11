@@ -34,13 +34,13 @@ namespace synthesis {
 			memcpy(out_buf, audio_in_buf, config::buffer_size * sizeof(float_s));
 			
 			float_s cutoff_buf_sum[config::buffer_size];
-			const bool cutoff_mods{ sum_bufs(BufTypes::CUTOFF, cutoff_buf_sum) };
+			const bool cutoff_mods{ sum_bufs(BufType::CUTOFF, cutoff_buf_sum) };
 			float_s resonance_buf_sum[config::buffer_size];
-			const bool resonance_mods{ sum_bufs(BufTypes::RESONANCE, resonance_buf_sum) };
+			const bool resonance_mods{ sum_bufs(BufType::RESONANCE, resonance_buf_sum) };
 			float_s band_width_buf_sum[config::buffer_size];
-			const bool band_width_mods{ sum_bufs(BufTypes::BAND_WIDTH, band_width_buf_sum) };
+			const bool band_width_mods{ sum_bufs(BufType::BAND_WIDTH, band_width_buf_sum) };
 
-			for (int i{ 0 }; i < config::actual_buffer_size; i += config::control_rate) {
+			for (int i{ 0 }; i < config::channel_buffer_size; i += config::control_rate) {
 				int update_params{ false };
 				if (cutoff_mods) {
 					params[1] = cutoff + cutoff_buf_sum[i];
@@ -82,7 +82,7 @@ namespace synthesis {
 			set_resonance(value);
 		}
 
-		enum BufTypes {
+		enum BufType {
 			AUDIO,
 			WET,
 			CUTOFF,

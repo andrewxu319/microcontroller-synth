@@ -11,7 +11,7 @@
 namespace synthesis {
 	class NoiseGenerator : public Module {
 	public:
-		enum BufTypes {
+		enum BufType {
 			GAIN
 		};
 

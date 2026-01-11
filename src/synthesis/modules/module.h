@@ -8,18 +8,21 @@
 #include <array>
 
 namespace synthesis {
+	class MultichannelModule;
+
 	class Module {
 	public:
 		const int id;
 		vector<Module*> inputs;
 		vector<Module*> outputs;
 		static constexpr float_s EMPTY_BUF_MARKER{ numeric_limits<float_s>::min()};
-		vector<const float_s*>* in_bufs;
+		vector<const float_s*>* in_bufs_ptr;
 		static const float_s empty_buf[config::buffer_size];
 
-		Module(vector<const float*>* in_bufs_ = nullptr);
-		virtual int add_input(Module* __restrict input, const uint8_t buf_type = -1);
-		virtual int add_output(Module* __restrict output, const uint8_t buf_type = -1);
+		Module(vector<const float*>* in_bufs_ptr_ = nullptr);
+		int add_input(Module* __restrict input, uint8_t buf_type = -1);
+		int add_input(MultichannelModule* __restrict input, uint8_t buf_type = -1);
+		int add_output(Module* __restrict output, uint8_t buf_type = -1);
 		// implement remove input/output
 		virtual void add_buf(const float_s* __restrict buf, uint8_t buf_type);
 		// remove_buf
@@ -42,5 +45,23 @@ namespace synthesis {
 		// use unique_ptr instead
 		Module(const Module&) = delete;
 		Module& operator=(const Module&) = delete;
+	};
+
+	///////////////////////////////////////////////////////
+
+	class MultichannelModule : public Module {
+	public:
+		using Buffer = array<float_s, config::buffer_size>;
+
+		MultichannelModule(vector<const float*>* in_bufs_ptr_ = nullptr, uint8_t num_channels = 0);
+		int add_output(Module* __restrict output, uint8_t buf_type);
+		const vector<Buffer>& get_out_bufs() const; // read-only pointer
+		void set_num_channels(uint8_t value);
+
+	protected:
+		vector<Buffer> out_bufs;
+
+	private:
+		const float_s* get_out_buf() = delete;
 	};
 }

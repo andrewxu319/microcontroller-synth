@@ -66,7 +66,7 @@ void Envelope::generate_buf() {
 			}
 			break;
 		case EnvelopeState::off:
-			memset(&out_buf[t], 0.0f, (config::buffer_size - t) * sizeof(float_s));
+			memset(&out_buf[t], 0, (config::buffer_size - t) * sizeof(float_s));
 			return;
 		default:
 			break;
@@ -76,7 +76,7 @@ void Envelope::generate_buf() {
 
 void Envelope::note_on(const uint8_t note, const uint8_t velocity) {
 	state = EnvelopeState::attack;
-	delta_gain = 1.0 / state_durations[static_cast<size_t>(EnvelopeState::attack)];
+	delta_gain = 1.0f / state_durations[static_cast<size_t>(EnvelopeState::attack)];
 	t = 0;
 	//printf("attack\n");
 	Module::note_on(note, velocity);
@@ -88,26 +88,26 @@ void Envelope::note_off() {
 	//printf("release\n");
 }
 
-void Envelope::set_attack(const double value) {
-	attack = value;
-	state_durations[static_cast<size_t>(EnvelopeState::attack)] = value * config::sample_rate;
-	printf("Attack set: %f\n", value);
+void Envelope::set_attack(const float_s value_s) {
+	attack = value_s;
+	state_durations[static_cast<size_t>(EnvelopeState::attack)] = value_s * config::sample_rate;
+	printf("Attack set: %f\n", value_s);
 }
 
-void Envelope::set_decay(const double value) {
-	decay = value;
-	state_durations[static_cast<size_t>(EnvelopeState::decay)] = value * config::sample_rate;
-	printf("Decay set: %f\n", value);
+void Envelope::set_decay(const float_s value_s) {
+	decay = value_s;
+	state_durations[static_cast<size_t>(EnvelopeState::decay)] = value_s * config::sample_rate;
+	printf("Decay set: %f\n", value_s);
 }
 
-void Envelope::set_sustain(const double value) {
-	assert(0.0 <= value && value <= 1.0);
-	sustain = value;
-	printf("Sustain set: %f\n", value);
+void Envelope::set_sustain(const float_s value_s) {
+	assert(0.0 <= value_s && value_s <= 1.0);
+	sustain = value_s;
+	printf("Sustain set: %f\n", value_s);
 }
 
-void Envelope::set_release(const double value) {
-	release = value;
-	state_durations[static_cast<size_t>(EnvelopeState::release)] = value * config::sample_rate;
-	printf("Release set: %f\n", value);
+void Envelope::set_release(const float_s value_s) {
+	release = value_s;
+	state_durations[static_cast<size_t>(EnvelopeState::release)] = value_s * config::sample_rate;
+	printf("Release set: %f\n", value_s);
 }

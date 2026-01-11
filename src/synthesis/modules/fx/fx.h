@@ -11,7 +11,8 @@ namespace synthesis {
 
 		Fx(vector<const float_s*>* in_bufs_ = nullptr);
 		void mix_dry_wet();
-		virtual int add_input(Module* __restrict input, const uint8_t buf_type) override;
+		int add_input(Module* __restrict input, uint8_t buf_type);
+		int add_input(MultichannelModule* __restrict input, uint8_t buf_type);
 		virtual void add_buf(const float_s* __restrict buf, uint8_t buf_type) override;
 
 		const float_s* audio_in_buf; // signal to be processed. there can be other buffers that provide supplementary info. ONLY ONE ALLOWED

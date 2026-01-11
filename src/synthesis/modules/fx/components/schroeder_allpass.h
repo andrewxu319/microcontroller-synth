@@ -14,7 +14,7 @@ namespace synthesis {
 		void set_feedback(const float_s value);
 		void set_delay(const double value_ms);
 
-		enum BufTypes {
+		enum BufType {
 			AUDIO,
 			WET
 		};

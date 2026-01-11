@@ -13,9 +13,9 @@ namespace synthesis {
 		void generate_buf() override;
 		void set_delay(const double value);
 		void set_voice_count(const uint8_t value);
-		int add_input(Module* __restrict input, const uint8_t buf_type);
+		int add_input(Module* __restrict input, uint8_t buf_type);
 
-		enum BufTypes {
+		enum BufType {
 			AUDIO,
 			WET,
 			DELAY,

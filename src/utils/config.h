@@ -11,8 +11,8 @@ namespace config {
 	constexpr PaHostApiTypeId host_api{ paWASAPI };
 	constexpr uint8_t channels{ 1 }; // 2 for stereo. keep it 1 for now. to make it stereo we should make a buf struct
 	inline int sample_rate{ 44100 };
-	constexpr int actual_buffer_size{ 512 };
-	constexpr int buffer_size{ actual_buffer_size * channels }; // doubled if stereo
+	constexpr int channel_buffer_size{ 512 };
+	constexpr int buffer_size{ channel_buffer_size * channels }; // doubled if stereo
 	constexpr double latency{ 0.005 }; // seconds. now sure why but this is the lowest it'll go without sounding weird
 	constexpr uint8_t control_rate{ 8 };
 	constexpr uint8_t num_voices{ 1 };

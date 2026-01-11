@@ -40,7 +40,7 @@ void Oscillator::generate_buf() {
 
 	// better way to do this? or just make mono?
 	float_s pitch_buf_sum[config::buffer_size];
-	const bool pitch_mods{ sum_bufs(BufTypes::PITCH, pitch_buf_sum) }; // "constant" parameter is 0
+	const bool pitch_mods{ sum_bufs(BufType::PITCH, pitch_buf_sum) }; // "constant" parameter is 0
 	for (size_t i = 0; i < config::buffer_size; i += config::channels) {
 		if (pitch_mods) {
 		// pitch shift. at audio rate. uses a linear approximation between semitones https://en.wikipedia.org/wiki/Cent_(music)#Piecewise_linear_approximation
@@ -69,7 +69,7 @@ void Oscillator::generate_buf() {
 	}
 
 	float_s effective_gain_buf[config::buffer_size];
-	if (sum_bufs(BufTypes::GAIN, effective_gain_buf, gain)) {
+	if (sum_bufs(BufType::GAIN, effective_gain_buf, gain)) {
 		accelerator::vec_entrywise_mult_float_s(effective_gain_buf, out_buf, out_buf, config::buffer_size);
 		accelerator::vec_scal_mult_float_s(out_buf, out_buf, velocity_gain, config::buffer_size);
 	}
@@ -131,7 +131,7 @@ void Oscillator::set_gain(const float_s value) {
 	gain = value;
 }
 
-void Oscillator::set_phase(const double value) {
+void Oscillator::set_phase(const float_s value) {
 	assert(value >= 0.0 && value <= 1.0);
 	phase = value * config::waveform_resolution;
 }

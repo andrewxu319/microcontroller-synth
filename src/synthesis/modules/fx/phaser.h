@@ -14,10 +14,10 @@ namespace synthesis {
 		Phaser();
 		void generate_buf() override;
 		void set_stages(const uint8_t value);
-		void set_center_freq(const double value);
+		void set_center_freq(const uint16_t value);
 		void set_feedback(const float_s value);
 
-		enum BufTypes {
+		enum BufType {
 			AUDIO,
 			WET,
 			CENTER_FREQ,

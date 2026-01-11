@@ -84,6 +84,9 @@
     <ClCompile Include="src\synthesis\modules\fx\reverb\luff.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\synthesis\modules\fx\components\multichannel_diffuser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\standalone\sound_engine.h">

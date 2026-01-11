@@ -7,6 +7,7 @@
 #include "synthesis/modules/mixer.h"
 
 #include <array>
+#include <memory>
 
 namespace synthesis {
 	class Schroeder : public Reverb {
@@ -16,7 +17,7 @@ namespace synthesis {
 		void generate_buf() override;
 
 	private:
-		array<WetOnlyDelayLine, 4> delay_lines;
+		array<unique_ptr<WetOnlyDelayLine>, 4> delay_lines;
 		Mixer mixer;
 		SchroederAllpass allpass_filters[2];
 	};

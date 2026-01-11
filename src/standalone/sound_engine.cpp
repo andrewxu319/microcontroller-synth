@@ -53,7 +53,7 @@ namespace standalone::sound_engine {
 		device = Pa_GetHostApiInfo(Pa_HostApiTypeIdToHostApiIndex(config::host_api))->defaultOutputDevice;
 		device = 14;
 		const PaDeviceInfo* device_info{ Pa_GetDeviceInfo(device) };
-		config::sample_rate = device_info->defaultSampleRate;
+		config::sample_rate = static_cast<int>(device_info->defaultSampleRate);
 		config::waveform_path = string("resources\\waveforms\\32_bit\\") + to_string(config::sample_rate) + string("\\");
 		printf("Using audio device %s: index %d, host API %d, max channels %d, default latency %f, sample rate %d\n",
 			device_info->name,
@@ -76,7 +76,7 @@ namespace standalone::sound_engine {
 			nullptr,
 			&output_parameters,
 			device_info->defaultSampleRate,
-			config::actual_buffer_size,
+			config::channel_buffer_size,
 			0, // flags. clipping on by default
 			&load_buffer,
 			(void*)(&data) // communicate with load_buffer through this data structure. avoid sharing complex data structures that can be easily corrupted. avoid locks

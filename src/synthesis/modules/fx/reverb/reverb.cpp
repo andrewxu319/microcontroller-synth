@@ -3,5 +3,7 @@
 using namespace synthesis;
 
 Reverb::Reverb()
-	: Fx(in_bufs)
+	: Fx(in_bufs),
+	decay{},
+	decay_samples{}
 { }

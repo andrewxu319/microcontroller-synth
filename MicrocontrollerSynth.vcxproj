@@ -169,6 +169,7 @@
     <ClCompile Include="src\standalone\standalone.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\chorus.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\components\delay_line.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\components\multichannel_diffuser.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\components\schroeder_allpass.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\delay.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\flanger.cpp" />
