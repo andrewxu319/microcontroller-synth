@@ -4,6 +4,7 @@
 #include "utils/utils.h"
 #include "utils/config.h"
 
+#include <limits>
 #include <unordered_map>
 #include <array>
 
@@ -15,7 +16,7 @@ namespace synthesis {
 		const int id;
 		vector<Module*> inputs;
 		vector<Module*> outputs;
-		static constexpr float_s EMPTY_BUF_MARKER{ numeric_limits<float_s>::min()};
+		static constexpr float_s EMPTY_BUF_MARKER{ numeric_limits<float_s>::min() };
 		vector<const float_s*>* in_bufs_ptr;
 		static const float_s empty_buf[config::buffer_size];
 

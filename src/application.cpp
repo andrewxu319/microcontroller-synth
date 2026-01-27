@@ -1,3 +1,4 @@
+#include "utils/global.h"
 #include "synthesis/synthesizer.h"
 #include "synthesis/modules/oscillator.h"
 #include "synthesis/modules/noise_generator.h"
@@ -12,7 +13,11 @@
 #include "synthesis/modules/fx/reverb/luff.h"
 #include "synthesis/modules/fx/components/multichannel_diffuser.h"
 #include "synthesis/modules/modulator/envelope.h"
+#ifdef TEENSY
+#include "teensy/midi_listener.h"
+#else
 #include "standalone/midi_listener.h"
+#endif
 
 #include <cmath>
 

@@ -2,7 +2,7 @@
 
 #include "utils/config.h"
 
-#include <cassert>
+
 
 using namespace synthesis;
 

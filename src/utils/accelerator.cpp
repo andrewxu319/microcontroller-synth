@@ -2,18 +2,18 @@
 
 #ifdef TEENSY
 namespace accelerator {
-	inline void vec_add_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {}
-	inline void vec_scal_mult_float_s(const float_s* const in, float_s* const out, const float_s scalar, const int len) {}
-	inline void vec_scal_add_float_s(const float_s* const in, float_s* const out, const float_s scalar, const int len) {}
-	inline void vec_entrywise_mult_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {}
-	inline void vec_mult_add_float_s(const float* const in_1, const float* const in_2, float_s* const out, const float_s in_1_scalar, const int len) {}
+	void vec_add_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {}
+	void vec_scal_mult_float_s(const float_s* const in, float_s* const out, const float_s scalar, const int len) {}
+	void vec_scal_add_float_s(const float_s* const in, float_s* const out, const float_s scalar, const int len) {}
+	void vec_entrywise_mult_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {}
+	void vec_mult_add_float_s(const float* const in_1, const float* const in_2, float_s* const out, const float_s in_1_scalar, const int len) {}
 }
 #else
 #include <immintrin.h>
 
 namespace accelerator {
 	// in_1 cannot be the same as out. in_2 can
-	inline void vec_add_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {
+	void vec_add_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {
 		// if standalone
 		int i{ 0 };
 		for (; i < len - 8; i += 8) { // with regular avx, we can add 8 at once
@@ -27,7 +27,7 @@ namespace accelerator {
 		}
 	}
 
-	inline void vec_scal_mult_float_s(const float_s* const in, float_s* const out, const float_s scalar, const int len) {
+	void vec_scal_mult_float_s(const float_s* const in, float_s* const out, const float_s scalar, const int len) {
 		// if standalone
 		const __m256 scalar_reg_{ _mm256_set1_ps(scalar) };
 		int i{ 0 };
@@ -41,7 +41,7 @@ namespace accelerator {
 		}
 	}
 
-	inline void vec_scal_add_float_s(const float_s* const in, float_s* const out, const float_s scalar, const int len) {
+	void vec_scal_add_float_s(const float_s* const in, float_s* const out, const float_s scalar, const int len) {
 		// if standalone
 		const __m256 scalar_reg_{ _mm256_set1_ps(scalar) };
 		int i{ 0 };
@@ -56,7 +56,7 @@ namespace accelerator {
 	}
 
 	// in_1 cannot be the same as out. in_2 can
-	inline void vec_entrywise_mult_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {
+	void vec_entrywise_mult_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {
 		// if standalone
 		int i{ 0 };
 		for (; i < len - 8; i += 8) { // with regular avx, we can add 8 at once
@@ -71,7 +71,7 @@ namespace accelerator {
 	}
 
 	// multiplies in_1 by scalar, adds to in_2
-	inline void vec_mult_add_float_s(const float* const in_1, const float* const in_2, float_s* const out, const float_s in_1_scalar, const int len) { // must be signed int here, otherwise "len - 8" breaks
+	void vec_mult_add_float_s(const float* const in_1, const float* const in_2, float_s* const out, const float_s in_1_scalar, const int len) { // must be signed int here, otherwise "len - 8" breaks
 		const __m256 scalar_reg_{ _mm256_set1_ps(in_1_scalar) };
 		int i{ 0 };
 		for (; i < len - 8; i += 8) { // with regular avx, we can add 8 at once

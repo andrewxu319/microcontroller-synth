@@ -9,7 +9,7 @@
 #include <array>
 #include <memory>
 #include <algorithm>
-#include <cassert>
+
 
 // for now, each channel is its own in_buf. if i end up doing stereo later i might make Module a class template that store multichannel buffers
 

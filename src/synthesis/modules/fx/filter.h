@@ -11,7 +11,7 @@
 
 #include "dspfilters/Dsp.h"
 
-#include <cassert>
+
 
 namespace synthesis {
 	template <class Type, int Channels> // must be rbj. inputs can be mono or stereo (eventually)

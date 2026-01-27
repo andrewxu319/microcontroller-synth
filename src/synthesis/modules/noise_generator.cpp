@@ -4,7 +4,7 @@
 #include "utils/accelerator.h"
 #include "utils/rng.h"
 
-#include <cassert>
+
 
 using namespace synthesis;
 

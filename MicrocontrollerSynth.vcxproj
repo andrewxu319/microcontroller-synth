@@ -188,7 +188,6 @@
     <ClCompile Include="src\synthesis\modules\voice.cpp" />
     <ClCompile Include="src\synthesis\modules\voice_manager.cpp" />
     <ClCompile Include="src\synthesis\synthesizer.cpp" />
-    <ClCompile Include="src\teensy\MicrocontrollerSynth.cpp" />
     <ClCompile Include="src\teensy\teensy.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -223,7 +222,7 @@
     <ClInclude Include="src\utils\accelerator.h" />
     <ClInclude Include="src\utils\circular_array.h" />
     <ClInclude Include="src\utils\config.h" />
-    <ClInclude Include="src\utils\global.h" />
+    <ClInclude Include="src\utils\includes.h" />
     <ClInclude Include="src\utils\rng.h" />
     <ClInclude Include="src\utils\utils.h" />
   </ItemGroup>

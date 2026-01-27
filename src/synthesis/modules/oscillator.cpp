@@ -1,12 +1,16 @@
 #include "oscillator.h"
-#include "standalone/file_io.h"
 #include "utils/config.h"
 #include "utils/accelerator.h"
 #include "midi/notes.h"
+#ifdef TEENSY
+#include "teensy/file_io.h"
+#else
+#include "standalone/file_io.h"
+#endif
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include <cassert>
+
 
 using namespace synthesis;
 
@@ -93,9 +97,11 @@ void Oscillator::generate_buf() {
 }
 
 void Oscillator::load_waveform(const string& path, const bool unipolar) {
-#ifdef STANDALONE
-	standalone::file_io::read_wav(config::waveform_path + path + ".wav", waveform);
-#endif
+	#ifdef TEENSY
+		teensy::file_io::read_wav(config::waveform_path + path + ".wav", waveform);
+	#else
+		standalone::file_io::read_wav(config::waveform_path + path + ".wav", waveform);
+	#endif
 	if (unipolar) { // already rescaled to -1 to 1
 		accelerator::vec_scal_add_float_s(waveform, waveform, 1.0f, config::buffer_size);
 		accelerator::vec_scal_mult_float_s(waveform, waveform, 0.5f, config::buffer_size);

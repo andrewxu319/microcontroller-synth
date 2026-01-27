@@ -5,8 +5,6 @@
 #include <portaudio/portaudio.h>
 #include <string>
 
-#define STANDALONE
-
 namespace config {
 	constexpr PaHostApiTypeId host_api{ paWASAPI };
 	constexpr uint8_t channels{ 1 }; // 2 for stereo. keep it 1 for now. to make it stereo we should make a buf struct

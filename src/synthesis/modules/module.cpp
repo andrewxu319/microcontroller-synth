@@ -3,7 +3,7 @@
 #include "synthesis/synthesizer.h"
 #include "utils/accelerator.h"
 
-#include <cassert>
+
 #include <algorithm>
 #include <iterator>
 

@@ -2,7 +2,7 @@
 
 #include "utils/accelerator.h"
 
-#include <cassert>
+
 
 using namespace synthesis;
 

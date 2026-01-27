@@ -2,6 +2,8 @@
 
 #include "utils/accelerator.h"
 
+#include <stdexcept>
+
 using namespace synthesis;
 
 Fx::Fx(vector<const float_s*>* in_bufs_)

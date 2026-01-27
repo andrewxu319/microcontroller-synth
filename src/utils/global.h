@@ -2,8 +2,9 @@
 
 #include <cstdint>
 #include <cstdio>
+#include <cstring>
+#include <cassert>
 #include <vector>
 #include <memory>
 
-using namespace std;
 using float_s = float; // sample format

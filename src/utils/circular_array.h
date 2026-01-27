@@ -2,7 +2,7 @@
 
 #include "global.h"
 
-#include <cassert>
+
 
 namespace utils {
 	template <typename T>

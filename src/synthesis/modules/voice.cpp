@@ -1,7 +1,7 @@
 #include "voice.h"
 #include "midi/notes.h"
 
-#include <cassert>
+
 
 using namespace synthesis;
 

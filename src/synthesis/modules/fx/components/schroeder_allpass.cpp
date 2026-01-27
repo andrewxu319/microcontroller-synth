@@ -5,7 +5,7 @@ https://medium.com/the-seekers-project/coding-a-basic-reverb-algorithm-part-2-an
 
 #include "schroeder_allpass.h"
 
-#include <cassert>
+
 
 using namespace synthesis;
 
