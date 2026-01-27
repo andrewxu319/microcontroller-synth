@@ -1,3 +1,7 @@
+TEENSY TODO
+- chrono
+- accelerator
+
 to do
 - various misc mods
 - turn mods on/off

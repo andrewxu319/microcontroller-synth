@@ -35,7 +35,7 @@ namespace standalone::sound_engine {
 		return 0;
 	}
 
-	void sound_engine_init()
+	void init()
 	{
 		PaError error;
 

@@ -21,7 +21,8 @@ namespace synthesis {
 		const float_s* get_out_buf() const override;
 		void set_diffuser_delays(initializer_list<double> values_ms);
 		void set_feedback(float_s value);
-		void set_feedback_delay_range(double lower_ms, double upper_ms);
+		void set_decay_time(double value_s);
+		void set_feedback_delay_range(double max_ms);
 		void set_mixing_matrix(MixingMatrix type);
 
 	private:
@@ -32,5 +33,6 @@ namespace synthesis {
 		using BuffersMatrix = Eigen::Matrix<float_s, NUM_CHANNELS, config::buffer_size, Eigen::RowMajor>;
 		BuffersMatrix output_channels;
 		Mixer mixer;
+		float_s avg_feedback;
 	};
 }

@@ -33,6 +33,7 @@ namespace synthesis {
 		vector<const float_s*> in_bufs[1];
 		size_t capacity;
 		uint8_t num_channels;
+		float_s sqrt_num_channels;
 		double max_delay; // in ms
 
 		WetOnlyDelayLine delay_line;

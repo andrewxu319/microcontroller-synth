@@ -2,7 +2,7 @@
 
 #undef _MSC_VER // otherwise dspfilters has tr1 issues
 
-#include "utils/includes.h"
+#include "utils/global.h"
 #include "utils/config.h"
 #include "synthesis/modules/fx/fx.h"
 

@@ -2,11 +2,14 @@
 
 #include "multichannel_diffuser.h"
 
+#include <cmath>
+
 using namespace synthesis;
 
 MultichannelDiffuser::MultichannelDiffuser(size_t capacity_, uint8_t num_channels_)
 	: MultichannelModule(in_bufs, num_channels_),
-	in_bufs{}, capacity{ capacity_ }, num_channels{ num_channels_ }, max_delay{}, delay_line{ capacity_, num_channels_ }, flip_polarities(static_cast<int8_t>(num_channels_), false)
+	in_bufs{}, capacity{ capacity_ }, num_channels{ num_channels_ }, sqrt_num_channels{ static_cast<float_s>(sqrt(num_channels_)) }, max_delay{},
+	delay_line{ capacity_, num_channels_ }, flip_polarities(static_cast<int8_t>(num_channels_), false)
 {
 	assert((num_channels & (num_channels - 1)) == 0); // check num_channels is power of 2
 }
@@ -45,6 +48,7 @@ void MultichannelDiffuser::set_num_channels(uint8_t value) {
 	delay_line.set_num_channels(value);
 	flip_polarities.resize(value);
 	num_channels = value;
+	sqrt_num_channels = sqrt(value);
 }
 
 void MultichannelDiffuser::set_delay(double value_ms) {
@@ -72,6 +76,6 @@ void MultichannelDiffuser::fast_hadamard_transform(vector<MultichannelModule::Bu
 	}
 
 	for (MultichannelModule::Buffer& buffer : data) {
-		accelerator::vec_scal_mult_float_s(buffer.data(), buffer.data(), 1.0f / num_channels, config::buffer_size);
+		accelerator::vec_scal_mult_float_s(buffer.data(), buffer.data(), 1.0f / sqrt_num_channels, config::buffer_size);
 	}
 }

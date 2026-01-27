@@ -12,7 +12,7 @@ using namespace synthesis;
 
 Oscillator::Oscillator(const string& waveform_path, const bool unipolar)
 	: Module(in_bufs),
-	phase { 0 }, freq{ 0.0f }, waveform{}, phase_increment{ 0 }, gain{ 1.0 }, velocity_gain{ 1.0 }
+	on{ false }, phase { 0 }, freq{ 0.0f }, waveform{}, phase_increment{ 0 }, gain{ 1.0 }, velocity_gain{ 1.0 }
 {
 	load_waveform(waveform_path, unipolar);
 }
@@ -38,6 +38,11 @@ void Oscillator::generate_buf() {
 		return;
 	}
 
+	// if we just had a note_off. don't care about mods here because it's just one buffer
+	if (!on) {
+		;
+	}
+
 	// better way to do this? or just make mono?
 	float_s pitch_buf_sum[config::buffer_size];
 	const bool pitch_mods{ sum_bufs(BufType::PITCH, pitch_buf_sum) }; // "constant" parameter is 0
@@ -59,7 +64,14 @@ void Oscillator::generate_buf() {
 		//const float_s next_sample{ waveform[static_cast<size_t>((phase >= config::waveform_resolution - 1) ? 0 : phase + 1)] };
 		//const float_s interpolation_ratio{ phase - static_cast<uint16_t>(phase) };
 		//*(out_buf + i) = prev_sample * (1.0 - interpolation_ratio) + next_sample * interpolation_ratio;
-		*(out_buf + i) = waveform[static_cast<size_t>(phase)]; // round?
+		out_buf[i] = waveform[static_cast<size_t>(phase)]; // round?
+
+		// if recently note_off'ed, wait until signal gets close to 0 and turn off (set subsequent samples to 0)
+		if (!on && (i > 0) && (signbit(out_buf[i]) != signbit(out_buf[i - 1]))) {
+			memset(out_buf + i, 0.0f, (config::buffer_size - i) * sizeof(float_s));
+			set_freq(0.0f);
+			return;
+		}
 
 		for (size_t j = 1; j < config::channels; j++) {
 			*(out_buf + i + j) = *(out_buf + i);
@@ -115,10 +127,11 @@ void Oscillator::note_on(const uint8_t note, const uint8_t velocity) {
 	//}
 	velocity_gain = static_cast<float_s>(velocity) / 127;
 	phase = 0;
+	on = true;
 }
 
 void Oscillator::note_off() {
-	set_freq(0.0f);
+	on = false;
 }
 
 void Oscillator::set_freq(const float_s value) {

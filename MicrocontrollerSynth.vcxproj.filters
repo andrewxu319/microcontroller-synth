@@ -18,9 +18,6 @@
     <ClCompile Include="src\standalone\sound_engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\standalone\standalone.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\synthesis\modules\module.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -87,6 +84,18 @@
     <ClCompile Include="src\synthesis\modules\fx\components\multichannel_diffuser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\standalone\standalone.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\teensy\teensy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\teensy\MicrocontrollerSynth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\standalone\sound_engine.h">
@@ -116,7 +125,7 @@
     <ClInclude Include="src\synthesis\modules\oscillator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\utils\includes.h">
+    <ClInclude Include="src\utils\global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\standalone\file_io.h">
@@ -185,10 +194,21 @@
     <ClInclude Include="src\synthesis\modules\fx\reverb\luff.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\teensy\teensy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt">
       <Filter>Source Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TeensyMakefile">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

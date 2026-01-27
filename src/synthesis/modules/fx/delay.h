@@ -1,7 +1,7 @@
 #pragma once
 
 #include "synthesis/modules/fx/fx.h"
-#include "utils/includes.h"
+#include "utils/global.h"
 #include "utils/circular_array.h"
 
 namespace synthesis {

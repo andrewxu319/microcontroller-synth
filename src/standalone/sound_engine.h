@@ -15,7 +15,7 @@ namespace standalone::sound_engine {
 	extern const BufferLoaderData data;
 	extern PaStream* stream;
 
-	void sound_engine_init();
+	void init();
 	void sound_engine_close();
 	void start_stream();
 

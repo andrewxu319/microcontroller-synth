@@ -30,6 +30,7 @@ namespace synthesis {
 		vector<const float_s*> in_bufs[2];
 
 	private:
+		bool on;
 		float_s phase; // in waveform indices
 		float_s phase_increment;
 		float_s freq;  // in hz

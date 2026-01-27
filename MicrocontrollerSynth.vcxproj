@@ -163,6 +163,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\standalone\file_io.cpp" />
     <ClCompile Include="src\standalone\midi_listener.cpp" />
     <ClCompile Include="src\standalone\sound_engine.cpp" />
@@ -187,8 +188,11 @@
     <ClCompile Include="src\synthesis\modules\voice.cpp" />
     <ClCompile Include="src\synthesis\modules\voice_manager.cpp" />
     <ClCompile Include="src\synthesis\synthesizer.cpp" />
+    <ClCompile Include="src\teensy\MicrocontrollerSynth.cpp" />
+    <ClCompile Include="src\teensy\teensy.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\application.h" />
     <ClInclude Include="src\midi\message.h" />
     <ClInclude Include="src\midi\notes.h" />
     <ClInclude Include="src\standalone\file_io.h" />
@@ -215,15 +219,19 @@
     <ClInclude Include="src\synthesis\modules\voice.h" />
     <ClInclude Include="src\synthesis\modules\voice_manager.h" />
     <ClInclude Include="src\synthesis\synthesizer.h" />
+    <ClInclude Include="src\teensy\teensy.h" />
     <ClInclude Include="src\utils\accelerator.h" />
     <ClInclude Include="src\utils\circular_array.h" />
     <ClInclude Include="src\utils\config.h" />
-    <ClInclude Include="src\utils\includes.h" />
+    <ClInclude Include="src\utils\global.h" />
     <ClInclude Include="src\utils\rng.h" />
     <ClInclude Include="src\utils\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TeensyMakefile" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "synthesis/modules/module.h"
-#include "utils/includes.h"
+#include "utils/global.h"
 #include "utils/utils.h"
 
 namespace synthesis {

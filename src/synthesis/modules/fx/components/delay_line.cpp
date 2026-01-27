@@ -92,11 +92,11 @@ void DelayLine::set_feedback(const float_s value, uint8_t channel) {
 	assert(value > -1.0 && value < 1.0);
 
 	if (channel != 255) {
-		channels[channel].feedback = value;
+		channels[channel].feedback = 0.0f;
 	}
 	else {
 		for (DelayLineChannel& ch : channels) {
-			ch.feedback = value;
+			ch.feedback = 0.0f;
 		}
 	}
 }

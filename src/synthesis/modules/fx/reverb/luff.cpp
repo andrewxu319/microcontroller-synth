@@ -6,10 +6,11 @@ using namespace synthesis;
 
 Luff::Luff(uint8_t diffusion_steps_)
 	: diffusers{ diffusion_steps_ },
-	delay_line{ 20, NUM_CHANNELS }, // 5 is temp value
+	delay_line{ 200, NUM_CHANNELS }, // 5 is temp value
 	mixing_matrix{},
 	output_channels{},
-	mixer{}
+	mixer{},
+	avg_feedback{}
 {
 	assert(diffusion_steps_ >= 2);
 	static_assert(NUM_CHANNELS >= 2);
@@ -68,17 +69,37 @@ void Luff::set_diffuser_delays(initializer_list<double> values_ms) {
 }
 
 void Luff::set_feedback(float_s value) {
-	delay_line.set_feedback(value);
+	avg_feedback = value;
+	constexpr float_s feedback_half_range{ 0.05f }; // temporary magic number
+	float_s upper_bound{ value - feedback_half_range };
+	float_s lower_bound{ value + feedback_half_range };
+
+	delay_line.set_feedback(upper_bound, 0);
+	delay_line.set_feedback(lower_bound, 1);
+
+	double window_size{ (upper_bound - lower_bound) / (NUM_CHANNELS - 1) };
+	double next_window_lower_bound{ lower_bound + window_size / 2 };
+	for (uint8_t i{ 2 }; i < NUM_CHANNELS; i++) {
+		delay_line.set_feedback(utils::rng_uniform(next_window_lower_bound, next_window_lower_bound += window_size), i);
+	}
+	set_decay_time(decay); // DECAY TIME
+}
+
+void Luff::set_decay_time(double value_s) {
+	// "decay time" = t_60 (time to decay by 60dB)
+	assert(avg_feedback > 0.0f);
+	double avg_feedback_delay{ value_s * log10(avg_feedback) / -3 }; // strictly pretty sure we can't use the simple mean of feedbacks
+	constexpr double half_range{ 1.0f / 3.0f }; // temporary magic number. luff's example article used 100-200 => centered at 150ms
+	set_feedback_delay_range(avg_feedback_delay * (1.0f + half_range));
 }
 
 // randomize, but each channel has its own interval. similar to multichannel diffuser
-void Luff::set_feedback_delay_range(double lower_ms, double upper_ms) {
-	delay_line.set_delay(lower_ms, 0);
-	delay_line.set_delay(upper_ms, 1);
+void Luff::set_feedback_delay_range(double max_ms) {
+	delay_line.set_delay(max_ms, 0);
 
-	double window_size{ (upper_ms - lower_ms) / (NUM_CHANNELS - 1) };
-	double next_window_lower_bound{ lower_ms + window_size / 2};
-	for (uint8_t i{ 2 }; i < NUM_CHANNELS; i++) {
+	double window_size{ (max_ms) / (NUM_CHANNELS - 1) };
+	double next_window_lower_bound{ window_size / 2};
+	for (uint8_t i{ 1 }; i < NUM_CHANNELS; i++) {
 		delay_line.set_delay(utils::rng_uniform(next_window_lower_bound, next_window_lower_bound += window_size), i);
 	}
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "utils/utils.h"
-#include "utils/includes.h"
+#include "utils/global.h"
 
 namespace midi {
     constexpr array<float_s, 128> notes{

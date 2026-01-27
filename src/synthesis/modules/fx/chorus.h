@@ -2,7 +2,7 @@
 
 #include "synthesis/modules/fx/fx.h"
 #include "synthesis/modules/oscillator.h"
-#include "utils/includes.h"
+#include "utils/global.h"
 #include "utils/config.h"
 #include "utils/circular_array.h"
 
