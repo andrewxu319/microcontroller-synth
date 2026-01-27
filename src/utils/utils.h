@@ -13,6 +13,6 @@ namespace utils {
 	namespace timer {
 		void start();
 
-		void end(const string_view timer_name);
+		void end(const std::string_view timer_name);
 	}
 }

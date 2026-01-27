@@ -19,7 +19,7 @@ namespace utils {
 			assert((size_ % config::buffer_size) == 0);
 		}
 
-		typename vector<T>::iterator begin() {
+		typename std::vector<T>::iterator begin() {
 			return data.begin() + start;
 		}
 
@@ -38,7 +38,7 @@ namespace utils {
 		}
 
 		// // might be broken. fix
-		//void pop_start_into(vector<T>& dest, const typename vector<T>::iterator dest_location_iter, const int len) {
+		//void pop_start_into(std::vector<T>& dest, const typename std::vector<T>::iterator dest_location_iter, const int len) {
 		//	if (start + len <= size) {
 		//		dest.insert(dest_location_iter, make_move_iterator(data.begin() + start), make_move_iterator(data.begin() + start + len));
 		//		//fill_n(data.begin() + start, len, 0.0f);
@@ -67,14 +67,14 @@ namespace utils {
 		}
 
 		// return: pointer to first segment, length of first segment, pointer to second segment, length of second segment
-		tuple<T*, size_t, T*, size_t> get_subarray_ptrs(const size_t index, const size_t len) {
+		std::tuple<T*, size_t, T*, size_t> get_subarray_ptrs(const size_t index, const size_t len) {
 			const size_t subarray_start_index{ (start + index) % size };
 			const size_t subarray_end_index{ (start + index + len) % size };
 			if (subarray_end_index > subarray_start_index) {
-				return tuple{ &data_array[subarray_start_index], len, nullptr, 0 };
+				return std::tuple{ &data_array[subarray_start_index], len, nullptr, 0 };
 			}
 			else {
-				return tuple{ &data_array[subarray_start_index], size - subarray_start_index, data_array, subarray_end_index };
+				return std::tuple{ &data_array[subarray_start_index], size - subarray_start_index, data_array, subarray_end_index };
 			}
 		}
 
@@ -111,7 +111,7 @@ namespace utils {
 		}
 
 	private:
-		vector<T> data;
+		std::vector<T> data;
 		T* data_array;
 		size_t start;
 	};

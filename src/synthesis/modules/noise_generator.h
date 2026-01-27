@@ -20,7 +20,7 @@ namespace synthesis {
 		void set_gain(const float_s value);
 
 	protected:
-		vector<const float_s*> in_bufs[1];
+		std::vector<const float_s*> in_bufs[1];
 
 	private:
 		float_s gain;

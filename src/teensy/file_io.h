@@ -8,6 +8,6 @@
 
 namespace teensy {
 	namespace file_io {
-		void read_wav(const string& path, float_s(&dest)[config::waveform_resolution]);
+		void read_wav(const std::string& path, float_s(&dest)[config::waveform_resolution]);
 	}
 }

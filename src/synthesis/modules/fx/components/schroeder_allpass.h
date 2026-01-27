@@ -20,7 +20,7 @@ namespace synthesis {
 		};
 
 	private:
-		vector<const float_s*> in_bufs[2];
+		std::vector<const float_s*> in_bufs[2];
 		WetOnlyDelayLine delay_line;
 		Mixer adder;
 		float_s feedback;

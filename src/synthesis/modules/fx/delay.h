@@ -20,7 +20,7 @@ namespace synthesis {
 		};
 
 	protected:
-		vector<const float_s*> in_bufs[3];
+		std::vector<const float_s*> in_bufs[3];
 
 	private:
 		float_s feedback;

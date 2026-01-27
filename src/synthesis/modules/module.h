@@ -14,13 +14,13 @@ namespace synthesis {
 	class Module {
 	public:
 		const int id;
-		vector<Module*> inputs;
-		vector<Module*> outputs;
-		static constexpr float_s EMPTY_BUF_MARKER{ numeric_limits<float_s>::min() };
-		vector<const float_s*>* in_bufs_ptr;
+		std::vector<Module*> inputs;
+		std::vector<Module*> outputs;
+		static constexpr float_s EMPTY_BUF_MARKER{ std::numeric_limits<float_s>::min() };
+		std::vector<const float_s*>* in_bufs_ptr;
 		static const float_s empty_buf[config::buffer_size];
 
-		Module(vector<const float*>* in_bufs_ptr_ = nullptr);
+		Module(std::vector<const float*>* in_bufs_ptr_ = nullptr);
 		int add_input(Module* __restrict input, uint8_t buf_type = -1);
 		int add_input(MultichannelModule* __restrict input, uint8_t buf_type = -1);
 		int add_output(Module* __restrict output, uint8_t buf_type = -1);
@@ -52,15 +52,15 @@ namespace synthesis {
 
 	class MultichannelModule : public Module {
 	public:
-		using Buffer = array<float_s, config::buffer_size>;
+		using Buffer = std::array<float_s, config::buffer_size>;
 
-		MultichannelModule(vector<const float*>* in_bufs_ptr_ = nullptr, uint8_t num_channels = 0);
+		MultichannelModule(std::vector<const float*>* in_bufs_ptr_ = nullptr, uint8_t num_channels = 0);
 		int add_output(Module* __restrict output, uint8_t buf_type);
-		const vector<Buffer>& get_out_bufs() const; // read-only pointer
+		const std::vector<Buffer>& get_out_bufs() const; // read-only pointer
 		void set_num_channels(uint8_t value);
 
 	protected:
-		vector<Buffer> out_bufs;
+		std::vector<Buffer> out_bufs;
 
 	private:
 		const float_s* get_out_buf() = delete;

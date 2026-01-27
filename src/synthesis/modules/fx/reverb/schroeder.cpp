@@ -8,7 +8,7 @@ Schroeder::Schroeder()
 {
 	// value is temporary. tbd
 	for (uint8_t i{ 0 }; i < 4; i++) {
-		delay_lines[i] = make_unique<WetOnlyDelayLine>(5);
+		delay_lines[i] = std::make_unique<WetOnlyDelayLine>(5);
 	}
 }
 
@@ -16,7 +16,7 @@ void Schroeder::init() {
 	decay = 100.0;
 	double decay_factor = 0.5;
 
-	for (unique_ptr<WetOnlyDelayLine>& delay_line : delay_lines) {
+	for (std::unique_ptr<WetOnlyDelayLine>& delay_line : delay_lines) {
 		delay_line->add_buf(audio_in_buf, WetOnlyDelayLine::BufType::AUDIO);
 		mixer.add_buf(delay_line->get_out_bufs()[0].data(), Mixer::BufType::AUDIO);
 	}
@@ -40,7 +40,7 @@ void Schroeder::init() {
 }
 
 void Schroeder::generate_buf() {
-	for (unique_ptr<WetOnlyDelayLine>& delay_line : delay_lines) {
+	for (std::unique_ptr<WetOnlyDelayLine>& delay_line : delay_lines) {
 		delay_line->generate_buf();
 	}
 	mixer.generate_buf();

@@ -21,7 +21,7 @@ namespace synthesis {
 		};
 
 	protected:
-		vector<const float_s*> in_bufs[3];
+		std::vector<const float_s*> in_bufs[3];
 		double decay;
 		size_t decay_samples;
 

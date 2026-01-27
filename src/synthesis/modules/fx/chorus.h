@@ -27,15 +27,15 @@ namespace synthesis {
 
 	private:
 		struct ChorusVoice {
-			unique_ptr<Oscillator> lfo;
+			std::unique_ptr<Oscillator> lfo;
 			float_s* effective_delay;
 			float_s lfo_gain_offset[config::buffer_size];
 			float_s lfo_freq_offset[config::buffer_size];
 		};
 
-		vector<const float_s*> in_bufs[7];
+		std::vector<const float_s*> in_bufs[7];
 		utils::CircularArray<float_s> memory_buffer;
-		vector<ChorusVoice> voices;
+		std::vector<ChorusVoice> voices;
 		uint8_t num_voices;
 		float_s range_proportion_to_increment;
 	public:

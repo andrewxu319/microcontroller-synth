@@ -14,7 +14,7 @@
 
 using namespace synthesis;
 
-Oscillator::Oscillator(const string& waveform_path, const bool unipolar)
+Oscillator::Oscillator(const std::string& waveform_path, const bool unipolar)
 	: Module(in_bufs),
 	on{ false }, phase { 0 }, freq{ 0.0f }, waveform{}, phase_increment{ 0 }, gain{ 1.0 }, velocity_gain{ 1.0 }
 {
@@ -96,7 +96,7 @@ void Oscillator::generate_buf() {
 	return;
 }
 
-void Oscillator::load_waveform(const string& path, const bool unipolar) {
+void Oscillator::load_waveform(const std::string& path, const bool unipolar) {
 	#ifdef TEENSY
 		teensy::file_io::read_wav(config::waveform_path + path + ".wav", waveform);
 	#else

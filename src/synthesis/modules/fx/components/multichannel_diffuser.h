@@ -30,15 +30,15 @@ namespace synthesis {
 		};
 
 	private:
-		vector<const float_s*> in_bufs[1];
+		std::vector<const float_s*> in_bufs[1];
 		size_t capacity;
 		uint8_t num_channels;
 		float_s sqrt_num_channels;
 		double max_delay; // in ms
 
 		WetOnlyDelayLine delay_line;
-		vector<int8_t> flip_polarities;
+		std::vector<int8_t> flip_polarities;
 
-		void fast_hadamard_transform(vector<MultichannelModule::Buffer>& data);
+		void fast_hadamard_transform(std::vector<MultichannelModule::Buffer>& data);
 	};
 }

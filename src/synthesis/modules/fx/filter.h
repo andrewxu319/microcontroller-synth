@@ -91,7 +91,7 @@ namespace synthesis {
 		};
 
 	protected:
-		vector<const float_s*> in_bufs[5]{};
+		std::vector<const float_s*> in_bufs[5]{};
 
 	private:
 		Dsp::FilterDesign<Type, Channels> filter{};

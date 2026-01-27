@@ -4,7 +4,7 @@
 #include "utils/global.h"
 
 namespace midi {
-    constexpr array<float_s, 128> notes{
+    constexpr std::array<float_s, 128> notes{
         8.176f, 8.662f, 9.177f, 9.723f,
         10.301f, 10.913f, 11.562f, 12.250f,
         12.978f, 13.750f, 14.568f, 15.434f,

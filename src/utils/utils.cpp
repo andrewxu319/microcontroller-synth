@@ -13,7 +13,7 @@ using namespace utils::timer;
 
 #ifdef TEENSY
 void start() {}
-void end(const string_view timer_name) {}
+void end(const std::string_view timer_name) {}
 
 #else
 static std::chrono::steady_clock::time_point start_time{};
@@ -24,7 +24,7 @@ void start() {
     start_time = std::chrono::high_resolution_clock::now();
 }
 
-void end(const string_view timer_name) {
+void end(const std::string_view timer_name) {
     if (count < 100) {
         count++;
         return;

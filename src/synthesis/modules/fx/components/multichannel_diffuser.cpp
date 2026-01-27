@@ -63,7 +63,7 @@ void MultichannelDiffuser::set_delay(double value_ms) {
 	}
 }
 
-void MultichannelDiffuser::fast_hadamard_transform(vector<MultichannelModule::Buffer>& data) {
+void MultichannelDiffuser::fast_hadamard_transform(std::vector<MultichannelModule::Buffer>& data) {
 	for (uint8_t h{ 1 }; h < num_channels; h *= 2) {
 		for (uint8_t i{ 0 }; i < num_channels; i += 2 * h) {
 			for (uint8_t j{ i }; j < i + h; j++) {

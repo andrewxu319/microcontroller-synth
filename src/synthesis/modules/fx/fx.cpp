@@ -6,7 +6,7 @@
 
 using namespace synthesis;
 
-Fx::Fx(vector<const float_s*>* in_bufs_)
+Fx::Fx(std::vector<const float_s*>* in_bufs_)
 	: Module::Module(in_bufs_),
 	wet{ 1.0 },
 	audio_in_buf{}
@@ -45,7 +45,7 @@ int Fx::add_input(Module* __restrict input, const uint8_t buf_type) {
 
 int Fx::add_input(MultichannelModule* __restrict input, const uint8_t buf_type) {
 	if (buf_type != -1) {
-		throw runtime_error("Cannot add multichannel input to fx with specified buffer type. Only one buffer allowed---must add manually.\n");
+		throw std::runtime_error("Cannot add multichannel input to fx with specified buffer type. Only one buffer allowed---must add manually.\n");
 	}
 	return add_input(static_cast<Module*>(input), -1);
 }

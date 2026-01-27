@@ -18,8 +18,8 @@ namespace synthesis {
 		void note_off(const uint8_t note);
 
 	private:
-		vector<Voice*> active_voices; // vectors are faster than queues here
-		vector<Voice*> inactive_voices;
-		multimap<char, Voice*> voices_with_each_note; // high overhead with small voice count? use simple array instead?
+		std::vector<Voice*> active_voices; // vectors are faster than queues here
+		std::vector<Voice*> inactive_voices;
+		std::multimap<char, Voice*> voices_with_each_note; // high overhead with small voice count? use simple array instead?
 	};
 }

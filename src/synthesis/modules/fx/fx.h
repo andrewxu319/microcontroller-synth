@@ -9,7 +9,7 @@ namespace synthesis {
 	public:
 		float_s wet;
 
-		Fx(vector<const float_s*>* in_bufs_ = nullptr);
+		Fx(std::vector<const float_s*>* in_bufs_ = nullptr);
 		void mix_dry_wet();
 		int add_input(Module* __restrict input, uint8_t buf_type);
 		int add_input(MultichannelModule* __restrict input, uint8_t buf_type);

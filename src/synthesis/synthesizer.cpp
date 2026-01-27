@@ -8,21 +8,21 @@
 namespace synthesis {
 	Master* master{ &Master::instance() };
 	VoiceManager* voice_manager{};
-	vector<unique_ptr<Module>> modules{};
-	extern queue<midi::NoteMessage> note_messages{};
-	extern queue<midi::CcMessage> cc_messages{};
-	array<vector<function<void(uint8_t)>>, 128> cc_mappings{};
+	std::vector<std::unique_ptr<Module>> modules{};
+	extern std::queue<midi::NoteMessage> note_messages{};
+	extern std::queue<midi::CcMessage> cc_messages{};
+	std::array<std::vector<std::function<void(uint8_t)>>, 128> cc_mappings{};
 
 	void init() {
-		for (const unique_ptr<Module>& module : modules) {
+		for (const std::unique_ptr<Module>& module : modules) {
 			module->init();
 		}
 	}
 
-	Module* add_module(unique_ptr<Module> module) {
+	Module* add_module(std::unique_ptr<Module> module) {
 		// must be adding master
 		Module* ret_ptr{ module.get() };
-		modules.emplace_back(move(module));
+		modules.emplace_back(std::move(module));
 		return ret_ptr;
 	}
 
@@ -30,11 +30,11 @@ namespace synthesis {
 	// all input buffers generated before it can generate its own buffer
 	int topo_sort() {
 		const size_t len{ modules.size() };
-		unordered_set<int> visiting{};
-		unordered_set<int> visited{};
-		unordered_map<Module*, int> indices{};
-		vector<unique_ptr<Module>> sorted(len);
-		stack<int> stack{};
+		std::unordered_set<int> visiting{};
+		std::unordered_set<int> visited{};
+		std::unordered_map<Module*, int> indices{};
+		std::vector<std::unique_ptr<Module>> sorted(len);
+		std::stack<int> stack{};
 		size_t sorted_index{ len - 1 };
 
 		// take care of Master (make sure we don't consider it an output)
@@ -71,13 +71,13 @@ namespace synthesis {
 					visited.insert(current);
 					visiting.erase(stack.top());
 					stack.pop();
-					sorted[sorted_index] = move(modules[current]);
+					sorted[sorted_index] = std::move(modules[current]);
 					sorted_index--;
 				}
 			}
 
 		}
-		modules = move(sorted);
+		modules = std::move(sorted);
 		return 0;
 	}
 
@@ -105,7 +105,7 @@ namespace synthesis {
 			printf("CC message: function %d, channel %d, value %d\n", cc_message.function, cc_message.channel, cc_message.value);
 
 			if (!cc_mappings[cc_message.function].empty()) {
-				for (function<void(uint8_t)> fn : cc_mappings[cc_message.function]) {
+				for (std::function<void(uint8_t)> fn : cc_mappings[cc_message.function]) {
 					fn(cc_message.value);
 				}
 			}

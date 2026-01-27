@@ -31,7 +31,7 @@ namespace synthesis {
 		float_s decay;
 		float_s sustain;
 		float_s release;
-		array<double, 5> state_durations;
+		std::array<double, 5> state_durations;
 		EnvelopeState state;
 		size_t t;
 		float_s gain;

@@ -10,11 +10,11 @@ using namespace midi;
 namespace standalone::midi_listener{
 	RtMidiIn midi_in{};
 	unsigned int num_ports{};
-	vector<string> port_names{};
+	std::vector<std::string> port_names{};
 
 	void init() {
 		num_ports = midi_in.getPortCount();
-		port_names = vector<string>{ num_ports };
+		port_names = std::vector<std::string>{ num_ports };
 		if (num_ports == 0) {
 			printf("No MIDI input ports available.");
 		}
@@ -23,7 +23,7 @@ namespace standalone::midi_listener{
 		}
 	}
 
-	void send_message(double delta_time, vector<unsigned char>* midi_message, void* user_data) { // delta_time unused but required by rtmidi
+	void send_message(double delta_time, std::vector<unsigned char>* midi_message, void* user_data) { // delta_time unused but required by rtmidi
 		//utils::timer::start();
 		size_t len = midi_message->size(); // bytes
 		//for (unsigned char b : *midi_message) {

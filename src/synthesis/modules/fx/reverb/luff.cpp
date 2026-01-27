@@ -15,7 +15,7 @@ Luff::Luff(uint8_t diffusion_steps_)
 	assert(diffusion_steps_ >= 2);
 	static_assert(NUM_CHANNELS >= 2);
 	for (uint8_t i{ 0 }; i < diffusion_steps_; i++) {
-		diffusers[i] = make_unique<MultichannelDiffuser>(5, NUM_CHANNELS); // 5 is temporary
+		diffusers[i] = std::make_unique<MultichannelDiffuser>(5, NUM_CHANNELS); // 5 is temporary
 		diffusers[i]->resize(20);
 	}
 }
@@ -44,7 +44,7 @@ void Luff::init() {
 }
 
 void Luff::generate_buf() {
-	for (unique_ptr<MultichannelDiffuser>& diffuser : diffusers) {
+	for (std::unique_ptr<MultichannelDiffuser>& diffuser : diffusers) {
 		diffuser->generate_buf();
 	}
 	delay_line.generate_buf();
@@ -61,7 +61,7 @@ const float_s* Luff::get_out_buf() const {
 	return mixer.get_out_buf();
 }
 
-void Luff::set_diffuser_delays(initializer_list<double> values_ms) {
+void Luff::set_diffuser_delays(std::initializer_list<double> values_ms) {
 	assert(values_ms.size() == diffusers.size());
 	for (uint8_t i{ 0 }; i < diffusers.size(); i++) {
 		diffusers[i]->set_delay(*(values_ms.begin() + i));

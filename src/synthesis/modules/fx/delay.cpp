@@ -86,7 +86,7 @@ void Delay::set_delay(double value) {
 void Delay::set_feedback(float_s value) {
 	feedback = value;
 	if (value >= 1.0) {
-		half_life = numeric_limits<double>::max();
+		half_life = std::numeric_limits<double>::max();
 	}
 	half_life = delay_time * log(2.0) / log(1.0 / feedback);
 	silence_threshold = static_cast<size_t>(half_life + 1) * 14 * config::sample_rate / config::buffer_size;

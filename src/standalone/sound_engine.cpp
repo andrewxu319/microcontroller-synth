@@ -54,7 +54,7 @@ namespace standalone::sound_engine {
 		device = 14;
 		const PaDeviceInfo* device_info{ Pa_GetDeviceInfo(device) };
 		config::sample_rate = static_cast<int>(device_info->defaultSampleRate);
-		config::waveform_path = string("resources\\waveforms\\32_bit\\") + to_string(config::sample_rate) + string("\\");
+		config::waveform_path = std::string("resources\\waveforms\\32_bit\\") + std::to_string(config::sample_rate) + std::string("\\");
 		printf("Using audio device %s: index %d, host API %d, max channels %d, default latency %f, sample rate %d\n",
 			device_info->name,
 			device,

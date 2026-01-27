@@ -23,7 +23,7 @@ namespace synthesis {
 		};
 
 	protected:
-		vector<const float_s*> in_bufs[3];
+		std::vector<const float_s*> in_bufs[3];
 
 		struct DelayLineChannel {
 			utils::CircularArray<float_s> memory_buffer;
@@ -31,7 +31,7 @@ namespace synthesis {
 			float_s feedback;
 			float_s feedback_memory;
 		};
-		vector<DelayLineChannel> channels;
+		std::vector<DelayLineChannel> channels;
 		uint8_t num_channels; // should this stuff be a template class instead
 	};
 

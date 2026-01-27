@@ -2,8 +2,6 @@
 
 #include "utils/accelerator.h"
 
-
-
 using namespace synthesis;
 
 Chorus::Chorus()
@@ -84,7 +82,7 @@ void Chorus::set_voice_count(const uint8_t value) {
 	if (value > num_voices) {
 		voices.reserve(value);
 		for (uint8_t i{ num_voices }; i < value; i++) {
-			voices.emplace_back(ChorusVoice{ make_unique<Oscillator>("sine") });
+			voices.emplace_back(ChorusVoice{ std::make_unique<Oscillator>("sine") });
 			voices.back().lfo->add_output(this);
 			//voices.back().lfo->set_phase(utils::rng_uniform(0.0, 1.0)); // not needed?
 		}

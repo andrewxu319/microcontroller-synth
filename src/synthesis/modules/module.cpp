@@ -12,7 +12,7 @@ using namespace synthesis;
 int Module::last_id{ -1 }; // master is -1
 const float_s Module::empty_buf[config::buffer_size] = { 0.0 };
 
-Module::Module(vector<const float*>* in_bufs_ptr_)
+Module::Module(std::vector<const float*>* in_bufs_ptr_)
 	: id{ last_id++ }, // Initialize const member `id`
 	inputs{},
 	outputs{},
@@ -112,7 +112,7 @@ bool Module::sum_bufs(const uint8_t buf_type, float_s* dest, const float_s const
 
 /////////////////////////////
 
-MultichannelModule::MultichannelModule(vector<const float*>* in_bufs_ptr_, uint8_t num_channels)
+MultichannelModule::MultichannelModule(std::vector<const float*>* in_bufs_ptr_, uint8_t num_channels)
 	: Module(in_bufs_ptr_), out_bufs{ num_channels }
 {
 }
@@ -130,6 +130,6 @@ void MultichannelModule::set_num_channels(uint8_t value) {
 	out_bufs.resize(value);
 }
 
-const vector<MultichannelModule::Buffer>& MultichannelModule::get_out_bufs() const {
+const std::vector<MultichannelModule::Buffer>& MultichannelModule::get_out_bufs() const {
 	return out_bufs;
 }

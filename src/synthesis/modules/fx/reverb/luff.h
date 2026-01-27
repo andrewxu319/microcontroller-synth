@@ -19,7 +19,7 @@ namespace synthesis {
 		void init() override;
 		void generate_buf() override;
 		const float_s* get_out_buf() const override;
-		void set_diffuser_delays(initializer_list<double> values_ms);
+		void set_diffuser_delays(std::initializer_list<double> values_ms);
 		void set_feedback(float_s value);
 		void set_decay_time(double value_s);
 		void set_feedback_delay_range(double max_ms);
@@ -27,7 +27,7 @@ namespace synthesis {
 
 	private:
 		static constexpr uint8_t NUM_CHANNELS{ 8 };
-		vector<unique_ptr<MultichannelDiffuser>> diffusers;
+		std::vector<std::unique_ptr<MultichannelDiffuser>> diffusers;
 		DelayLine delay_line; // multichannel
 		Eigen::Matrix<float_s, NUM_CHANNELS, NUM_CHANNELS> mixing_matrix;
 		using BuffersMatrix = Eigen::Matrix<float_s, NUM_CHANNELS, config::buffer_size, Eigen::RowMajor>;

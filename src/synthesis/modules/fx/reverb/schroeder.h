@@ -17,7 +17,7 @@ namespace synthesis {
 		void generate_buf() override;
 
 	private:
-		array<unique_ptr<WetOnlyDelayLine>, 4> delay_lines;
+		std::array<std::unique_ptr<WetOnlyDelayLine>, 4> delay_lines;
 		Mixer mixer;
 		SchroederAllpass allpass_filters[2];
 	};
