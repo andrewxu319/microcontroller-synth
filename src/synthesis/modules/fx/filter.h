@@ -6,7 +6,7 @@
 
 #include "utils/global.h"
 #include "utils/config.h"
-#include "utils/accelerator.h"
+#include "utils/math.h"
 #include "synthesis/modules/fx/fx.h"
 
 #include "dspfilters/Dsp.h"

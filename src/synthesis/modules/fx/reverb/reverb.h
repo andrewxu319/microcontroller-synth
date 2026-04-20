@@ -2,7 +2,7 @@
 
 #include "synthesis/modules/fx/fx.h"
 #include "utils/global.h"
-#include "utils/accelerator.h"
+#include "utils/math.h"
 
 #ifdef TEENSY
 	#include <arm_math.h>
@@ -58,7 +58,7 @@ void Reverb::create_mixing_matrix(MixingMatrix type, arm_matrix_instance_f32* de
 	arm_mat_init_f32(&identity, N, N, identity_data);
 
 	constexpr float_s filled_data[N * N]{};
-	accelerator::vec_scal_add_float_s(filled_data, filled_data, -2.0 / N, N * N);
+	math::vec_scal_add_float_s(filled_data, filled_data, -2.0 / N, N * N);
 	MatrixNxN filled{};
 	arm_mat_init_f32(&filled, N, N, filled_data);
 

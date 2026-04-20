@@ -1,7 +1,7 @@
 #include "module.h"
 
 #include "synthesis/synthesizer.h"
-#include "utils/accelerator.h"
+#include "utils/math.h"
 
 
 #include <algorithm>
@@ -89,7 +89,7 @@ bool Module::sum_bufs(const uint8_t buf_type, float_s* dest) {
 
 	memset(dest, 0, config::buffer_size * sizeof(float_s));
 	for (const float_s* in_buf : in_bufs_ptr[buf_type]) {
-		accelerator::vec_add_float_s(in_buf, dest, dest, config::buffer_size);
+		math::vec_add_float_s(in_buf, dest, dest, config::buffer_size);
 	}
 
 	return true;
@@ -102,10 +102,10 @@ bool Module::sum_bufs(const uint8_t buf_type, float_s* dest, const float_s const
 
 	memset(dest, 0, config::buffer_size * sizeof(float_s));
 	for (const float_s* in_buf : in_bufs_ptr[buf_type]) {
-		accelerator::vec_add_float_s(in_buf, dest, dest, config::buffer_size);
+		math::vec_add_float_s(in_buf, dest, dest, config::buffer_size);
 	}
 
-	accelerator::vec_scal_add_float_s(dest, dest, constant, config::buffer_size);
+	math::vec_scal_add_float_s(dest, dest, constant, config::buffer_size);
 
 	return true;
 }

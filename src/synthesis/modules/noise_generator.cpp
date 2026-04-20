@@ -1,7 +1,7 @@
 #include "noise_generator.h"
 
 #include "utils/config.h"
-#include "utils/accelerator.h"
+#include "utils/math.h"
 #include "utils/rng.h"
 
 
@@ -25,10 +25,10 @@ void NoiseGenerator::generate_buf() {
 
 	float_s effective_gain_buf[config::buffer_size];
 	if (sum_bufs(BufType::GAIN, effective_gain_buf, gain)) {
-		accelerator::vec_entrywise_mult_float_s(effective_gain_buf, out_buf, out_buf, config::buffer_size);
+		math::vec_entrywise_mult_float_s(effective_gain_buf, out_buf, out_buf, config::buffer_size);
 	}
 	else {
-		accelerator::vec_scal_mult_float_s(out_buf, out_buf, gain, config::buffer_size);
+		math::vec_scal_mult_float_s(out_buf, out_buf, gain, config::buffer_size);
 	}
 
 	return;

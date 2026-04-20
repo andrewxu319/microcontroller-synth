@@ -1,7 +1,7 @@
 #include "master.h"
 
 #include "utils/utils.h"
-#include "utils/accelerator.h"
+#include "utils/math.h"
 #include "synthesis/synthesizer.h"
 
 #include <algorithm>
@@ -35,7 +35,7 @@ void Master::generate_buf() {
 				is_empty = false;
 			}
 			else {
-				accelerator::vec_add_float_s(in_buf, out_buf, out_buf, config::buffer_size);
+				math::vec_add_float_s(in_buf, out_buf, out_buf, config::buffer_size);
 			}
 		}
 	}

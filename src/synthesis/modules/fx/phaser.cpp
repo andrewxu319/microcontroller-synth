@@ -1,6 +1,6 @@
 #include "phaser.h"
 
-#include "utils/accelerator.h"
+#include "utils/math.h"
 
 
 
@@ -56,7 +56,7 @@ void Phaser::generate_buf() {
 		}
 	}
 
-	accelerator::vec_add_float_s(audio_in_buf, out_buf, out_buf, config::buffer_size);
+	math::vec_add_float_s(audio_in_buf, out_buf, out_buf, config::buffer_size);
 
 	mix_dry_wet();
 }

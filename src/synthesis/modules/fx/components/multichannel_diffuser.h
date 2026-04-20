@@ -3,7 +3,7 @@
 #include "synthesis/modules/module.h"
 #include "synthesis/modules/fx/components/delay_line.h"
 #include "synthesis/modules/mixer.h"
-#include "utils/accelerator.h"
+#include "utils/math.h"
 #include "utils/rng.h"
 
 #include <array>

@@ -1,6 +1,6 @@
 #include "fx.h"
 
-#include "utils/accelerator.h"
+#include "utils/math.h"
 
 using namespace synthesis;
 
@@ -13,22 +13,22 @@ Fx::Fx(std::vector<const float_s*>* in_bufs_)
 
 void Fx::mix_dry_wet() {
 	if (in_bufs_ptr[WET].empty()) {
-		accelerator::vec_scal_mult_float_s(out_buf, out_buf, wet, config::buffer_size);
+		math::vec_scal_mult_float_s(out_buf, out_buf, wet, config::buffer_size);
 		if (audio_in_buf[0] != EMPTY_BUF_MARKER) {
-			accelerator::vec_mult_add_float_s(audio_in_buf, out_buf, out_buf, 1.0f - wet, config::buffer_size);
+			math::vec_mult_add_float_s(audio_in_buf, out_buf, out_buf, 1.0f - wet, config::buffer_size);
 		}
 	}
 	else {
 		float_s effective_wet_buf[config::buffer_size];
 		sum_bufs(WET, effective_wet_buf, wet);
-		accelerator::vec_entrywise_mult_float_s(effective_wet_buf, out_buf, out_buf, config::buffer_size);
+		math::vec_entrywise_mult_float_s(effective_wet_buf, out_buf, out_buf, config::buffer_size);
 
 		// get 1.0 - wet for dry signal
-		accelerator::vec_scal_mult_float_s(effective_wet_buf, effective_wet_buf, -1.0, config::buffer_size);
-		accelerator::vec_scal_add_float_s(effective_wet_buf, effective_wet_buf, 1.0, config::buffer_size);
+		math::vec_scal_mult_float_s(effective_wet_buf, effective_wet_buf, -1.0, config::buffer_size);
+		math::vec_scal_add_float_s(effective_wet_buf, effective_wet_buf, 1.0, config::buffer_size);
 		float_s wet_scaled_audio[config::buffer_size];
-		accelerator::vec_entrywise_mult_float_s(effective_wet_buf, audio_in_buf, wet_scaled_audio, config::buffer_size);
-		accelerator::vec_add_float_s(wet_scaled_audio, out_buf, out_buf, config::buffer_size);
+		math::vec_entrywise_mult_float_s(effective_wet_buf, audio_in_buf, wet_scaled_audio, config::buffer_size);
+		math::vec_add_float_s(wet_scaled_audio, out_buf, out_buf, config::buffer_size);
 	}
 }
 

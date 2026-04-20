@@ -1,6 +1,6 @@
 #include "flanger.h"
 
-#include "utils/accelerator.h"
+#include "utils/math.h"
 
 using namespace synthesis;
 

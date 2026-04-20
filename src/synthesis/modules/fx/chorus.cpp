@@ -1,6 +1,6 @@
 #include "chorus.h"
 
-#include "utils/accelerator.h"
+#include "utils/math.h"
 
 using namespace synthesis;
 
@@ -39,14 +39,14 @@ void Chorus::generate_buf() {
 	float_s delay_lfo_range_buf_sum[config::buffer_size];
 	if (sum_bufs(BufType::DELAY_LFO_RANGE, delay_lfo_range_buf_sum)) {
 		for (uint8_t i{ 0 }; i < num_voices; i++) {
-			accelerator::vec_scal_mult_float_s(delay_lfo_range_buf_sum, voices[i].lfo_gain_offset, i * range_proportion_to_increment - 1, config::buffer_size);
+			math::vec_scal_mult_float_s(delay_lfo_range_buf_sum, voices[i].lfo_gain_offset, i * range_proportion_to_increment - 1, config::buffer_size);
 		}
 	}
 
 	float_s freq_range_buf_sum[config::buffer_size];
 	if (sum_bufs(BufType::FREQ_RANGE, freq_range_buf_sum)) {
 		for (uint8_t i{ 0 }; i < num_voices; i++) {
-			accelerator::vec_scal_mult_float_s(freq_range_buf_sum, voices[i].lfo_freq_offset, i * range_proportion_to_increment - 1, config::buffer_size);
+			math::vec_scal_mult_float_s(freq_range_buf_sum, voices[i].lfo_freq_offset, i * range_proportion_to_increment - 1, config::buffer_size);
 		}
 	}
 

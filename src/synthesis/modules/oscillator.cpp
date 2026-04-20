@@ -1,6 +1,6 @@
 #include "oscillator.h"
 #include "utils/config.h"
-#include "utils/accelerator.h"
+#include "utils/math.h"
 #include "midi/notes.h"
 #ifdef TEENSY
 #include "teensy/file_io.h"
@@ -95,11 +95,11 @@ void Oscillator::generate_buf() {
 
 	float_s effective_gain_buf[config::buffer_size];
 	if (sum_bufs(BufType::GAIN, effective_gain_buf, gain)) {
-		accelerator::vec_entrywise_mult_float_s(effective_gain_buf, out_buf, out_buf, config::buffer_size);
-		accelerator::vec_scal_mult_float_s(out_buf, out_buf, velocity_gain, config::buffer_size);
+		math::vec_entrywise_mult_float_s(effective_gain_buf, out_buf, out_buf, config::buffer_size);
+		math::vec_scal_mult_float_s(out_buf, out_buf, velocity_gain, config::buffer_size);
 	}
 	else {
-		accelerator::vec_scal_mult_float_s(out_buf, out_buf, gain * velocity_gain, config::buffer_size);
+		math::vec_scal_mult_float_s(out_buf, out_buf, gain * velocity_gain, config::buffer_size);
 	}
 
 	return;
@@ -112,8 +112,8 @@ void Oscillator::load_waveform(const std::string& path, const bool unipolar) {
 		standalone::file_io::read_wav(config::waveform_path + path + ".wav", waveform);
 	#endif
 	if (unipolar) { // already rescaled to -1 to 1
-		accelerator::vec_scal_add_float_s(waveform, waveform, 1.0f, config::buffer_size);
-		accelerator::vec_scal_mult_float_s(waveform, waveform, 0.5f, config::buffer_size);
+		math::vec_scal_add_float_s(waveform, waveform, 1.0f, config::buffer_size);
+		math::vec_scal_mult_float_s(waveform, waveform, 0.5f, config::buffer_size);
 	}
 }
 

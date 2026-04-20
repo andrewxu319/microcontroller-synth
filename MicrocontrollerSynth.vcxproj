@@ -193,7 +193,7 @@
     <ClCompile Include="src\synthesis\modules\voice_manager.cpp" />
     <ClCompile Include="src\synthesis\synthesizer.cpp" />
     <ClCompile Include="src\teensy\teensy.cpp" />
-    <ClCompile Include="src\utils\accelerator.cpp" />
+    <ClCompile Include="src\utils\math.cpp" />
     <ClCompile Include="src\utils\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -225,7 +225,7 @@
     <ClInclude Include="src\synthesis\modules\voice_manager.h" />
     <ClInclude Include="src\synthesis\synthesizer.h" />
     <ClInclude Include="src\teensy\teensy.h" />
-    <ClInclude Include="src\utils\accelerator.h" />
+    <ClInclude Include="src\utils\math.h" />
     <ClInclude Include="src\utils\circular_array.h" />
     <ClInclude Include="src\utils\config.h" />
     <ClInclude Include="src\utils\global.h" />

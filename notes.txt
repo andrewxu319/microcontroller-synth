@@ -1,6 +1,6 @@
 TEENSY TODO
 - chrono
-- accelerator https://arm-software.github.io/CMSIS-DSP/latest/
+- math https://arm-software.github.io/CMSIS-DSP/latest/
 
 to do
 - various misc mods

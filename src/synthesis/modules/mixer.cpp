@@ -1,6 +1,6 @@
 #include "mixer.h"
 #include "utils/utils.h"
-#include "utils/accelerator.h"
+#include "utils/math.h"
 
 using namespace synthesis;
 
@@ -18,16 +18,16 @@ void Mixer::generate_buf() {
 			if (is_empty) {
 				memcpy(out_buf, in_buf, config::buffer_size * sizeof(float_s)); // first nonempty buffer, we copy it directly
 				if (gains[in_buf] != 1.0) {
-					accelerator::vec_scal_mult_float_s(out_buf, out_buf, gains[in_buf], config::buffer_size);
+					math::vec_scal_mult_float_s(out_buf, out_buf, gains[in_buf], config::buffer_size);
 				}
 				is_empty = false;
 			}
 			else {
 				if (gains[in_buf] == 1.0) {
-					accelerator::vec_add_float_s(in_buf, out_buf, out_buf, config::buffer_size);
+					math::vec_add_float_s(in_buf, out_buf, out_buf, config::buffer_size);
 				}
 				else {
-					accelerator::vec_mult_add_float_s(in_buf, out_buf, out_buf, gains[in_buf], config::buffer_size);
+					math::vec_mult_add_float_s(in_buf, out_buf, out_buf, gains[in_buf], config::buffer_size);
 				}
 			}
 		}

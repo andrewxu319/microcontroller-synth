@@ -1,9 +1,9 @@
-#include "accelerator.h"
+#include "math.h"
 
 #ifdef TEENSY
 #include <arm_math.h>
 
-namespace accelerator {
+namespace math {
 	// in_1 cannot be the same as out. in_2 can
 	void vec_add_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {
 		arm_add_f32(const_cast<float_s* __restrict const>(in_1), const_cast<float_s* const>(in_2), out, len);
@@ -37,7 +37,7 @@ namespace accelerator {
 #else
 #include <immintrin.h>
 
-namespace accelerator {
+namespace math {
 	// in_1 cannot be the same as out. in_2 can
 	void vec_add_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {
 		// if standalone

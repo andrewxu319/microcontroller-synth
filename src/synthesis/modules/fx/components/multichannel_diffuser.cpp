@@ -30,7 +30,7 @@ void MultichannelDiffuser::generate_buf() {
 	delay_line.generate_buf();
 	for (uint8_t i{ 0 }; i < num_channels; i++) {
 		if (flip_polarities[i]) {
-			accelerator::vec_scal_mult_float_s(delay_line.get_out_bufs()[i].data(), out_bufs[i].data(), -1.0f, config::buffer_size);
+			math::vec_scal_mult_float_s(delay_line.get_out_bufs()[i].data(), out_bufs[i].data(), -1.0f, config::buffer_size);
 		}
 		else {
 			memcpy(out_bufs[i].data(), delay_line.get_out_bufs()[i].data(), config::buffer_size * sizeof(float_s));
@@ -68,13 +68,13 @@ void MultichannelDiffuser::fast_hadamard_transform(std::vector<MultichannelModul
 		for (uint8_t i{ 0 }; i < num_channels; i += 2 * h) {
 			for (uint8_t j{ i }; j < i + h; j++) {
 				memcpy(hadamard_a, data[j].data(), config::buffer_size * sizeof(float_s));
-				accelerator::vec_add_float_s(data[j].data(), data[j + h].data(), data[j].data(), config::buffer_size);
-				accelerator::vec_mult_add_float_s(hadamard_a, data[j + h].data(), data[j + h].data(), -1.0f, config::buffer_size);
+				math::vec_add_float_s(data[j].data(), data[j + h].data(), data[j].data(), config::buffer_size);
+				math::vec_mult_add_float_s(hadamard_a, data[j + h].data(), data[j + h].data(), -1.0f, config::buffer_size);
 			}
 		}
 	}
 
 	for (MultichannelModule::Buffer& buffer : data) {
-		accelerator::vec_scal_mult_float_s(buffer.data(), buffer.data(), 1.0f / sqrt_num_channels, config::buffer_size);
+		math::vec_scal_mult_float_s(buffer.data(), buffer.data(), 1.0f / sqrt_num_channels, config::buffer_size);
 	}
 }

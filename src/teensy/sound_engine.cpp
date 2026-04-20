@@ -1,7 +1,7 @@
 #ifdef TEENSY
 #include "sound_engine.h"
 
-#include "utils/accelerator.h"
+#include "utils/math.h"
 
 #include <queue>
 #include <limits>
@@ -42,7 +42,7 @@ namespace teensy::sound_engine {
 		// Serial.println(micros() - start);
 
 		// IMPLEMENT CLIPPING LATER
-		// accelerator::vec_scal_mult_float_s(float_out_buf, float_out_buf, 0.01, config::buffer_size);
+		// math::vec_scal_mult_float_s(float_out_buf, float_out_buf, 0.01, config::buffer_size);
 		arm_float_to_q15(float_out_buf, queue_buf, config::buffer_size);
 		// start = micros();
 		queue.playBuffer();

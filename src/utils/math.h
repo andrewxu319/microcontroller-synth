@@ -3,7 +3,7 @@
 #include "global.h"
 #include "config.h"
 
-namespace accelerator {
+namespace math {
 	void vec_add_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len);
 	void vec_scal_mult_float_s(const float_s* const in, float_s* const out, float_s scalar, const int len);
 	#ifdef TEENSY
