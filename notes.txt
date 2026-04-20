@@ -1,12 +1,13 @@
 TEENSY TODO
 - chrono
-- accelerator
+- accelerator https://arm-software.github.io/CMSIS-DSP/latest/
 
 to do
 - various misc mods
 - turn mods on/off
 - dealing with empty audio buffers
 - time before deactivating
+- standardize reverb decay times to ms
 
 
 
@@ -20,6 +21,8 @@ to do
 
 to do (features)
 - pitch shift
+- filter https://www.researchgate.net/publication/220386519_Oscillator_and_Filter_Algorithms_for_Virtual_Analog_Synthesis
+- - taken from this https://github.com/wang-edward/teensy-juno?tab=readme-ov-file
 
 use mtd for microcontroller?
 
@@ -31,3 +34,9 @@ um. there seem to be additive modulators and multiplicative modulators
 
 
 
+
+12V peak to peak
+amp has 52V going in
+
+330
+4.7k, 4.7k

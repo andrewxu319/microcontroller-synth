@@ -16,7 +16,7 @@ namespace synthesis {
 			AUDIO
 		};
 
-	protected:
+	//protected:
 		std::vector<const float_s*> in_bufs[1];
 		std::unordered_map<const float_s*, float_s> gains; // indexed by buffer pointer
 	};

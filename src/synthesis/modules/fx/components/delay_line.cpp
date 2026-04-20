@@ -25,7 +25,7 @@ void DelayLine::generate_buf() {
 		float_s& feedback_memory{ channels[i].feedback_memory };
 
 		if (in_bufs[BufType::AUDIO][i][0] == EMPTY_BUF_MARKER) {
-			memset(channel_out_buf, 0, config::buffer_size * sizeof(float_s));
+			memset(channel_out_buf, 0.0f, config::buffer_size * sizeof(float_s));
 		}
 		else {
 			memcpy(channel_out_buf, in_bufs[BufType::AUDIO][i], config::buffer_size * sizeof(float_s));
@@ -52,7 +52,7 @@ void DelayLine::generate_buf() {
 				const float_s delayed_signal_interpolated{ delayed_signal_next * (1.0f - decimal_part) + delayed_signal_prev * decimal_part };
 				channel_out_buf[j] += delayed_signal_interpolated;
 
-				feedback_memory = channel_out_buf[i];
+				feedback_memory = channel_out_buf[j]; // changed 3/27 from [i] to [j]
 			}
 		}
 		else {
@@ -92,11 +92,11 @@ void DelayLine::set_feedback(const float_s value, uint8_t channel) {
 	assert(value > -1.0 && value < 1.0);
 
 	if (channel != 255) {
-		channels[channel].feedback = 0.0f;
+		channels[channel].feedback = value;
 	}
 	else {
 		for (DelayLineChannel& ch : channels) {
-			ch.feedback = 0.0f;
+			ch.feedback = value;
 		}
 	}
 }
@@ -116,6 +116,13 @@ void WetOnlyDelayLine::generate_buf() {
 		size_t& delay{ channels[i].delay };
 		float_s& feedback{ channels[i].feedback };
 		float_s& feedback_memory{ channels[i].feedback_memory };
+
+		if (in_bufs[BufType::AUDIO][i][0] == EMPTY_BUF_MARKER) {
+			memset(channel_out_buf, 0.0f, config::buffer_size * sizeof(float_s));
+		}
+		else {
+			memcpy(channel_out_buf, in_bufs[BufType::AUDIO][i], config::buffer_size * sizeof(float_s));
+		}
 
 		float_s delay_buf_sum[config::buffer_size]; // in samples
 		const bool delay_mods{ sum_bufs(BufType::DELAY, delay_buf_sum, static_cast<float_s>(delay)) };

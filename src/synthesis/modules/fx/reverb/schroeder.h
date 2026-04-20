@@ -15,6 +15,7 @@ namespace synthesis {
 		Schroeder();
 		void init() override;
 		void generate_buf() override;
+		void set_decay_time(double value_ms);
 
 	private:
 		std::array<std::unique_ptr<WetOnlyDelayLine>, 4> delay_lines;

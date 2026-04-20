@@ -2,8 +2,6 @@
 
 #include "utils/accelerator.h"
 
-#include <stdexcept>
-
 using namespace synthesis;
 
 Fx::Fx(std::vector<const float_s*>* in_bufs_)
@@ -45,7 +43,7 @@ int Fx::add_input(Module* __restrict input, const uint8_t buf_type) {
 
 int Fx::add_input(MultichannelModule* __restrict input, const uint8_t buf_type) {
 	if (buf_type != -1) {
-		throw std::runtime_error("Cannot add multichannel input to fx with specified buffer type. Only one buffer allowed---must add manually.\n");
+		printf("Cannot add multichannel input to fx with specified buffer type. Only one buffer allowed---must add manually.\n");
 	}
 	return add_input(static_cast<Module*>(input), -1);
 }

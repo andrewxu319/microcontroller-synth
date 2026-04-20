@@ -39,6 +39,7 @@ namespace synthesis {
 		WetOnlyDelayLine delay_line;
 		std::vector<int8_t> flip_polarities;
 
+		float_s hadamard_a[config::buffer_size];
 		void fast_hadamard_transform(std::vector<MultichannelModule::Buffer>& data);
 	};
 }

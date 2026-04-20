@@ -1,3 +1,4 @@
+#ifndef TEENSY
 #pragma once
 
 #include "utils/global.h"
@@ -14,3 +15,4 @@ namespace standalone::midi_listener {
 	void close_port();
 	//void loop();
 }
+#endif

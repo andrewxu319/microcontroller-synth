@@ -44,3 +44,8 @@ MIDI keyboard required. For Windows, just plug it into USB, and the application 
 To use a custom oscillator, place the `.wav` file containing one period of the waveform in `resources/waveforms/{bitrate}_bit/{sample_rate}/`. In `src/applications.cpp`, create an `Oscillator` object with the extensionless filename as the argument. There is a `.wav` generator script at `other/wav_generator.ipynb`.
 
 <!-- selecting audio output -->
+
+## Hardware Setup
+My setup (very simple): Teensy 4.1, Teensy Audio Shield, a USB module routing into the audio shield's USB ports (will replace), audio output device plugged into the audio shield's headphone jack.
+
+Plan to add physical knobs & sliders, maybe even a keyboard.

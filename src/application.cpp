@@ -14,9 +14,10 @@
 #include "synthesis/modules/fx/components/multichannel_diffuser.h"
 #include "synthesis/modules/modulator/envelope.h"
 #ifdef TEENSY
-#include "teensy/midi_listener.h"
+	#include "teensy/midi_listener.h"
+	#include "teensy/sound_engine.h"
 #else
-#include "standalone/midi_listener.h"
+	#include "standalone/midi_listener.h"
 #endif
 
 #include <cmath>
@@ -27,17 +28,18 @@ void application() {
 	// master, voice_manager, and module are initialized in synthesizer.cpp. maybe theres a better way to structure this?
 	synthesis::voice_manager = static_cast<VoiceManager*>(synthesis::add_module(std::make_unique<VoiceManager>()));
 
-	//Schroeder* reverb{ static_cast<Schroeder*>(synthesis::add_module(std::make_unique<Schroeder>())) };
-	//reverb->add_output(master, Master::BufType::AUDIO);
-	//reverb->wet = 1.0;
+	Schroeder* schroeder_reverb{ static_cast<Schroeder*>(synthesis::add_module(std::make_unique<Schroeder>())) };
+	schroeder_reverb->add_output(master, Master::BufType::AUDIO);
+	schroeder_reverb->wet = 1.0;
 
-	Luff* luff_reverb{ static_cast<Luff*>(synthesis::add_module(std::make_unique<Luff>(4))) };
-	luff_reverb->add_output(master, Master::BufType::AUDIO);
-	luff_reverb->wet = 1.0;
-	luff_reverb->set_diffuser_delays({ 20, 40, 80, 160 });
-	luff_reverb->set_feedback(0.85f);
-	luff_reverb->set_decay_time(1000);
-	luff_reverb->set_mixing_matrix(Reverb::MixingMatrix::Householder);
+	 //Luff* luff_reverb{ static_cast<Luff*>(synthesis::add_module(std::make_unique<Luff>(4))) };
+	 //luff_reverb->add_output(master, Master::BufType::AUDIO);
+	 //luff_reverb->wet = 0.5f;
+	 //luff_reverb->set_diffuser_delays({ 20, 40, 80, 160 });
+	 //luff_reverb->set_feedback(0.85f);
+	 //luff_reverb->set_feedback_delay_range(100, 200);
+	 //luff_reverb->set_decay_time(1000); // why is this in ms
+	 //luff_reverb->set_mixing_matrix(Reverb::MixingMatrix::Householder);
 
 	//Delay* delay{ static_cast<Delay*>(synthesis::add_module(std::make_unique<Delay>())) };
 	//delay->add_output(master, Master::BufType::AUDIO);
@@ -108,10 +110,11 @@ void application() {
 	//chorus_lfo->add_output(chorus, Chorus::BufType::FREQ_RANGE);
 
 	Mixer* mixer{ static_cast<Mixer*>(synthesis::add_module(std::make_unique<Mixer>())) };
-	mixer->add_output(luff_reverb, -1);
-	for (uint8_t i{ 0 }; i < 8; i++) {
-		luff_reverb->add_buf(mixer->get_out_buf(), MultichannelDiffuser::BufType::AUDIO);
-	}
+	mixer->add_output(schroeder_reverb, Master::BufType::AUDIO);
+	// mixer->add_output(luff_reverb, -1);
+	// for (uint8_t i{ 0 }; i < 8; i++) {
+	// 	luff_reverb->add_buf(mixer->get_out_buf(), MultichannelDiffuser::BufType::AUDIO);
+	// }
 
 	for (int i{ 0 }; i < config::num_voices; i++) {
 		//NoiseGenerator* noise_generator{ static_cast<NoiseGenerator*>(synthesis::add_module(std::make_unique<NoiseGenerator>())) };
@@ -170,4 +173,11 @@ void application() {
 	}
 
 	synthesis::init();
+	// synthesis::voice_manager->note_on(60, 127);
+	// #ifdef TEENSY
+	// while (true) {
+	// 	synthesis::voice_manager->note_on(60, 127);
+	// 	teensy::sound_engine::load_buffer();
+	// }
+	// #endif
 }

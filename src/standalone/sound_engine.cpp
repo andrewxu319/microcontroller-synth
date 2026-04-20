@@ -1,3 +1,4 @@
+#ifndef TEENSY
 #include "sound_engine.h"
 
 #include <queue>
@@ -11,28 +12,6 @@ namespace standalone::sound_engine {
 		if (error != paNoError) {
 			printf("PortAudio error: %s\n", Pa_GetErrorText(error));
 		}
-	}
-
-	int load_buffer(
-		const void* __restrict in_buf_,
-		void* __restrict out_buf_,
-		unsigned long buffer_size,
-		const PaStreamCallbackTimeInfo* time_info,
-		PaStreamCallbackFlags status_flags,
-		void* __restrict data_
-	) {
-//		if (status_flags) {
-//			printf("%x\n", status_flags);
-//		}
-
-		//utils::timer::start();
-		BufferLoaderData* data = (BufferLoaderData*)data_;
-		float_s* out_buf{ (float_s*)out_buf_ };
-		master.out_buf = out_buf;
-		master.generate_buf();
-		//utils::timer::end();
-
-		return 0;
 	}
 
 	void init()
@@ -51,7 +30,7 @@ namespace standalone::sound_engine {
 			//}
 		}
 		device = Pa_GetHostApiInfo(Pa_HostApiTypeIdToHostApiIndex(config::host_api))->defaultOutputDevice;
-		device = 14;
+		//device = 14;
 		const PaDeviceInfo* device_info{ Pa_GetDeviceInfo(device) };
 		config::sample_rate = static_cast<int>(device_info->defaultSampleRate);
 		config::waveform_path = std::string("resources\\waveforms\\32_bit\\") + std::to_string(config::sample_rate) + std::string("\\");
@@ -83,7 +62,27 @@ namespace standalone::sound_engine {
 		);
 	}
 
-	void sound_engine_close() {
+	int load_buffer(
+		const void* __restrict in_buf_,
+		void* __restrict out_buf_,
+		unsigned long buffer_size,
+		const PaStreamCallbackTimeInfo* time_info,
+		PaStreamCallbackFlags status_flags,
+		void* __restrict data_
+	) {
+//		if (status_flags) {
+//			printf("%x\n", status_flags);
+//		}
+
+		BufferLoaderData* data = (BufferLoaderData*)data_;
+		float_s* out_buf{ (float_s*)out_buf_ };
+		master.out_buf = out_buf;
+		master.generate_buf();
+
+		return 0;
+	}
+
+	void close() {
 		PaError error;
 
 		error = Pa_StopStream(stream);
@@ -102,3 +101,4 @@ namespace standalone::sound_engine {
 		Pa_Sleep(50);
 	}
 }
+#endif

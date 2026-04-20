@@ -1,3 +1,4 @@
+#ifndef TEENSY
 #include "midi_listener.h"
 
 #include "midi/message.h"
@@ -90,3 +91,4 @@ namespace standalone::midi_listener{
 	//	}
 	//}
 }
+#endif

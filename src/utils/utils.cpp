@@ -2,9 +2,8 @@
 
 #include <cstdio>
 
-#include <stdexcept>
 #ifdef TEENSY
-// idk
+    #include <Arduino.h>
 #else
 	#include <chrono>
 #endif
@@ -12,8 +11,14 @@
 using namespace utils::timer;
 
 #ifdef TEENSY
-void start() {}
-void end(const std::string_view timer_name) {}
+static uint32_t start_time;
+
+void start() {
+    start_time = micros();
+}
+void end(const std::string_view timer_name) {
+    printf("Timer %s: %d\n", timer_name, micros() - start_time);
+}
 
 #else
 static std::chrono::steady_clock::time_point start_time{};

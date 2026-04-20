@@ -1,3 +1,4 @@
+#ifndef TEENSY
 #pragma once
 
 #include "utils/config.h"
@@ -16,7 +17,7 @@ namespace standalone::sound_engine {
 	extern PaStream* stream;
 
 	void init();
-	void sound_engine_close();
+	void close();
 	void start_stream();
 
 	void pa_check_error(const PaError& error);
@@ -29,3 +30,4 @@ namespace standalone::sound_engine {
 		void* __restrict data_
 	);
 }
+#endif

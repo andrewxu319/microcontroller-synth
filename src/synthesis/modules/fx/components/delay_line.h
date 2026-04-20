@@ -10,7 +10,7 @@
 namespace synthesis {
 	class DelayLine : public MultichannelModule {
 	public:
-		DelayLine(size_t capacity = 0, uint8_t num_channels_ = 0); // in multiples of buffer_size
+		DelayLine(size_t capacity = 0, uint8_t num_channels_ = 1); // in multiples of buffer_size
 		void generate_buf() override;
 		void set_delay(const double value_ms, uint8_t channel = 255);
 		void set_feedback(const float_s value, uint8_t channel = 255);
@@ -37,7 +37,7 @@ namespace synthesis {
 
 	class WetOnlyDelayLine : public DelayLine {
 	public:
-		WetOnlyDelayLine(size_t capacity = 0, uint8_t num_channels_ = 0);
+		WetOnlyDelayLine(size_t capacity = 0, uint8_t num_channels_ = 1);
 		void generate_buf() override;
 	};
 }

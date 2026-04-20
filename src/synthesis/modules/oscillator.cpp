@@ -68,14 +68,23 @@ void Oscillator::generate_buf() {
 		//const float_s next_sample{ waveform[static_cast<size_t>((phase >= config::waveform_resolution - 1) ? 0 : phase + 1)] };
 		//const float_s interpolation_ratio{ phase - static_cast<uint16_t>(phase) };
 		//*(out_buf + i) = prev_sample * (1.0 - interpolation_ratio) + next_sample * interpolation_ratio;
+		
+#ifdef TEENSY
+		out_buf[i] = waveform[static_cast<size_t>(phase)];
+		// out_buf[i] = static_cast<float_s>(sin(2.0 * M_PI * (static_cast<double>(freq) / config::sample_rate) * phase));
+		// out_buf[i] = static_cast<float_s>((sin(2.0 * M_PI * (static_cast<double>(freq) / config::sample_rate) * phase) >= 0.0) ? 1.0 : -1.0); // square
+		// out_buf[i] = static_cast<float_s>(fmod(static_cast<double>(freq) * phase / config::sample_rate, 1.0) * 2.0 - 1.0); // sawtooth
+#else
 		out_buf[i] = waveform[static_cast<size_t>(phase)]; // round?
+#endif
 
-		// if recently note_off'ed, wait until signal gets close to 0 and turn off (set subsequent samples to 0)
-		if (!on && (i > 0) && (signbit(out_buf[i]) != signbit(out_buf[i - 1]))) {
-			memset(out_buf + i, 0.0f, (config::buffer_size - i) * sizeof(float_s));
-			set_freq(0.0f);
-			return;
-		}
+		//// if recently note_off'ed, wait until signal gets close to 0 and turn off (set subsequent samples to 0).
+		// // BUT apparently this breaks things and everything works fine without it
+		//if (!on && (i > 0) && (signbit(out_buf[i]) != signbit(out_buf[i - 1]))) {
+		//	memset(out_buf + i, 0.0f, (config::buffer_size - i) * sizeof(float_s));
+		//	set_freq(0.0f);
+		//	return;
+		//}
 
 		for (size_t j = 1; j < config::channels; j++) {
 			*(out_buf + i + j) = *(out_buf + i);

@@ -9,7 +9,7 @@ using namespace synthesis;
 MultichannelDiffuser::MultichannelDiffuser(size_t capacity_, uint8_t num_channels_)
 	: MultichannelModule(in_bufs, num_channels_),
 	in_bufs{}, capacity{ capacity_ }, num_channels{ num_channels_ }, sqrt_num_channels{ static_cast<float_s>(sqrt(num_channels_)) }, max_delay{},
-	delay_line{ capacity_, num_channels_ }, flip_polarities(static_cast<int8_t>(num_channels_), false)
+	delay_line{ capacity_, num_channels_ }, flip_polarities(static_cast<int8_t>(num_channels_), false), hadamard_a{}
 {
 	assert((num_channels & (num_channels - 1)) == 0); // check num_channels is power of 2
 }
@@ -67,10 +67,9 @@ void MultichannelDiffuser::fast_hadamard_transform(std::vector<MultichannelModul
 	for (uint8_t h{ 1 }; h < num_channels; h *= 2) {
 		for (uint8_t i{ 0 }; i < num_channels; i += 2 * h) {
 			for (uint8_t j{ i }; j < i + h; j++) {
-				float_s a[config::buffer_size];
-				memcpy(a, data[j].data(), config::buffer_size * sizeof(float_s));
+				memcpy(hadamard_a, data[j].data(), config::buffer_size * sizeof(float_s));
 				accelerator::vec_add_float_s(data[j].data(), data[j + h].data(), data[j].data(), config::buffer_size);
-				accelerator::vec_mult_add_float_s(a, data[j + h].data(), data[j + h].data(), -1.0f, config::buffer_size);
+				accelerator::vec_mult_add_float_s(hadamard_a, data[j + h].data(), data[j + h].data(), -1.0f, config::buffer_size);
 			}
 		}
 	}

@@ -1,3 +1,4 @@
+#ifndef TEENSY
 #pragma once
 
 #include "utils/global.h"
@@ -11,3 +12,4 @@ namespace standalone {
 		void read_wav(const std::string& path, float_s(&dest)[config::waveform_resolution]);
 	}
 }
+#endif

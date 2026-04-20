@@ -1,3 +1,4 @@
+#ifndef TEENSY
 #include "application.h"
 #include "standalone/sound_engine.h"
 #include "standalone/midi_listener.h"
@@ -18,5 +19,6 @@ int main() {
 	}
 
 	standalone::midi_listener::close_port();
-	standalone::sound_engine::sound_engine_close();
+	standalone::sound_engine::close();
 }
+#endif
