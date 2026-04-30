@@ -117,7 +117,7 @@ void Oscillator::load_waveform(const std::string& path, const bool unipolar) {
 	}
 }
 
-void Oscillator::note_on(const uint8_t note, const uint8_t velocity) {
+void Oscillator::note_on(const uint8_t note) {
 	const int16_t transposed_note{ note + transpose };
 
 	// // we could do all this, but tbh those frequencies are too extreme to be useful
@@ -140,13 +140,23 @@ void Oscillator::note_on(const uint8_t note, const uint8_t velocity) {
 	//else {
 	//	set_freq(midi::notes)
 	//}
-	velocity_gain = static_cast<float_s>(velocity) / 127;
+
 	phase = 0;
 	on = true;
 }
 
+void Oscillator::note_on(const uint8_t note, const uint8_t velocity) {
+	note_on(note);
+	velocity_gain = static_cast<float_s>(velocity) / 127;
+}
+
 void Oscillator::note_off() {
 	on = false;
+}
+
+void Oscillator::change_note(const uint8_t note) {
+	note_on(note);
+	Module::change_note(note);
 }
 
 void Oscillator::set_freq(const float_s value) {

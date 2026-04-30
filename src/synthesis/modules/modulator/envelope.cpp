@@ -12,10 +12,10 @@ Envelope::Envelope()
 	gain{ 0.0f },
 	delta_gain{ 0.0f }
 {
-	set_attack(0);
-	set_decay(0);
-	set_sustain(0);
-	set_release(0);
+	set_attack(0.1f);
+	set_decay(0.1f);
+	set_sustain(0.1f);
+	set_release(0.1f);
 }
 
 void Envelope::generate_buf() {
@@ -84,7 +84,7 @@ void Envelope::note_on(const uint8_t note, const uint8_t velocity) {
 
 void Envelope::note_off() {
 	state = EnvelopeState::release;
-	delta_gain = -sustain / state_durations[static_cast<size_t>(EnvelopeState::release)];
+	delta_gain = -gain / state_durations[static_cast<size_t>(EnvelopeState::release)];
 	//printf("release\n");
 }
 

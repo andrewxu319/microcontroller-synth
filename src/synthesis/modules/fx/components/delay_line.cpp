@@ -74,7 +74,9 @@ void DelayLine::generate_buf() {
 void DelayLine::set_delay(const double value_ms, uint8_t channel) {
 	const size_t value_samples{ static_cast<size_t>(value_ms * 0.001 * config::sample_rate) };
 	if (value_samples >= channels[0].memory_buffer.size) {
-		printf("Delay time exceeds memory buffer capacity!\n");
+		for (DelayLineChannel& channel : channels) {
+			channel.memory_buffer.resize((value_samples / config::buffer_size) * 3 / 2 * config::buffer_size); // roughly 1.5x the requested capacity
+		}
 		return;
 	}
 

@@ -7,7 +7,6 @@ to do
 - turn mods on/off
 - dealing with empty audio buffers
 - time before deactivating
-- standardize reverb decay times to ms
 
 
 

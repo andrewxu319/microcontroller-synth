@@ -36,6 +36,7 @@ namespace synthesis {
 
 		virtual void note_on(const uint8_t note, const uint8_t velocity);
 		virtual void note_off();
+		virtual void change_note(const uint8_t note);
 
 	protected:
 		float_s out_buf[config::buffer_size];

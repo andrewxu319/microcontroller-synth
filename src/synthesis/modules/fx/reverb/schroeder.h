@@ -21,5 +21,6 @@ namespace synthesis {
 		std::array<std::unique_ptr<WetOnlyDelayLine>, 4> delay_lines;
 		Mixer mixer;
 		SchroederAllpass allpass_filters[2];
+		std::array<std::array<float_s, config::buffer_size>, 6> decay_bufs;
 	};
 }

@@ -16,10 +16,12 @@ namespace synthesis {
 		int add_output(Module* __restrict output, const uint8_t buf_type = -1);
 		void note_on(const uint8_t note, const uint8_t velocity);
 		void note_off(const uint8_t note);
+		void set_legato(bool value);
 
 	private:
 		std::vector<Voice*> active_voices; // vectors are faster than queues here
 		std::vector<Voice*> inactive_voices;
 		std::multimap<char, Voice*> voices_with_each_note; // high overhead with small voice count? use simple array instead?
+		bool legato;
 	};
 }

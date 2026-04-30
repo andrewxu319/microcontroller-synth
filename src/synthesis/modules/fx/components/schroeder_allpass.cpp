@@ -5,14 +5,12 @@ https://medium.com/the-seekers-project/coding-a-basic-reverb-algorithm-part-2-an
 
 #include "schroeder_allpass.h"
 
-
-
 using namespace synthesis;
 
 SchroederAllpass::SchroederAllpass()
 	: Fx(in_bufs),
 	in_bufs{},
-	delay_line{ 1, 1 }, // PLACEHOLDER VALUE
+	delay_line{ 1, 1 }, // 8 IS ARBITRARY PLACEHOLDER (enough for about 4? second decay)
 	adder{},
 	feedback{},
 	delay{}
@@ -36,9 +34,31 @@ void SchroederAllpass::generate_buf() {
 
 void SchroederAllpass::set_delay(const double value_ms) {
 	delay = static_cast<size_t>(value_ms * 0.001 * config::sample_rate);
+	delay_line.set_delay(value_ms);
 }
 
 void SchroederAllpass::set_feedback(const float_s value) {
 	assert(value > -1.0 && value < 1.0);
 	feedback = value;
+}
+
+int SchroederAllpass::add_input(Module* __restrict input, uint8_t buf_type) {
+	switch (buf_type) {
+	case BufType::DELAY:
+		delay_line.add_input(input, BufType::DELAY);
+		break;
+	default:
+		break;
+	}
+	return Fx::add_input(input, buf_type);
+}
+int SchroederAllpass::add_input(MultichannelModule* __restrict input, uint8_t buf_type) {
+	switch (buf_type) {
+	case BufType::DELAY:
+		delay_line.add_input(input, BufType::DELAY);
+		break;
+	default:
+		break;
+	}
+	return Fx::add_input(input, buf_type);
 }

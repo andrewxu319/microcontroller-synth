@@ -35,6 +35,11 @@ void VoiceManager::note_on(const uint8_t note, const uint8_t velocity) {
 	Voice* voice_to_activate{};
 
 	if (inactive_voices.empty()) {
+		if (legato && config::num_voices == 1) {
+			active_voices.front()->change_note(note);
+			return;
+		}
+
 		voice_to_activate = active_voices.front();
 		note_off(voice_to_activate->current_note);
 	}
@@ -56,4 +61,8 @@ void VoiceManager::note_off(const uint8_t note) {
 	active_voices.erase(remove(active_voices.begin(), active_voices.end(), match->second));
 	inactive_voices.emplace_back(match->second);
 	voices_with_each_note.erase(match);
+}
+
+void VoiceManager::set_legato(bool value) {
+	legato = value;
 }

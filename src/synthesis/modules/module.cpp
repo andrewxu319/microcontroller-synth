@@ -72,9 +72,16 @@ void Module::note_on(const uint8_t note, const uint8_t velocity) {
 		output->note_on(note, velocity);
 	}
 }
+
 void Module::note_off() {
 	for (Module* output : outputs) {
 		output->note_off();
+	}
+}
+
+void Module::change_note(const uint8_t note) {
+	for (Module* output : outputs) {
+		output->change_note(note);
 	}
 }
 

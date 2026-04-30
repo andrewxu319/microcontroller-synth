@@ -10,12 +10,15 @@ namespace synthesis {
 		SchroederAllpass();
 		void init();
 		void generate_buf() override;
+		int add_input(Module* __restrict input, uint8_t buf_type);
+		int add_input(MultichannelModule* __restrict input, uint8_t buf_type);
 
 		void set_feedback(const float_s value);
 		void set_delay(const double value_ms);
 
 		enum BufType {
 			AUDIO,
+			DELAY,
 			WET
 		};
 

@@ -23,3 +23,8 @@ void Voice::note_off() {
 	current_note = -1;
 	Module::note_off();
 }
+
+void Voice::change_note(const uint8_t note) {
+	current_note = note;
+	Module::change_note(note);
+}

@@ -13,6 +13,7 @@ namespace synthesis {
 		Voice();
 		void note_on(const uint8_t note, const uint8_t velocity);
 		void note_off();
+		void change_note(const uint8_t note);
 
 	private:
 		bool active;

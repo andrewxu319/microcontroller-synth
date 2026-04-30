@@ -52,6 +52,10 @@ void Luff::init() {
 }
 
 void Luff::generate_buf() {
+	float_s decay_buf_sum[config::buffer_size];
+	const bool decay_mods{ sum_bufs(BufType::DECAY, decay_buf_sum, decay) };
+	// wip
+
 	for (std::unique_ptr<MultichannelDiffuser>& diffuser : diffusers) {
 		diffuser->generate_buf();
 	}

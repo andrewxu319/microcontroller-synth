@@ -30,7 +30,7 @@ namespace config {
 
 	inline std::string waveform_path{ std::string("resources\\waveforms\\32_bit\\") + std::to_string(sample_rate) + std::string("\\") };
 	constexpr int waveform_resolution{ 2048 };
-	constexpr uint8_t midi_port{ 0 };
+	constexpr uint8_t midi_port{ 0 }; // 1 for external midi controller (temp)
 
 #ifdef TEENSY
 	constexpr int teensy_baud{};
