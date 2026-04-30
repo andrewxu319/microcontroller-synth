@@ -12,10 +12,10 @@ Envelope::Envelope()
 	gain{ 0.0f },
 	delta_gain{ 0.0f }
 {
-	set_attack(0.1f);
-	set_decay(0.1f);
-	set_sustain(0.1f);
-	set_release(0.1f);
+	set_attack(0.1);
+	set_decay(0.1);
+	set_sustain(0.1);
+	set_release(0.1);
 }
 
 void Envelope::generate_buf() {
@@ -88,25 +88,25 @@ void Envelope::note_off() {
 	//printf("release\n");
 }
 
-void Envelope::set_attack(const float_s value_s) {
+void Envelope::set_attack(const double value_s) {
 	attack = value_s;
 	state_durations[static_cast<size_t>(EnvelopeState::attack)] = value_s * config::sample_rate;
 	printf("Attack set: %f\n", value_s);
 }
 
-void Envelope::set_decay(const float_s value_s) {
+void Envelope::set_decay(const double value_s) {
 	decay = value_s;
 	state_durations[static_cast<size_t>(EnvelopeState::decay)] = value_s * config::sample_rate;
 	printf("Decay set: %f\n", value_s);
 }
 
-void Envelope::set_sustain(const float_s value_s) {
+void Envelope::set_sustain(const double value_s) {
 	assert(0.0 <= value_s && value_s <= 1.0);
 	sustain = value_s;
 	printf("Sustain set: %f\n", value_s);
 }
 
-void Envelope::set_release(const float_s value_s) {
+void Envelope::set_release(const double value_s) {
 	release = value_s;
 	state_durations[static_cast<size_t>(EnvelopeState::release)] = value_s * config::sample_rate;
 	printf("Release set: %f\n", value_s);

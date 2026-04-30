@@ -28,11 +28,11 @@ void application() {
 	// master, voice_manager, and module are initialized in synthesizer.cpp. maybe theres a better way to structure this?
 	synthesis::voice_manager = static_cast<VoiceManager*>(synthesis::add_module(std::make_unique<VoiceManager>()));
 	synthesis::voice_manager->set_legato(true);
-	// fix issue here
-	//Schroeder* schroeder_reverb{ static_cast<Schroeder*>(synthesis::add_module(std::make_unique<Schroeder>())) };
-	//schroeder_reverb->add_output(master, Master::BufType::AUDIO);
-	//schroeder_reverb->set_decay_time(10);
-	//schroeder_reverb->wet = 0.0;
+
+	Schroeder* schroeder_reverb{ static_cast<Schroeder*>(synthesis::add_module(std::make_unique<Schroeder>())) };
+	schroeder_reverb->add_output(master, Master::BufType::AUDIO);
+	schroeder_reverb->set_decay_time(10);
+	schroeder_reverb->wet = 0.0;
 
 	//Oscillator* schroeder_reverb_lfo{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
 	//schroeder_reverb_lfo->set_freq(0.5);
@@ -117,7 +117,7 @@ void application() {
 	//chorus_lfo->add_output(chorus, Chorus::BufType::FREQ_RANGE);
 
 	Mixer* mixer{ static_cast<Mixer*>(synthesis::add_module(std::make_unique<Mixer>())) };
-	mixer->add_output(master, Master::BufType::AUDIO);
+	mixer->add_output(schroeder_reverb, Master::BufType::AUDIO);
 	// mixer->add_output(luff_reverb, -1);
 	// for (uint8_t i{ 0 }; i < 8; i++) {
 	// 	luff_reverb->add_buf(mixer->get_out_buf(), MultichannelDiffuser::BufType::AUDIO);
@@ -130,7 +130,7 @@ void application() {
 		//Oscillator* osc_sine{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
 		//osc_sine->add_output(mixer, true);
 		//osc_sine->set_gain(0);
-		Oscillator* osc_sawtooth{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("triangle"))) };
+		Oscillator* osc_sawtooth{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
 		osc_sawtooth->add_output(mixer, Mixer::BufType::AUDIO);
 		osc_sawtooth->set_gain(0);
 		//Oscillator* osc_triangle{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("triangle"))) };

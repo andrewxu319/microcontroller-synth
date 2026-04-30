@@ -13,10 +13,10 @@ namespace synthesis {
 		void note_on(const uint8_t note, const uint8_t velocity) override;
 		void note_off() override;
 
-		void set_attack(const float_s value_s);
-		void set_decay(const float_s value_s);
-		void set_sustain(const float_s value_s);
-		void set_release(const float_s value_s);
+		void set_attack(const double value_s);
+		void set_decay(const double value_s);
+		void set_sustain(const double value_s);
+		void set_release(const double value_s);
 
 	private:
 		enum class EnvelopeState {

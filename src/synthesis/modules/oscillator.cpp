@@ -36,20 +36,16 @@ double Oscillator::get_semitone_shift_multiplier(const int8_t semitones) {
 }
 
 void Oscillator::generate_buf() {
-	if (freq == 0.0f) {
+	if (!on) {
 		//memset(out_buf, 0.0f, config::buffer_size * sizeof(float_s));
 		*out_buf = EMPTY_BUF_MARKER; // put marker at start of buffer
 		return;
 	}
 
-	// if we just had a note_off. don't care about mods here because it's just one buffer
-	if (!on) {
-		;
-	}
-
 	// better way to do this? or just make mono?
 	float_s pitch_buf_sum[config::buffer_size];
 	const bool pitch_mods{ sum_bufs(BufType::PITCH, pitch_buf_sum) }; // "constant" parameter is 0
+
 	for (size_t i = 0; i < config::buffer_size; i += config::channels) {
 		if (pitch_mods) {
 		// pitch shift. at audio rate. uses a linear approximation between semitones https://en.wikipedia.org/wiki/Cent_(music)#Piecewise_linear_approximation
@@ -141,13 +137,14 @@ void Oscillator::note_on(const uint8_t note) {
 	//	set_freq(midi::notes)
 	//}
 
-	phase = 0;
+	//phase = 0;
 	on = true;
 }
 
 void Oscillator::note_on(const uint8_t note, const uint8_t velocity) {
 	note_on(note);
 	velocity_gain = static_cast<float_s>(velocity) / 127;
+	phase = 0;
 }
 
 void Oscillator::note_off() {

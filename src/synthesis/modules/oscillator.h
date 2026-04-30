@@ -40,6 +40,7 @@ namespace synthesis {
 		float_s velocity_gain;
 		int8_t transpose; // semitones
 		int8_t tune; // cents
+		bool freq_changed; // freq changed mid-note
 
 		static double get_semitone_shift_multiplier(const int8_t semitones);
 	};
