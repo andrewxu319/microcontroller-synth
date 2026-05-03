@@ -67,24 +67,6 @@ void Module::add_buf(const float_s* __restrict buf, uint8_t buf_type) {
 	in_bufs_ptr[buf_type].emplace_back(buf);
 }
 
-void Module::note_on(const uint8_t note, const uint8_t velocity) {
-	for (Module* output : outputs) {
-		output->note_on(note, velocity);
-	}
-}
-
-void Module::note_off() {
-	for (Module* output : outputs) {
-		output->note_off();
-	}
-}
-
-void Module::change_note(const uint8_t note) {
-	for (Module* output : outputs) {
-		output->change_note(note);
-	}
-}
-
 const float_s* Module::get_out_buf() const {
 	return out_buf;
 }

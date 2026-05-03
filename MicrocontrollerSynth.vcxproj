@@ -186,9 +186,11 @@
     <ClCompile Include="src\synthesis\modules\master.cpp" />
     <ClCompile Include="src\synthesis\modules\mixer.cpp" />
     <ClCompile Include="src\synthesis\modules\modulator\envelope.cpp" />
+    <ClCompile Include="src\synthesis\modules\modulator\portamento.cpp" />
     <ClCompile Include="src\synthesis\modules\module.cpp" />
     <ClCompile Include="src\synthesis\modules\noise_generator.cpp" />
     <ClCompile Include="src\synthesis\modules\oscillator.cpp" />
+    <ClCompile Include="src\synthesis\modules\performed_oscillator.cpp" />
     <ClCompile Include="src\synthesis\modules\voice.cpp" />
     <ClCompile Include="src\synthesis\modules\voice_manager.cpp" />
     <ClCompile Include="src\synthesis\synthesizer.cpp" />
@@ -218,9 +220,11 @@
     <ClInclude Include="src\synthesis\modules\master.h" />
     <ClInclude Include="src\synthesis\modules\mixer.h" />
     <ClInclude Include="src\synthesis\modules\modulator\envelope.h" />
+    <ClInclude Include="src\synthesis\modules\modulator\portamento.h" />
     <ClInclude Include="src\synthesis\modules\module.h" />
     <ClInclude Include="src\synthesis\modules\noise_generator.h" />
     <ClInclude Include="src\synthesis\modules\oscillator.h" />
+    <ClInclude Include="src\synthesis\modules\performed_oscillator.h" />
     <ClInclude Include="src\synthesis\modules\voice.h" />
     <ClInclude Include="src\synthesis\modules\voice_manager.h" />
     <ClInclude Include="src\synthesis\synthesizer.h" />

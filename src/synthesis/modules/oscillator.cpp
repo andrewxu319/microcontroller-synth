@@ -11,12 +11,11 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-
 using namespace synthesis;
 
 Oscillator::Oscillator(const std::string& waveform_path, const bool unipolar)
 	: Module(in_bufs),
-	on{ false }, phase { 0 }, freq{ 0.0f }, waveform{}, phase_increment{ 0 }, gain{ 1.0 }, velocity_gain{ 1.0 }
+	phase { 0 }, freq{ 0.0f }, waveform{}, phase_increment{ 0 }, gain{ 1.0 }, velocity_gain{ 1.0 }
 {
 	load_waveform(waveform_path, unipolar);
 }
@@ -36,12 +35,6 @@ double Oscillator::get_semitone_shift_multiplier(const int8_t semitones) {
 }
 
 void Oscillator::generate_buf() {
-	if (!on) {
-		//memset(out_buf, 0.0f, config::buffer_size * sizeof(float_s));
-		*out_buf = EMPTY_BUF_MARKER; // put marker at start of buffer
-		return;
-	}
-
 	// better way to do this? or just make mono?
 	float_s pitch_buf_sum[config::buffer_size];
 	const bool pitch_mods{ sum_bufs(BufType::PITCH, pitch_buf_sum) }; // "constant" parameter is 0
@@ -111,49 +104,6 @@ void Oscillator::load_waveform(const std::string& path, const bool unipolar) {
 		math::vec_scal_add_float_s(waveform, waveform, 1.0f, config::buffer_size);
 		math::vec_scal_mult_float_s(waveform, waveform, 0.5f, config::buffer_size);
 	}
-}
-
-void Oscillator::note_on(const uint8_t note) {
-	const int16_t transposed_note{ note + transpose };
-
-	// // we could do all this, but tbh those frequencies are too extreme to be useful
-	//if (transposed_note < 0) {
-	//	// think of it as a simple interval up, then octave(s) down
-	//	const uint8_t octaves_to_go_down{ static_cast<uint8_t>((-1 - transposed_note) / 12 + 1) };
-	//	const uint8_t semitones_to_go_up{ static_cast<uint8_t>(transpose % 12 + 12) };
-	//	set_freq(midi::notes[note + (semitones_to_go_up == 12 ? 0 : semitones_to_go_up)] / pow(2, octaves_to_go_down));
-	//	// unaccounted hypothetical: note is at the upper end of the midi mapping & transpose is very low => note + semitones_to_go_up is invalid
-	//}
-	//else if (transposed_note > 127) {
-	//	// this might be wrong, fix
-	//	const uint8_t octaves_to_go_up{ static_cast<uint8_t>((transposed_note - 127 - 1) / 12 + 1) };
-	//	const uint8_t semitones_to_go_down{ static_cast<uint8_t>(12 - transpose % 12) };
-	//	set_freq(midi::notes[note - (semitones_to_go_down == 12 ? 0 : semitones_to_go_down)] * pow(2, octaves_to_go_up));
-	//}
-	if (transposed_note >= 0 && transposed_note <= 127) {
-		set_freq(midi::notes[transposed_note]); // cant static_cast because of const
-	}
-	//else {
-	//	set_freq(midi::notes)
-	//}
-
-	//phase = 0;
-	on = true;
-}
-
-void Oscillator::note_on(const uint8_t note, const uint8_t velocity) {
-	note_on(note);
-	velocity_gain = static_cast<float_s>(velocity) / 127;
-	phase = 0;
-}
-
-void Oscillator::note_off() {
-	on = false;
-}
-
-void Oscillator::change_note(const uint8_t note) {
-	note_on(note);
-	Module::change_note(note);
 }
 
 void Oscillator::set_freq(const float_s value) {

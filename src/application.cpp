@@ -1,6 +1,7 @@
 #include "utils/global.h"
 #include "synthesis/synthesizer.h"
 #include "synthesis/modules/oscillator.h"
+#include "synthesis/modules/performed_oscillator.h"
 #include "synthesis/modules/noise_generator.h"
 #include "synthesis/modules/voice.h"
 #include "synthesis/modules/voice_manager.h"
@@ -127,17 +128,18 @@ void application() {
 		//NoiseGenerator* noise_generator{ static_cast<NoiseGenerator*>(synthesis::add_module(std::make_unique<NoiseGenerator>())) };
 		//noise_generator->add_output(mixer, Mixer::BufType::AUDIO);
 		//noise_generator->set_gain(0);
-		//Oscillator* osc_sine{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+		//PerformedOscillator* osc_sine{ static_cast<PerformedOscillator*>(synthesis::add_module(std::make_unique<PerformedOscillator>("sine"))) };
 		//osc_sine->add_output(mixer, true);
 		//osc_sine->set_gain(0);
-		Oscillator* osc_sawtooth{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+		PerformedOscillator* osc_sawtooth{ static_cast<PerformedOscillator*>(synthesis::add_module(std::make_unique<PerformedOscillator>("sine"))) };
 		osc_sawtooth->add_output(mixer, Mixer::BufType::AUDIO);
 		osc_sawtooth->set_gain(0);
-		//Oscillator* osc_triangle{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("triangle"))) };
+		//PerformedOscillator* osc_triangle{ static_cast<PerformedOscillator*>(synthesis::add_module(std::make_unique<PerformedOscillator>("triangle"))) };
 		//osc_triangle->add_output(mixer, true);
+
 		Envelope* envelope{ static_cast<Envelope*>(synthesis::add_module(std::make_unique<Envelope>())) };
 		//envelope->add_output(osc_sine, true);
-		envelope->add_output(osc_sawtooth, NoiseGenerator::BufType::GAIN);
+		envelope->add_output(osc_sawtooth, PerformedOscillator::BufType::GAIN);
 		//envelope->add_output(osc_triangle, true);
 		envelope->set_attack(0.02f);
 		envelope->set_decay(0.02f);
@@ -170,14 +172,14 @@ void application() {
 			}
 		);
 
-		//Oscillator* pitch_lfo{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine", true))) };
-		//pitch_lfo->add_output(osc_sawtooth, true);
-		//osc_sawtooth->attach_mod(pitch_lfo->get_out_buf(), Oscillator::BufType::PITCH);
-		//pitch_lfo->set_freq(4.64);
-		//pitch_lfo->set_gain(10);
+		Oscillator* pitch_lfo{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine", true))) };
+		pitch_lfo->add_output(osc_sawtooth, PerformedOscillator::BufType::PITCH);
+		pitch_lfo->set_freq(4.64);
+		pitch_lfo->set_gain(100);
 
 		Voice* voice{ static_cast<Voice*>(synthesis::add_module(std::make_unique<Voice>())) };
 		voice->add_output(envelope);
+		voice->add_output(osc_sawtooth);
 		synthesis::voice_manager->add_output(voice);
 	}
 

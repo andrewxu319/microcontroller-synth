@@ -20,19 +20,12 @@ namespace synthesis {
 		Oscillator(const std::string& waveform_path = "zeros", const bool unipolar = false);
 		void generate_buf() override;
 		void load_waveform(const std::string& path, const bool unipolar = false);
-		void note_on(const uint8_t note);
-		void note_on(const uint8_t note, const uint8_t velocity);
-		void note_off();
-		void change_note(const uint8_t note);
 		void set_freq(const float_s value);
 		void set_gain(const float_s value);
 		void set_phase(const float_s value);
 
 	protected:
 		std::vector<const float_s*> in_bufs[2];
-
-	private:
-		bool on;
 		float_s phase; // in waveform indices
 		float_s phase_increment;
 		float_s freq;  // in hz

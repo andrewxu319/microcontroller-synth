@@ -2,8 +2,6 @@
 
 #include "utils/config.h"
 
-
-
 using namespace synthesis;
 
 Envelope::Envelope() 
@@ -58,7 +56,6 @@ void Envelope::generate_buf() {
 					state = EnvelopeState::off;
 					//printf("off\n");
 					gain = 0.0;
-					Module::note_off();
 					break;
 				}
 				gain += delta_gain;
@@ -79,7 +76,6 @@ void Envelope::note_on(const uint8_t note, const uint8_t velocity) {
 	delta_gain = 1.0f / state_durations[static_cast<size_t>(EnvelopeState::attack)];
 	t = 0;
 	//printf("attack\n");
-	Module::note_on(note, velocity);
 }
 
 void Envelope::note_off() {

@@ -34,9 +34,9 @@ namespace synthesis {
 		bool sum_bufs(const uint8_t buf_type, float_s* dest); // use for control-rate modulations: only adding constant every control_rate samples => don't need vectorization
 		bool sum_bufs(const uint8_t buf_type, float_s* dest, const float_s constant);
 
-		virtual void note_on(const uint8_t note, const uint8_t velocity);
-		virtual void note_off();
-		virtual void change_note(const uint8_t note);
+		virtual void note_on(const uint8_t note, const uint8_t velocity) {};
+		virtual void note_off() {};
+		virtual void change_note(const uint8_t note) {};
 
 	protected:
 		float_s out_buf[config::buffer_size];

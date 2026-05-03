@@ -11,7 +11,8 @@ using namespace synthesis;
 
 VoiceManager::VoiceManager()
 	: active_voices{},
-	inactive_voices{}  // initialize queue with a vector
+	inactive_voices{},  // initialize queue with a vector
+	legato{}
 {
 }
 
@@ -36,6 +37,20 @@ void VoiceManager::note_on(const uint8_t note, const uint8_t velocity) {
 
 	if (inactive_voices.empty()) {
 		if (legato && config::num_voices == 1) {
+			// remove <note, voice> pair from voices_with_each_note
+			using iter = std::multimap<char, Voice*>::iterator;
+			std::pair<iter, iter> iter_pair{ voices_with_each_note.equal_range(active_voices.front()->current_note) };
+			iter it{ iter_pair.first };
+			for (; it != iter_pair.second; it++) {
+				if (it->second == active_voices.front()) {
+					voices_with_each_note.erase(it);
+					break;
+				}
+			}
+
+			// add new pair to voices_with_each_note
+			voices_with_each_note.insert({ note, active_voices.front() });
+
 			active_voices.front()->change_note(note);
 			return;
 		}
