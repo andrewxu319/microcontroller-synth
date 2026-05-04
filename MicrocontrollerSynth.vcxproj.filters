@@ -105,6 +105,9 @@
     <ClCompile Include="src\synthesis\modules\performed_oscillator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\synthesis\modules\fx\soft_clip.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\standalone\sound_engine.h">
@@ -213,6 +216,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\synthesis\modules\performed_oscillator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\synthesis\modules\fx\soft_clip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

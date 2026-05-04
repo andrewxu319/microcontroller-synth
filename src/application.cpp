@@ -13,6 +13,7 @@
 #include "synthesis/modules/fx/reverb/schroeder.h"
 #include "synthesis/modules/fx/reverb/luff.h"
 #include "synthesis/modules/fx/components/multichannel_diffuser.h"
+#include "synthesis/modules/fx/soft_clip.h"
 #include "synthesis/modules/modulator/envelope.h"
 #include "synthesis/modules/modulator/portamento.h"
 #ifdef TEENSY
@@ -31,10 +32,10 @@ void application() {
 	synthesis::voice_manager = static_cast<VoiceManager*>(synthesis::add_module(std::make_unique<VoiceManager>()));
 	synthesis::voice_manager->set_legato(true);
 
-	Schroeder* schroeder_reverb{ static_cast<Schroeder*>(synthesis::add_module(std::make_unique<Schroeder>())) };
-	schroeder_reverb->add_output(master, Master::BufType::AUDIO);
-	schroeder_reverb->set_decay_time(10);
-	schroeder_reverb->wet = 0.0;
+	//Schroeder* schroeder_reverb{ static_cast<Schroeder*>(synthesis::add_module(std::make_unique<Schroeder>())) };
+	//schroeder_reverb->add_output(master, Master::BufType::AUDIO);
+	//schroeder_reverb->set_decay_time(10);
+	//schroeder_reverb->wet = 0.0;
 
 	//Oscillator* schroeder_reverb_lfo{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
 	//schroeder_reverb_lfo->set_freq(0.5);
@@ -118,8 +119,17 @@ void application() {
 	//chorus_lfo->set_gain(0.5);
 	//chorus_lfo->add_output(chorus, Chorus::BufType::FREQ_RANGE);
 
+	//SoftClip* soft_clip{ static_cast<SoftClip*>(synthesis::add_module(std::make_unique<SoftClip>())) };
+	//soft_clip->set_drive(10.0f);
+	//soft_clip->add_output(master, Master::BufType::AUDIO);
+
+	//Oscillator* soft_clip_lfo{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	//soft_clip_lfo->set_freq(1);
+	//soft_clip_lfo->set_gain(9);
+	//soft_clip_lfo->add_output(soft_clip, SoftClip::BufType::DRIVE);
+
 	Mixer* mixer{ static_cast<Mixer*>(synthesis::add_module(std::make_unique<Mixer>())) };
-	mixer->add_output(schroeder_reverb, Master::BufType::AUDIO);
+	mixer->add_output(master, Master::BufType::AUDIO);
 	// mixer->add_output(luff_reverb, -1);
 	// for (uint8_t i{ 0 }; i < 8; i++) {
 	// 	luff_reverb->add_buf(mixer->get_out_buf(), MultichannelDiffuser::BufType::AUDIO);

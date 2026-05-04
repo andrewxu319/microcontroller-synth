@@ -183,6 +183,7 @@
     <ClCompile Include="src\synthesis\modules\fx\reverb\luff.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\reverb\reverb.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\reverb\schroeder.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\soft_clip.cpp" />
     <ClCompile Include="src\synthesis\modules\master.cpp" />
     <ClCompile Include="src\synthesis\modules\mixer.cpp" />
     <ClCompile Include="src\synthesis\modules\modulator\envelope.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="src\synthesis\modules\fx\reverb\luff.h" />
     <ClInclude Include="src\synthesis\modules\fx\reverb\reverb.h" />
     <ClInclude Include="src\synthesis\modules\fx\reverb\schroeder.h" />
+    <ClInclude Include="src\synthesis\modules\fx\soft_clip.h" />
     <ClInclude Include="src\synthesis\modules\master.h" />
     <ClInclude Include="src\synthesis\modules\mixer.h" />
     <ClInclude Include="src\synthesis\modules\modulator\envelope.h" />
