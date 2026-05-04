@@ -9,11 +9,6 @@ PerformedOscillator::PerformedOscillator(const std::string& waveform_path, const
 }
 
 void PerformedOscillator::generate_buf() {
-	if (!on) {
-		//memset(out_buf, 0.0f, config::buffer_size * sizeof(float_s));
-		*out_buf = EMPTY_BUF_MARKER; // put marker at start of buffer
-		return;
-	}
 	Oscillator::generate_buf();
 }
 
@@ -50,10 +45,6 @@ void PerformedOscillator::note_on(const uint8_t note, const uint8_t velocity) {
 	note_on(note);
 	velocity_gain = static_cast<float_s>(velocity) / 127;
 	phase = 0;
-}
-
-void PerformedOscillator::note_off() {
-	on = false;
 }
 
 void PerformedOscillator::change_note(const uint8_t note) {

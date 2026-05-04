@@ -11,12 +11,9 @@ namespace synthesis {
 		void generate_buf() override;
 		void note_on(const uint8_t note);
 		void note_on(const uint8_t note, const uint8_t velocity);
-		void note_off();
 		void change_note(const uint8_t note);
 
 	private:
 		bool on;
-		size_t portamento_time;
-		size_t portamento_time_elapsed;
 	};
 }
