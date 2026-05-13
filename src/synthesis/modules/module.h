@@ -13,7 +13,6 @@ namespace synthesis {
 
 	class Module {
 	public:
-		const int id;
 		std::vector<Module*> inputs;
 		std::vector<Module*> outputs;
 		static constexpr float_s EMPTY_BUF_MARKER{ std::numeric_limits<float_s>::min() };
@@ -25,7 +24,7 @@ namespace synthesis {
 		int add_input(MultichannelModule* __restrict input, uint8_t buf_type = -1);
 		int add_output(Module* __restrict output, uint8_t buf_type = -1);
 		// implement remove input/output
-		virtual void add_buf(const float_s* __restrict buf, uint8_t buf_type);
+		virtual void add_buf(const float_s* buf, uint8_t buf_type);
 		// remove_buf
 		virtual void init() {};
 
@@ -42,9 +41,7 @@ namespace synthesis {
 		float_s out_buf[config::buffer_size];
 
 	private:
-		static int last_id;
-
-		// use unique_ptr instead
+		// to create modules in application.cpp and to store sub-modules in other modules, use unique_ptr instead
 		Module(const Module&) = delete;
 		Module& operator=(const Module&) = delete;
 	};

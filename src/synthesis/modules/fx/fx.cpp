@@ -48,10 +48,14 @@ int Fx::add_input(MultichannelModule* __restrict input, const uint8_t buf_type) 
 	return add_input(static_cast<Module*>(input), -1);
 }
 
-void Fx::add_buf(const float_s* __restrict buf, uint8_t buf_type) {
+void Fx::add_buf(const float_s* buf, uint8_t buf_type) {
 	Module::add_buf(buf, buf_type);
 
 	if (buf_type == AUDIO && in_bufs_ptr[AUDIO].size() == 1) {
 		audio_in_buf = buf;
 	}
+}
+
+void Fx::set_wet(float_s value) {
+	wet = value;
 }

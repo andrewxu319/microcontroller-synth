@@ -9,12 +9,10 @@
 
 using namespace synthesis;
 
-int Module::last_id{ -1 }; // master is -1
 const float_s Module::empty_buf[config::buffer_size] = { 0.0 };
 
 Module::Module(std::vector<const float*>* in_bufs_ptr_)
-	: id{ last_id++ }, // Initialize const member `id`
-	inputs{},
+	: inputs{},
 	outputs{},
 	in_bufs_ptr{ in_bufs_ptr_ },
 	out_buf{} // Initialize `out_buf` to nullptr
@@ -29,7 +27,7 @@ void Module::generate_buf() {
 int Module::add_input(Module* __restrict input, uint8_t buf_type) { // -1 means no buffer
 	inputs.emplace_back(input);
 	if (synthesis::topo_sort() == -1) {
-		printf("Failed to add input (ID: %d): circular in/out!\n", input->id);
+		printf("Failed to add input: circular in/out!\n");
 		inputs.pop_back();
 		return -1;
 	}
@@ -42,7 +40,7 @@ int Module::add_input(Module* __restrict input, uint8_t buf_type) { // -1 means 
 int Module::add_input(MultichannelModule* __restrict input, uint8_t buf_type) { // -1 means no buffer
 	inputs.emplace_back(input);
 	if (synthesis::topo_sort() == -1) {
-		printf("Failed to add input (ID: %d): circular in/out!\n", input->id);
+		printf("Failed to add input: circular in/out!\n");
 		inputs.pop_back();
 		return -1;
 	}

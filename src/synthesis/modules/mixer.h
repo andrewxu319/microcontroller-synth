@@ -9,7 +9,7 @@ namespace synthesis {
 	public:
 		Mixer();
 		void generate_buf() override;
-		void add_buf(const float_s* __restrict buf, uint8_t buf_type) override;
+		void add_buf(const float_s* buf, uint8_t buf_type) override;
 		void set_in_buf_gain(const float_s* __restrict in_buf, const float_s value);
 
 		enum BufType {

@@ -37,7 +37,7 @@ void Mixer::generate_buf() {
 	}
 }
 
-void Mixer::add_buf(const float_s* __restrict buf, uint8_t buf_type) {
+void Mixer::add_buf(const float_s* buf, uint8_t buf_type) {
 	if (buf_type == BufType::AUDIO) {
 		gains[buf] = 1.0;
 	}
