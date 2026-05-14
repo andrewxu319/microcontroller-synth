@@ -68,17 +68,22 @@ void application() {
 	//delay_lfo->set_freq(1);
 	//delay_lfo->set_gain(0.25);
 
-	RBJFilter::HighShelf* filter{ static_cast<RBJFilter::HighShelf*>(synthesis::add_module(std::make_unique<RBJFilter::HighShelf>())) };
-	filter->add_output(master, RBJFilter::HighShelf::BufType::AUDIO);
-	filter->set_cutoff(1000);
+	RBJFilter::LowShelf* filter{ static_cast<RBJFilter::LowShelf*>(synthesis::add_module(std::make_unique<RBJFilter::LowShelf>())) };
+	filter->add_output(master, RBJFilter::LowShelf::BufType::AUDIO);
+	filter->set_cutoff(5000);
 	filter->set_gain(0.0);
 	filter->set_slope(1.0);
 	filter->set_wet(1.0f);
 
-	Oscillator* filter_lfo{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
-	filter_lfo->add_output(filter, RBJFilter::HighShelf::BufType::GAIN);
-	filter_lfo->set_freq(1.0);
-	filter_lfo->set_gain(3.0);
+	Oscillator* filter_lfo_0{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	filter_lfo_0->add_output(filter, RBJFilter::LowShelf::BufType::GAIN);
+	filter_lfo_0->set_freq(1.0);
+	filter_lfo_0->set_gain(5.0);
+
+	Oscillator* filter_lfo_1{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	filter_lfo_1->add_output(filter, RBJFilter::LowShelf::BufType::CUTOFF);
+	filter_lfo_1->set_freq(0.724925);
+	filter_lfo_1->set_gain(4000);
 
 	// Phaser* phaser{ static_cast<Phaser*>(synthesis::add_module(std::make_unique<Phaser>())) };
 	// phaser->set_wet(1.0f);

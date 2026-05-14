@@ -61,12 +61,6 @@ void ShelfFilter<Derived>::generate_buf() {
 	}
 	else {
 		for (size_t i{}; i < config::buffer_size; i += config::control_rate) {
-			for (size_t j{ i }; j < i + config::control_rate; j++) {
-				this->out_buf[j] = this->b0 * this->audio_in_buf[j] + this->w1;
-				this->w1 = this->b1 * this->audio_in_buf[j] - this->a1 * this->out_buf[j] + this->w2;
-				this->w2 = this->b2 * this->audio_in_buf[j] - this->a2 * this->out_buf[j];
-			}
-
 			if (cutoff_mods) {
 				this->effective_omega = 2 * M_PI / static_cast<double>(config::sample_rate) * cutoff_buf_sum[i];
 				this->cos_omega = std::cos(this->effective_omega);
@@ -80,6 +74,12 @@ void ShelfFilter<Derived>::generate_buf() {
             }
 			static_cast<Derived*>(this)->compute_alpha();
 			static_cast<Derived*>(this)->compute_coefficients();
+
+			for (size_t j{ i }; j < i + config::control_rate; j++) {
+				this->out_buf[j] = this->b0 * this->audio_in_buf[j] + this->w1;
+				this->w1 = this->b1 * this->audio_in_buf[j] - this->a1 * this->out_buf[j] + this->w2;
+				this->w2 = this->b2 * this->audio_in_buf[j] - this->a2 * this->out_buf[j];
+			}
 		}
 	}
 
