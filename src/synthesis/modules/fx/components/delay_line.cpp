@@ -32,9 +32,9 @@ void DelayLine::generate_buf() {
 		}
 
 		float_s delay_buf_sum[config::buffer_size];
-		const bool delay_mods{ sum_bufs(BufType::DELAY, delay_buf_sum, static_cast<float_s>(delay)) };
+		bool delay_mods{ sum_bufs(BufType::DELAY, delay_buf_sum, static_cast<float_s>(delay)) };
 		float_s feedback_buf_sum[config::buffer_size];
-		const bool feedback_mods{ sum_bufs(BufType::FEEDBACK, feedback_buf_sum, feedback) };
+		bool feedback_mods{ sum_bufs(BufType::FEEDBACK, feedback_buf_sum, feedback) };
 
 		if (delay_mods) {
 			for (size_t j{ 0 }; j < config::buffer_size; j++) {
@@ -127,9 +127,9 @@ void WetOnlyDelayLine::generate_buf() {
 		}
 
 		float_s delay_buf_sum[config::buffer_size]; // in samples
-		const bool delay_mods{ sum_bufs(BufType::DELAY, delay_buf_sum, static_cast<float_s>(delay)) };
+		bool delay_mods{ sum_bufs(BufType::DELAY, delay_buf_sum, static_cast<float_s>(delay)) };
 		float_s feedback_buf_sum[config::buffer_size];
-		const bool feedback_mods{ sum_bufs(BufType::FEEDBACK, feedback_buf_sum, feedback) };
+		bool feedback_mods{ sum_bufs(BufType::FEEDBACK, feedback_buf_sum, feedback) };
 
 		if (delay_mods) {
 			for (size_t j{ 0 }; j < config::buffer_size; j++) {

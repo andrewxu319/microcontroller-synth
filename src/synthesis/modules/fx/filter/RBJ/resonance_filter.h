@@ -10,6 +10,13 @@ namespace synthesis::RBJFilter{
 		void set_resonance(double value);
 		void compute_alpha();
         void compute_coefficients();
+
+        enum BufType {
+			AUDIO,
+            WET,
+            CUTOFF,
+            RESONANCE
+		};
 	};
 }
 

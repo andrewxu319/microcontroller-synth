@@ -182,7 +182,9 @@
     <ClCompile Include="src\synthesis\modules\fx\filter\RBJ\allpass.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\filter\RBJ\bandpass.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\filter\RBJ\highpass.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\filter\RBJ\high_shelf.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\filter\RBJ\lowpass.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\filter\RBJ\low_shelf.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\filter\RBJ\notch.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\flanger.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\fx.cpp" />
@@ -224,11 +226,13 @@
     <ClInclude Include="src\synthesis\modules\fx\filter\RBJ\bandpass.h" />
     <ClInclude Include="src\synthesis\modules\fx\filter\RBJ\bandwidth_filter.h" />
     <ClInclude Include="src\synthesis\modules\fx\filter\RBJ\highpass.h" />
+    <ClInclude Include="src\synthesis\modules\fx\filter\RBJ\high_shelf.h" />
     <ClInclude Include="src\synthesis\modules\fx\filter\RBJ\lowpass.h" />
+    <ClInclude Include="src\synthesis\modules\fx\filter\RBJ\low_shelf.h" />
     <ClInclude Include="src\synthesis\modules\fx\filter\RBJ\notch.h" />
     <ClInclude Include="src\synthesis\modules\fx\filter\RBJ\RBJ.h" />
     <ClInclude Include="src\synthesis\modules\fx\filter\RBJ\resonance_filter.h" />
-    <ClInclude Include="src\synthesis\modules\fx\filter\RBJ\slope_filter.h" />
+    <ClInclude Include="src\synthesis\modules\fx\filter\RBJ\shelf_filter.h" />
     <ClInclude Include="src\synthesis\modules\fx\flanger.h" />
     <ClInclude Include="src\synthesis\modules\fx\fx.h" />
     <ClInclude Include="src\synthesis\modules\fx\phaser.h" />

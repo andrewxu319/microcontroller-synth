@@ -4,7 +4,7 @@
 
 using namespace synthesis;
 
-PerformedOscillator::PerformedOscillator(const std::string& waveform_path, const bool unipolar)
+PerformedOscillator::PerformedOscillator(const std::string& waveform_path, bool unipolar)
 	: Oscillator(waveform_path, unipolar), on{ false } {
 }
 

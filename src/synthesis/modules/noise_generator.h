@@ -15,7 +15,7 @@ namespace synthesis {
 			GAIN
 		};
 
-		NoiseGenerator(const bool unipolar = false);
+		NoiseGenerator(bool unipolar = false);
 		void generate_buf() override;
 		void set_gain(const float_s value);
 

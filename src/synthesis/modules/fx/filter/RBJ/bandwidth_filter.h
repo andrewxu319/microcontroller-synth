@@ -7,9 +7,16 @@ namespace synthesis::RBJFilter {
 	class BandwidthFilter : public RBJ<BandwidthFilter<Derived>> {
 	public:
         BandwidthFilter();
-		void set_bandwidth(double value);
+		void set_bandwidth(double value_octaves);
 		void compute_alpha();
         void compute_coefficients();
+
+        enum BufType {
+			AUDIO,
+            WET,
+            CUTOFF,
+            BANDWIDTH
+		};
 	};
 }
 
@@ -17,12 +24,12 @@ using namespace synthesis::RBJFilter;
 
 template<typename Derived>
 BandwidthFilter<Derived>::BandwidthFilter() {
-    Filter::set_qbs(500.0f);
+    Filter::set_qbs(1.0f);
 }
 
 template<typename Derived>
-void BandwidthFilter<Derived>::set_bandwidth(double value) {
-    this->set_qbs(value);
+void BandwidthFilter<Derived>::set_bandwidth(double value_octaves) {
+    this->set_qbs(value_octaves);
 }
 
 template<typename Derived>

@@ -11,13 +11,22 @@ namespace synthesis::RBJFilter {
 	class RBJ : public Filter {
 	public:
 		RBJ();
-		void generate_buf() override;
+		virtual void generate_buf() override;
 		void set_cutoff(double value);
 		
 	protected:
 		void set_qbs(double value);
 		float_s a1, a2, b0, b1, b2, w1, w2;
 		float_s cos_omega, sin_omega, alpha; // effective values (modulated)
+
+	private:
+		enum BufType {
+			AUDIO,
+            WET,
+            CUTOFF,
+            QBS,
+            GAIN // for shelf filters only
+		};
 	};
 }
 
@@ -38,11 +47,11 @@ void RBJ<Derived>::generate_buf() {
 	}
 
 	float_s cutoff_buf_sum[config::buffer_size];
-	const bool cutoff_mods{ sum_bufs(BufType::CUTOFF, cutoff_buf_sum, cutoff) };
+	bool cutoff_mods{ sum_bufs(BufType::CUTOFF, cutoff_buf_sum, cutoff) };
 	float_s qbs_buf_sum[config::buffer_size];
-	const bool qbs_mods{ sum_bufs(BufType::QBS, qbs_buf_sum, qbs) }; // FIX LATER
+	bool qbs_mods{ sum_bufs(BufType::QBS, qbs_buf_sum, qbs) };
 
-	if (!cutoff_mods && !qbs_mods && !qbs_mods) {
+	if (!cutoff_mods && !qbs_mods) {
 		for (size_t j{}; j < config::buffer_size; j++) {
 			out_buf[j] = b0 * audio_in_buf[j] + w1;
 			w1 = b1 * audio_in_buf[j] - a1 * out_buf[j] + w2;
@@ -57,10 +66,14 @@ void RBJ<Derived>::generate_buf() {
 				w2 = b2 * audio_in_buf[j] - a2 * out_buf[j];
 			}
 
-			effective_omega = 2 * M_PI / static_cast<double>(config::sample_rate) * cutoff_buf_sum[i];
-			cos_omega = std::cos(effective_omega);
-			sin_omega = std::sin(effective_omega);
-			effective_qbs = qbs_buf_sum[i];
+			if (cutoff_mods) {
+				effective_omega = 2 * M_PI / static_cast<double>(config::sample_rate) * cutoff_buf_sum[i];
+				cos_omega = std::cos(effective_omega);
+				sin_omega = std::sin(effective_omega);
+			}
+			if (qbs_mods) {
+				effective_qbs = qbs_buf_sum[i];
+			}
 			static_cast<Derived*>(this)->compute_alpha();
 			static_cast<Derived*>(this)->compute_coefficients();
 		}

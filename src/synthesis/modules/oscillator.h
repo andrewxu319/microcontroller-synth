@@ -17,9 +17,9 @@ namespace synthesis {
 			PITCH // IN CENTS
 		};
 
-		Oscillator(const std::string& waveform_path = "zeros", const bool unipolar = false);
+		Oscillator(const std::string& waveform_path = "zeros", bool unipolar = false);
 		void generate_buf() override;
-		void load_waveform(const std::string& path, const bool unipolar = false);
+		void load_waveform(const std::string& path, bool unipolar = false);
 		void set_freq(const float_s value);
 		void set_gain(const float_s value);
 		void set_phase(const float_s value);

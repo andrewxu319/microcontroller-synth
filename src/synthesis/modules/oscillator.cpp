@@ -12,7 +12,7 @@
 
 using namespace synthesis;
 
-Oscillator::Oscillator(const std::string& waveform_path, const bool unipolar)
+Oscillator::Oscillator(const std::string& waveform_path, bool unipolar)
 	: Module(in_bufs),
 	phase { 0 }, freq{ 0.0f }, waveform{}, phase_increment{ 0 }, gain{ 1.0 }, velocity_gain{ 1.0 }
 {
@@ -36,7 +36,7 @@ double Oscillator::get_semitone_shift_multiplier(const int8_t semitones) {
 void Oscillator::generate_buf() {
 	// better way to do this? or just make mono?
 	float_s pitch_buf_sum[config::buffer_size];
-	const bool pitch_mods{ sum_bufs(BufType::PITCH, pitch_buf_sum) }; // "constant" parameter is 0
+	bool pitch_mods{ sum_bufs(BufType::PITCH, pitch_buf_sum) }; // "constant" parameter is 0
 
 	for (size_t i = 0; i < config::buffer_size; i += config::channels) {
 		if (pitch_mods) {
@@ -93,7 +93,7 @@ void Oscillator::generate_buf() {
 	return;
 }
 
-void Oscillator::load_waveform(const std::string& path, const bool unipolar) {
+void Oscillator::load_waveform(const std::string& path, bool unipolar) {
 	#ifdef TEENSY
 		teensy::file_io::read_wav(config::waveform_path + path + ".wav", waveform);
 	#else

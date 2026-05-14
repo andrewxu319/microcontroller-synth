@@ -47,7 +47,7 @@ void Schroeder::init() {
 
 void Schroeder::generate_buf() {
 	float_s decay_buf_sum[config::buffer_size];
-	const bool decay_mods{ sum_bufs(BufType::DECAY, decay_buf_sum, decay) };
+	bool decay_mods{ sum_bufs(BufType::DECAY, decay_buf_sum, decay) };
 	if (sum_bufs(BufType::DECAY, decay_buf_sum, decay)) {
 		// THIS IS A LITTLE MEMORY INEFFICIENT BECAUSE THIS REALLY NEEDS TO BE A MULTIPLICATIVE MODULATOR. but we're going to have to do 6 vector multiplications either way
 		// this sounds very weird... like a pitch shift

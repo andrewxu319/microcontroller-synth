@@ -17,7 +17,7 @@ void SoftClip::generate_buf() {
 		return;
 	}
 
-	const bool drive_mods{ sum_bufs(BufType::DRIVE, out_buf, drive) }; // out_buf now stores drive_buf_sum
+	bool drive_mods{ sum_bufs(BufType::DRIVE, out_buf, drive) }; // out_buf now stores drive_buf_sum
 
 	if (drive_mods) {
 		math::vec_entrywise_mult_float_s(out_buf, audio_in_buf, out_buf, config::buffer_size);

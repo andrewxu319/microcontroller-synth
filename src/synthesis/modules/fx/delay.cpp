@@ -48,7 +48,7 @@ void Delay::generate_buf() {
 	if (wet <= 0.0) return;
 
 	float_s feedback_buf_sum[config::buffer_size];
-	const bool feedback_mods{ sum_bufs(BufType::FEEDBACK, feedback_buf_sum) };
+	bool feedback_mods{ sum_bufs(BufType::FEEDBACK, feedback_buf_sum) };
 	//const float_s* delay_time_mod_sum{ sum_mods(BufType::DELAY_TIME) }; // DO LATER
 
 	if (feedback_mods) {

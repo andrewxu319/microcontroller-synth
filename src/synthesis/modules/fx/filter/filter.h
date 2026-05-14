@@ -19,20 +19,13 @@ namespace synthesis {
 		Filter();
 		void set_cutoff(double value);
 
-		enum BufType {
-			AUDIO,
-			WET,
-			CUTOFF,
-			QBS
-		};
-
 	protected:
 		void set_qbs(double value);
 		
-		std::vector<const float_s*> in_bufs[4];
+		std::vector<const float_s*> in_bufs[5];
 		float_s effective_omega;
 		float_s cutoff;
-		float_s qbs; // resonance/bandwidth/slope. resonance is centered at 1.0
+		float_s qbs; // resonance/bandwidth/slope. resonance is centered at 1.0. bandwidth is in octaves
 		float_s effective_qbs;
 	};
 }

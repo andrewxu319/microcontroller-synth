@@ -8,7 +8,7 @@
 
 using namespace synthesis;
 
-NoiseGenerator::NoiseGenerator(const bool unipolar)
+NoiseGenerator::NoiseGenerator(bool unipolar)
 	: Module(in_bufs),
 	gain{ 1.0 }
 {

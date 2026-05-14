@@ -24,9 +24,9 @@ void Phaser::generate_buf() {
 
 	memcpy(out_buf, audio_in_buf, config::buffer_size * sizeof(float_s));
 	float_s feedback_buf_sum[config::buffer_size];
-	const bool feedback_mods{ sum_bufs(BufType::FEEDBACK, feedback_buf_sum, feedback) };
+	bool feedback_mods{ sum_bufs(BufType::FEEDBACK, feedback_buf_sum, feedback) };
 	float_s center_buf_sum[config::buffer_size];
-	const bool center_mods{ sum_bufs(BufType::CENTER_FREQ, center_buf_sum, center) };
+	bool center_mods{ sum_bufs(BufType::CENTER_FREQ, center_buf_sum, center) };
 
 	for (int i{ 0 }; i < config::channel_buffer_size; i++) {
 		float_s temp{ audio_in_buf[i] };

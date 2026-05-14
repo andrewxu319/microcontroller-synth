@@ -55,7 +55,7 @@ void Chorus::generate_buf() {
 	}
 
 	float_s delay_buf_sum[config::buffer_size];
-	const bool delay_mods{ sum_bufs(BufType::DELAY, delay_buf_sum, delay_center) };
+	bool delay_mods{ sum_bufs(BufType::DELAY, delay_buf_sum, delay_center) };
 	for (ChorusVoice& voice : voices) {
 		for (size_t i{ 0 }; i < config::buffer_size; i++) {
 			const float_s effective_delay{ (delay_mods ? delay_buf_sum[i] : 0.0f) + voice.lfo->get_out_buf()[i] };
