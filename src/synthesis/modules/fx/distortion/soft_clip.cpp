@@ -27,7 +27,7 @@ void SoftClip::generate_buf() {
 	}
 
 	for (size_t i{}; i < config::buffer_size; i++) {
-		out_buf[i] = std::atanf(out_buf[i]);
+		out_buf[i] = std::atan(out_buf[i]);
 	}
 
 	math::vec_scal_mult_float_s(out_buf, out_buf, 2.0f / 3.141592653589793f, config::buffer_size);

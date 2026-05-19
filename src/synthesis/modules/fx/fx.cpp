@@ -15,7 +15,7 @@ void Fx::mix_dry_wet() {
 	if (in_bufs_ptr[WET].empty()) {
 		math::vec_scal_mult_float_s(out_buf, out_buf, wet, config::buffer_size);
 		if (audio_in_buf[0] != EMPTY_BUF_MARKER) {
-			math::vec_mult_add_float_s(audio_in_buf, out_buf, out_buf, 1.0f - wet, config::buffer_size);
+			math::axpy(audio_in_buf, out_buf, out_buf, 1.0f - wet, config::buffer_size);
 		}
 	}
 	else {

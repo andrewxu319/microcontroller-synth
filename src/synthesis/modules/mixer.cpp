@@ -27,7 +27,7 @@ void Mixer::generate_buf() {
 					math::vec_add_float_s(in_buf, out_buf, out_buf, config::buffer_size);
 				}
 				else {
-					math::vec_mult_add_float_s(in_buf, out_buf, out_buf, gains[in_buf], config::buffer_size);
+					math::axpy(in_buf, out_buf, out_buf, gains[in_buf], config::buffer_size);
 				}
 			}
 		}

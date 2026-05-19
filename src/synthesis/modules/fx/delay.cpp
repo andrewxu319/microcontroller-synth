@@ -58,7 +58,7 @@ void Delay::generate_buf() {
 			//	//delay_buffer.fast_resize(static_cast<size_t>(round((delay_time_mod_sum[i] + delay_time) * config::sample_rate / config::buffer_size)) * config::buffer_size);
 			//}
 			const float_s* read_start_ptr{ delay_buffer.pop_start_with_pointer(config::control_rate) };
-			math::vec_mult_add_float_s(read_start_ptr, out_buf + i, out_buf + i, feedback_buf_sum[i] + feedback, config::control_rate);
+			math::axpy(read_start_ptr, out_buf + i, out_buf + i, feedback_buf_sum[i] + feedback, config::control_rate);
 		}
 	}
 	else {
@@ -67,7 +67,7 @@ void Delay::generate_buf() {
 		//	//delay_buffer.fast_resize(static_cast<size_t>(round((delay_time_mod_sum[i] + delay_time) * config::sample_rate / config::buffer_size)) * config::buffer_size);
 		//}
 		const float_s* read_start_ptr{ delay_buffer.pop_start_with_pointer(config::buffer_size) };
-		math::vec_mult_add_float_s(read_start_ptr, out_buf, out_buf, feedback, config::buffer_size);
+		math::axpy(read_start_ptr, out_buf, out_buf, feedback, config::buffer_size);
 	}
 
 	delay_buffer.push_back(out_buf, config::buffer_size);

@@ -8,6 +8,10 @@ namespace math {
 	void vec_add_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {
 		arm_add_f32(const_cast<float_s* __restrict const>(in_1), const_cast<float_s* const>(in_2), out, len);
 	}
+	
+	void vec_sub_float_s(const float_s* const in_1, const float_s* const in_2, float_s* const out, const int len) {
+		arm_sub_f32(const_cast<float_s* const>(in_1), const_cast<float_s* const>(in_2), out, len);
+	}
 
 	void vec_scal_mult_float_s(const float_s* const in, float_s* const out, float_s scalar, const int len) {
 		arm_scale_f32(const_cast<float_s* const>(in), scalar, out, len);
@@ -29,9 +33,14 @@ namespace math {
 	}
 
 	// multiplies in_1 by scalar, adds to in_2
-	void vec_mult_add_float_s(const float_s* const in_1, const float_s* const in_2, float_s* const out, float_s in_1_scalar, const int len) { // must be signed int here, otherwise "len - 8" breaks
-		arm_scale_f32(const_cast<float_s* __restrict const>(in_1), in_1_scalar, out, len);
-		arm_add_f32(out, const_cast<float_s* const>(in_2), out, len);
+	void axpy(const float_s* const x, const float_s* const y, float_s* const out, float_s a, const int len) { // must be signed int here, otherwise "len - 8" breaks
+		arm_scale_f32(const_cast<float_s* __restrict const>(x), a, out, len);
+		arm_add_f32(out, const_cast<float_s* const>(y), out, len);
+	}
+
+	void axpy(const float_s* const x, float y, float_s* const out, float_s a, const int len) { // must be signed int here, otherwise "len - 8" breaks
+		arm_scale_f32(const_cast<float_s* __restrict const>(x), a, out, len);
+		arm_offset_f32(out, y, out, len);
 	}
 }
 #else
@@ -42,7 +51,7 @@ namespace math {
 	void vec_add_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, const int len) {
 		// if standalone
 		int i{ 0 };
-		for (; i < len - 8; i += 8) { // with regular avx, we can add 8 at once
+		for (; i <= len - 8; i += 8) { // with regular avx, we can add 8 at once
 			const __m256 avx_in_1{ _mm256_loadu_ps(&in_1[i]) }; // change type for int or double if needed. use conditional_t
 			const __m256 avx_in_2{ _mm256_loadu_ps(&in_2[i]) };
 			const __m256 avx_result{ _mm256_add_ps(avx_in_1, avx_in_2) };
@@ -52,12 +61,26 @@ namespace math {
 			out[i] = in_1[i] + in_2[i];
 		}
 	}
+	
+	void vec_sub_float_s(const float_s* const in_1, const float_s* const in_2, float_s* const out, const int len) {
+		// if standalone
+		int i{ 0 };
+		for (; i <= len - 8; i += 8) { // with regular avx, we can sub 8 at once
+			const __m256 avx_in_1{ _mm256_loadu_ps(&in_1[i]) }; // change type for int or double if needed. use conditional_t
+			const __m256 avx_in_2{ _mm256_loadu_ps(&in_2[i]) };
+			const __m256 avx_result{ _mm256_sub_ps(avx_in_1, avx_in_2) };
+			_mm256_storeu_ps(&out[i], avx_result);
+		}
+		for (; i < len; i++) {
+			out[i] = in_1[i] - in_2[i];
+		}
+	}
 
 	void vec_scal_mult_float_s(const float_s* const in, float_s* const out, float_s scalar, const int len) {
 		// if standalone
 		const __m256 scalar_reg_{ _mm256_set1_ps(scalar) };
 		int i{ 0 };
-		for (; i < len - 8; i += 8) { // with regular avx, we can add 8 at once
+		for (; i <= len - 8; i += 8) { // with regular avx, we can add 8 at once
 			const __m256 avx_in{ _mm256_loadu_ps(&in[i]) }; // change type for int or double if needed. use conditional_t
 			const __m256 avx_result{ _mm256_mul_ps(avx_in, scalar_reg_) };
 			_mm256_storeu_ps(&out[i], avx_result);
@@ -71,7 +94,7 @@ namespace math {
 		// if standalone
 		const __m256 scalar_reg_{ _mm256_set1_ps(scalar) };
 		int i{ 0 };
-		for (; i < len - 8; i += 8) { // with regular avx, we can add 8 at once
+		for (; i <= len - 8; i += 8) { // with regular avx, we can add 8 at once
 			const __m256 avx_in{ _mm256_loadu_ps(&in[i]) }; // change type for int or double if needed. use conditional_t
 			const __m256 avx_result{ _mm256_add_ps(avx_in, scalar_reg_) };
 			_mm256_storeu_ps(&out[i], avx_result);
@@ -96,18 +119,32 @@ namespace math {
 		}
 	}
 
-	// multiplies in_1 by scalar, adds to in_2
-	void vec_mult_add_float_s(const float_s* const in_1, const float_s* const in_2, float_s* const out, float_s in_1_scalar, const int len) { // must be signed int here, otherwise "len - 8" breaks
-		const __m256 scalar_reg_{ _mm256_set1_ps(in_1_scalar) };
+	// multiplies x by a, adds to y
+	void axpy(const float_s* const x, const float_s* const y, float_s* const out, float_s a, const int len) { // must be signed int here, otherwise "len - 8" breaks
+		const __m256 avx_a{ _mm256_set1_ps(a) };
 		int i{ 0 };
-		for (; i < len - 8; i += 8) { // with regular avx, we can add 8 at once
-			const __m256 avx_in_1{ _mm256_loadu_ps(&in_1[i]) }; // change type for int or double if needed. use conditional_t
-			const __m256 avx_in_2{ _mm256_loadu_ps(&in_2[i]) };
-			const __m256 avx_result{ _mm256_fmadd_ps(avx_in_1, scalar_reg_, avx_in_2) };
+		for (; i <= len - 8; i += 8) { // with regular avx, we can add 8 at once
+			const __m256 avx_x{ _mm256_loadu_ps(&x[i]) }; // change type for int or double if needed. use conditional_t
+			const __m256 avx_y{ _mm256_loadu_ps(&y[i]) };
+			const __m256 avx_result{ _mm256_fmadd_ps(avx_x, avx_a, avx_y) };
 			_mm256_storeu_ps(&out[i], avx_result);
 		}
 		for (; i < len; i++) {
-			out[i] = in_1[i] * in_1_scalar + in_2[i];
+			out[i] = x[i] * a + y[i];
+		}
+	}
+
+	void axpy(const float_s* const x, float_s y, float_s* const out, float_s a, const int len) { // must be signed int here, otherwise "len - 8" breaks
+		const __m256 avx_a{ _mm256_set1_ps(a) };
+		const __m256 avx_y{ _mm256_set1_ps(y) };
+		int i{ 0 };
+		for (; i <= len - 8; i += 8) { // with regular avx, we can add 8 at once
+			const __m256 avx_x{ _mm256_loadu_ps(&x[i]) }; // change type for int or double if needed. use conditional_t
+			const __m256 avx_result{ _mm256_fmadd_ps(avx_x, avx_a, avx_y) };
+			_mm256_storeu_ps(&out[i], avx_result);
+		}
+		for (; i < len; i++) {
+			out[i] = x[i] * a + y;
 		}
 	}
 }

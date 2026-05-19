@@ -69,7 +69,7 @@ void MultichannelDiffuser::fast_hadamard_transform(std::vector<MultichannelModul
 			for (uint8_t j{ i }; j < i + h; j++) {
 				memcpy(hadamard_a, data[j].data(), config::buffer_size * sizeof(float_s));
 				math::vec_add_float_s(data[j].data(), data[j + h].data(), data[j].data(), config::buffer_size);
-				math::vec_mult_add_float_s(hadamard_a, data[j + h].data(), data[j + h].data(), -1.0f, config::buffer_size);
+				math::axpy(hadamard_a, data[j + h].data(), data[j + h].data(), -1.0f, config::buffer_size);
 			}
 		}
 	}

@@ -18,7 +18,9 @@
 #include "synthesis/modules/fx/reverb/schroeder.h"
 #include "synthesis/modules/fx/reverb/luff.h"
 #include "synthesis/modules/fx/components/multichannel_diffuser.h"
-#include "synthesis/modules/fx/soft_clip.h"
+#include "synthesis/modules/fx/distortion/soft_clip.h"
+#include "synthesis/modules/fx/distortion/ideal_wavefolder.h"
+#include "synthesis/modules/fx/distortion/serge_wavefolder/serge_wavefolder.h"
 #include "synthesis/modules/modulator/envelope.h"
 #include "synthesis/modules/modulator/portamento.h"
 #ifdef TEENSY
@@ -36,6 +38,11 @@ void application() {
 	// master, voice_manager, and module are initialized in synthesizer.cpp. maybe theres a better way to structure this?
 	synthesis::voice_manager = static_cast<VoiceManager*>(synthesis::add_module(std::make_unique<VoiceManager>()));
 	synthesis::voice_manager->set_legato(true);
+
+	SergeWavefolder* wavefolder = static_cast<SergeWavefolder*>(synthesis::add_module(std::make_unique<SergeWavefolder>()));
+	wavefolder->set_gain(3.0f);
+	wavefolder->set_offset(0.0f);
+	wavefolder->add_output(master, Master::BufType::AUDIO);
 
 	//Schroeder* schroeder_reverb{ static_cast<Schroeder*>(synthesis::add_module(std::make_unique<Schroeder>())) };
 	//schroeder_reverb->add_output(master, Master::BufType::AUDIO);
@@ -68,22 +75,22 @@ void application() {
 	//delay_lfo->set_freq(1);
 	//delay_lfo->set_gain(0.25);
 
-	RBJFilter::LowShelf* filter{ static_cast<RBJFilter::LowShelf*>(synthesis::add_module(std::make_unique<RBJFilter::LowShelf>())) };
-	filter->add_output(master, RBJFilter::LowShelf::BufType::AUDIO);
-	filter->set_cutoff(5000);
-	filter->set_gain(0.0);
-	filter->set_slope(1.0);
-	filter->set_wet(1.0f);
+	// RBJFilter::LowShelf* filter{ static_cast<RBJFilter::LowShelf*>(synthesis::add_module(std::make_unique<RBJFilter::LowShelf>())) };
+	// filter->add_output(master, RBJFilter::LowShelf::BufType::AUDIO);
+	// filter->set_cutoff(5000);
+	// filter->set_gain(0.0);
+	// filter->set_slope(1.0);
+	// filter->set_wet(1.0f);
 
-	Oscillator* filter_lfo_0{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
-	filter_lfo_0->add_output(filter, RBJFilter::LowShelf::BufType::GAIN);
-	filter_lfo_0->set_freq(1.0);
-	filter_lfo_0->set_gain(5.0);
+	// Oscillator* filter_lfo_0{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	// filter_lfo_0->add_output(filter, RBJFilter::LowShelf::BufType::GAIN);
+	// filter_lfo_0->set_freq(1.0);
+	// filter_lfo_0->set_gain(5.0);
 
-	Oscillator* filter_lfo_1{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
-	filter_lfo_1->add_output(filter, RBJFilter::LowShelf::BufType::CUTOFF);
-	filter_lfo_1->set_freq(0.724925);
-	filter_lfo_1->set_gain(4000);
+	// Oscillator* filter_lfo_1{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	// filter_lfo_1->add_output(filter, RBJFilter::LowShelf::BufType::CUTOFF);
+	// filter_lfo_1->set_freq(0.724925);
+	// filter_lfo_1->set_gain(4000);
 
 	// Phaser* phaser{ static_cast<Phaser*>(synthesis::add_module(std::make_unique<Phaser>())) };
 	// phaser->set_wet(1.0f);
@@ -150,14 +157,14 @@ void application() {
 	//soft_clip_lfo->add_output(soft_clip, SoftClip::BufType::DRIVE);
 
 	Mixer* mixer{ static_cast<Mixer*>(synthesis::add_module(std::make_unique<Mixer>())) };
-	mixer->add_output(filter, Master::BufType::AUDIO);
+	mixer->add_output(wavefolder, Master::BufType::AUDIO);
 	// mixer->add_output(luff_reverb, -1);
 	// for (uint8_t i{ 0 }; i < 8; i++) {
 	// 	luff_reverb->add_buf(mixer->get_out_buf(), MultichannelDiffuser::BufType::AUDIO);
 	// }
 
 	for (int i{ 0 }; i < config::num_voices; i++) {
-		PerformedOscillator* oscillator{ static_cast<PerformedOscillator*>(synthesis::add_module(std::make_unique<PerformedOscillator>("triangle"))) };
+		PerformedOscillator* oscillator{ static_cast<PerformedOscillator*>(synthesis::add_module(std::make_unique<PerformedOscillator>("sine"))) };
 		oscillator->add_output(mixer, Mixer::BufType::AUDIO);
 		oscillator->set_gain(0);
 

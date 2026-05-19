@@ -12,15 +12,19 @@ Oscillators
 - White noise
 - Custom waveforms (.wav file required)
 
+Performance
+- Mono legato and portamento
+
 Effects
 - ADSR
 - LFOs
-- Filters (RBJ)
+- Filters (RBJ): high/low/allpass, bandpass, notch, high/low shelf
 - Chorus
 - Flanger
 - Phaser
 - Delay
 - Reverb: Schroeder, Luff
+- Distortion: soft clip, wavefolder
 
 ## Codebase
 - AVX512 for vector arithmetic

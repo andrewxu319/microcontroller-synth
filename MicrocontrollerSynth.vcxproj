@@ -178,6 +178,11 @@
     <ClCompile Include="src\synthesis\modules\fx\components\phaser_allpass.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\components\schroeder_allpass.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\delay.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\distortion\ideal_wavefolder.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\distortion\serge_wavefolder\serge_stage.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\distortion\serge_wavefolder\serge_wavefolder.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\distortion\soft_clip.cpp" />
+    <ClCompile Include="src\synthesis\modules\fx\distortion\wavefolder.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\filter\filter.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\filter\RBJ\allpass.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\filter\RBJ\bandpass.cpp" />
@@ -192,7 +197,6 @@
     <ClCompile Include="src\synthesis\modules\fx\reverb\luff.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\reverb\reverb.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\reverb\schroeder.cpp" />
-    <ClCompile Include="src\synthesis\modules\fx\soft_clip.cpp" />
     <ClCompile Include="src\synthesis\modules\master.cpp" />
     <ClCompile Include="src\synthesis\modules\mixer.cpp" />
     <ClCompile Include="src\synthesis\modules\modulator\envelope.cpp" />
@@ -221,6 +225,11 @@
     <ClInclude Include="src\synthesis\modules\fx\components\phaser_allpass.h" />
     <ClInclude Include="src\synthesis\modules\fx\components\schroeder_allpass.h" />
     <ClInclude Include="src\synthesis\modules\fx\delay.h" />
+    <ClInclude Include="src\synthesis\modules\fx\distortion\ideal_wavefolder.h" />
+    <ClInclude Include="src\synthesis\modules\fx\distortion\serge_wavefolder\serge_stage.h" />
+    <ClInclude Include="src\synthesis\modules\fx\distortion\serge_wavefolder\serge_wavefolder.h" />
+    <ClInclude Include="src\synthesis\modules\fx\distortion\soft_clip.h" />
+    <ClInclude Include="src\synthesis\modules\fx\distortion\wavefolder.h" />
     <ClInclude Include="src\synthesis\modules\fx\filter\filter.h" />
     <ClInclude Include="src\synthesis\modules\fx\filter\RBJ\allpass.h" />
     <ClInclude Include="src\synthesis\modules\fx\filter\RBJ\bandpass.h" />
@@ -239,7 +248,6 @@
     <ClInclude Include="src\synthesis\modules\fx\reverb\luff.h" />
     <ClInclude Include="src\synthesis\modules\fx\reverb\reverb.h" />
     <ClInclude Include="src\synthesis\modules\fx\reverb\schroeder.h" />
-    <ClInclude Include="src\synthesis\modules\fx\soft_clip.h" />
     <ClInclude Include="src\synthesis\modules\master.h" />
     <ClInclude Include="src\synthesis\modules\mixer.h" />
     <ClInclude Include="src\synthesis\modules\modulator\envelope.h" />
