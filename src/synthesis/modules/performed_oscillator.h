@@ -2,8 +2,6 @@
 
 #include "oscillator.h"
 
-#include "utils/utils.h"
-
 namespace synthesis {
 	class PerformedOscillator : public Oscillator {
 	public:

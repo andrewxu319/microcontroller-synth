@@ -1,6 +1,6 @@
 #include "master.h"
 
-#include "utils/utils.h"
+#include "utils/timer.h"
 #include "utils/math.h"
 #include "synthesis/synthesizer.h"
 

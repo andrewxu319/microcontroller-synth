@@ -2,8 +2,6 @@
 
 #include "module.h"
 
-#include "utils/utils.h"
-
 #include <string>
 
 // idea for multiple voices: arrays of phase, freq, period, one for each voice

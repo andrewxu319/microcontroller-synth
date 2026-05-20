@@ -1,6 +1,5 @@
 #pragma once
 
-#include "utils/utils.h"
 #include "utils/global.h"
 
 namespace midi {

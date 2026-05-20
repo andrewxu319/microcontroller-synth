@@ -1,5 +1,4 @@
 #include "mixer.h"
-#include "utils/utils.h"
 #include "utils/math.h"
 
 using namespace synthesis;

@@ -2,7 +2,6 @@
 
 #include "synthesis/modules/module.h"
 #include "utils/global.h"
-#include "utils/utils.h"
 
 namespace synthesis {
 	class Fx : public Module {

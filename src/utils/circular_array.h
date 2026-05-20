@@ -2,8 +2,6 @@
 
 #include "global.h"
 
-
-
 namespace utils {
 	template <typename T>
 	class CircularArray {
