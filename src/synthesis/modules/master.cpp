@@ -43,7 +43,7 @@ void Master::generate_buf() {
 		memset(out_buf, 0, config::buffer_size * sizeof(float_s));
 	}
 
-	//utils::timer::end();
+	//utils::timer::end("master");
 
 	// clip between -1.0 and 1.0
 }

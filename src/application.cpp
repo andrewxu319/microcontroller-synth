@@ -40,8 +40,8 @@ void application() {
 	synthesis::voice_manager->set_legato(true);
 
 	SergeWavefolder* wavefolder = static_cast<SergeWavefolder*>(synthesis::add_module(std::make_unique<SergeWavefolder>()));
-	wavefolder->set_gain(3.0f);
-	wavefolder->set_offset(0.0f);
+	wavefolder->set_gain(1.5f);
+	wavefolder->set_offset(0.4f);
 	wavefolder->add_output(master, Master::BufType::AUDIO);
 
 	//Schroeder* schroeder_reverb{ static_cast<Schroeder*>(synthesis::add_module(std::make_unique<Schroeder>())) };
