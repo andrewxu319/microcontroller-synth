@@ -58,7 +58,17 @@ namespace synthesis {
         float_s last_sample;
         std::vector<const float_s*> in_bufs[1];
 
-#ifndef TEENSY
+#ifdef TEENSY
+
+#elif defined (__AVX512F__)
+        // all have FORCE_INLINE. i just need to put them in .cpp for some reason or there are errors
+        __m512 f1(__m512 src, __mmask16 mask, __m512 x) const;
+        __m512 f02(__m512 src, __mmask16 mask, __m512 x) const;
+        __m512 F1(__m512 src, __mmask16 mask, __m512 x) const;
+        __m512 F02(__m512 src, __mmask16 mask, __m512 x) const;
+        __m512 compute_block(__m512 x, __m512 x_prev) const;
+
+#elif defined(__AVX2__)
         // all have FORCE_INLINE. i just need to put them in .cpp for some reason or there are errors
         __m256 f1(__m256 x) const;
         __m256 f02(__m256 x) const;

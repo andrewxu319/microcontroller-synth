@@ -16,5 +16,4 @@ namespace math {
 	void axpy(const float_s* const x, const float_s* const y, float_s* const out, float_s a, size_t len);
 	void axpy(const float_s* const x, float_s y, float_s* const out, float_s a, size_t len);
 	void abs(const float_s* const in, float_s* const out, size_t len);
-	int compare_all(const float_s* __restrict const in, float_s threshold);
 }
