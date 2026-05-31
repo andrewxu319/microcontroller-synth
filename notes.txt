@@ -5,8 +5,6 @@ TEENSY TODO
 - math https://arm-software.github.io/CMSIS-DSP/latest/
 
 to do
-- portamento
-- arctan soft clip (std::atan, -pi/2 to pi/2 by default)
 - various misc mods
 - turn mods on/off
 - dealing with empty audio buffers

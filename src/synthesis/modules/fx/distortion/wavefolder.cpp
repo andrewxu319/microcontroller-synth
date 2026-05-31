@@ -14,7 +14,22 @@ void Wavefolder::generate_buf() {
 		return;
 	}
 
-    math::axpy(audio_in_buf, offset, out_buf, gain, config::buffer_size);
+	bool gain_mods{ sum_bufs(BufType::GAIN, out_buf, gain) }; // out_buf now stores gain_buf_sum
+	if (gain_mods) {
+		math::vec_entrywise_mult_float_s(out_buf, audio_in_buf, out_buf, config::buffer_size);
+	}
+	else {
+		math::vec_scal_mult_float_s(audio_in_buf, out_buf, gain, config::buffer_size);
+	}
+
+    float_s offset_sum_buf[config::buffer_size];
+    bool offset_mods{ sum_bufs(BufType::OFFSET, offset_sum_buf, offset) }; // out_buf now stores offset_buf_sum
+	if (offset_mods) {
+		math::vec_add_float_s(out_buf, offset_sum_buf, out_buf, config::buffer_size);
+	}
+	else {
+		math::vec_scal_add_float_s(out_buf, out_buf, offset, config::buffer_size);
+	}
 }
 
 // in raw factor, not dB

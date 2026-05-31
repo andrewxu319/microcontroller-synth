@@ -49,7 +49,7 @@ namespace synthesis {
         static constexpr float_s A10 = a9 / 10.0f;
         static constexpr float_s A12 = a11 / 12.0f;
         static constexpr float_s A14 = a13 / 14.0f;
-        static constexpr float_s A16 = a15 / 17.0f;
+        static constexpr float_s A16 = a15 / 16.0f;
         static constexpr float_s A18 = a17 / 18.0f;
         // coefficients for spline approximation of F(x), |x| > knot
         static constexpr float_s B1 = b0;

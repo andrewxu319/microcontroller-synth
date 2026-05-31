@@ -86,7 +86,7 @@ FORCE_INLINE __m512 SergeStage::F1(__m512 src, __mmask16 mask, __m512 x) const {
     const __m512 A18_{ _mm512_set1_ps(A18) };
 
     // horner's method
-    __m512 x_sq{ _mm512_mul_ps(x, x) }; // x_sq now acts as the "src" because it contains the original src entries and mask fma requires the src to be an operand in the fma
+    __m512 x_sq{ _mm512_mask_mul_ps(src, mask, x, x) }; // x_sq now acts as the "src" because it contains the original src entries and mask fma requires the src to be an operand in the fma
     __m512 r16{ _mm512_mask_fmadd_ps(x_sq, mask, A18_, A16_) };
     __m512 r14{ _mm512_mask_fmadd_ps(x_sq, mask, r16, A14_) };
     __m512 r12{ _mm512_mask_fmadd_ps(x_sq, mask, r14, A12_) };
@@ -95,7 +95,7 @@ FORCE_INLINE __m512 SergeStage::F1(__m512 src, __mmask16 mask, __m512 x) const {
     __m512 r6{ _mm512_mask_fmadd_ps(x_sq, mask, r8, A6_) };
     __m512 r4{ _mm512_mask_fmadd_ps(x_sq, mask, r6, A4_) };
     __m512 r2{ _mm512_mask_fmadd_ps(x_sq, mask, r4, A2_) };
-    return _mm512_mul_ps(x_sq, r2);
+    return _mm512_mask_mul_ps(src, mask, x_sq, r2);
 }
 
 FORCE_INLINE __m512 SergeStage::F02(__m512 src, __mmask16 mask, __m512 x) const {
@@ -105,8 +105,6 @@ FORCE_INLINE __m512 SergeStage::F02(__m512 src, __mmask16 mask, __m512 x) const 
 
     const __m512 zero_reg{ _mm512_setzero_ps() };
     __mmask16 F02_mask{ _mm512_mask_cmp_ps_mask(mask, x, zero_reg, _CMP_GT_OQ) };
-
-    // can't use fma because the src is not also an operand
 
     // F0
     __m512 B2_times_x{ _mm512_mask_mul_ps(src, mask, B2_, x) };
@@ -148,6 +146,12 @@ FORCE_INLINE __m512 SergeStage::compute_block(__m512 x, __m512 x_prev) const {
     __mmask16 F1_mask{ _kand_mask16(aa_mask, pw_n_mask) };
     __mmask16 F02_mask{ _kand_mask16(aa_mask, pw_mask) };
 
+    // same masking process for x_prev. only needed for F branches
+    __mmask16 pw_prev_mask{ _mm512_mask_cmp_ps_mask(aa_mask, x_prev_abs, knot_reg, _CMP_GT_OQ) }; // 0xFF if x > knot, 0x00 otherwise
+    __mmask16 pw_n_prev_mask{ _knot_mask16(pw_prev_mask) };
+    __mmask16 F1_prev_mask{ _kand_mask16(aa_mask, pw_n_prev_mask) };
+    __mmask16 F02_prev_mask{ _kand_mask16(aa_mask, pw_prev_mask) };
+
     __m512 result{};
 
     // f1
@@ -156,17 +160,13 @@ FORCE_INLINE __m512 SergeStage::compute_block(__m512 x, __m512 x_prev) const {
     // f02
     result = f02(result, f02_mask, avg_with_prev);
 
-    // F1. USING MASKED OPERATIONS WILL PROB MAKE THIS FASTER
-    __m512 F1_result{ F1(result, F1_mask, x) }; // use abs because F is even
-    __m512 F1_prev_result{ F1(result, F1_mask, x_prev) };
-    __m512 F1_diffs{ _mm512_mask_sub_ps(result, F1_mask, F1_result, F1_prev_result) };
-    result = _mm512_mask_div_ps(result, F1_mask, F1_diffs, diffs);
-
-    // F02
-    __m512 F02_result{ F02(result, F02_mask, x) }; // use abs because F is even
-    __m512 F02_prev_result{ F02(result, F02_mask, x_prev) };
-    __m512 F02_diffs{ _mm512_mask_sub_ps(result, F02_mask, F02_result, F02_prev_result) };
-    result = _mm512_mask_div_ps(result, F02_mask, F02_diffs, diffs);
+    // F
+    __m512 F1_result{ F1(result, F1_mask, x) };
+    __m512 F_result{ F02(F1_result, F02_mask, x) };
+    __m512 F1_prev_result{ F1(result, F1_prev_mask, x_prev) };
+    __m512 F_prev_result{ F02(F1_prev_result, F02_prev_mask, x_prev) };
+    __m512 F_diffs{ _mm512_mask_sub_ps(result, aa_mask, F_result, F_prev_result) };
+    result = _mm512_mask_div_ps(result, aa_mask, F_diffs, diffs);
 
     return result;
 }

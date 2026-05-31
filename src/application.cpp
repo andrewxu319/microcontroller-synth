@@ -40,9 +40,21 @@ void application() {
 	synthesis::voice_manager->set_legato(true);
 
 	SergeWavefolder* wavefolder = static_cast<SergeWavefolder*>(synthesis::add_module(std::make_unique<SergeWavefolder>()));
-	wavefolder->set_gain(1.5f);
-	wavefolder->set_offset(0.4f);
+	wavefolder->set_gain(1.7f);
+	wavefolder->set_offset(0.05f);
 	wavefolder->add_output(master, Master::BufType::AUDIO);
+
+	Oscillator* wavefolder_lfo_0{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	wavefolder_lfo_0->add_output(wavefolder, SergeWavefolder::BufType::GAIN);
+	wavefolder_lfo_0->set_freq(1.0);
+	wavefolder_lfo_0->set_gain(0.4);
+	wavefolder_lfo_0->set_phase(0.3592);
+
+	Oscillator* wavefolder_lfo_1{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	wavefolder_lfo_1->add_output(wavefolder, SergeWavefolder::BufType::OFFSET);
+	wavefolder_lfo_1->set_freq(0.724925);
+	wavefolder_lfo_1->set_gain(0.03);
+	wavefolder_lfo_1->set_phase(0.129303);
 
 	//Schroeder* schroeder_reverb{ static_cast<Schroeder*>(synthesis::add_module(std::make_unique<Schroeder>())) };
 	//schroeder_reverb->add_output(master, Master::BufType::AUDIO);
@@ -81,16 +93,6 @@ void application() {
 	// filter->set_gain(0.0);
 	// filter->set_slope(1.0);
 	// filter->set_wet(1.0f);
-
-	// Oscillator* filter_lfo_0{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
-	// filter_lfo_0->add_output(filter, RBJFilter::LowShelf::BufType::GAIN);
-	// filter_lfo_0->set_freq(1.0);
-	// filter_lfo_0->set_gain(5.0);
-
-	// Oscillator* filter_lfo_1{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
-	// filter_lfo_1->add_output(filter, RBJFilter::LowShelf::BufType::CUTOFF);
-	// filter_lfo_1->set_freq(0.724925);
-	// filter_lfo_1->set_gain(4000);
 
 	// Phaser* phaser{ static_cast<Phaser*>(synthesis::add_module(std::make_unique<Phaser>())) };
 	// phaser->set_wet(1.0f);
@@ -218,6 +220,7 @@ void application() {
 	}
 
 	synthesis::init();
+
 	// synthesis::voice_manager->note_on(60, 127);
 	// #ifdef TEENSY
 	// while (true) {
