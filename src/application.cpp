@@ -34,39 +34,41 @@
 
 using namespace synthesis;
 
+#define ADD_MODULE(T, ...) static_cast<T*>(add_module(std::make_unique<T>(__VA_ARGS__)))
+
 void application() {
 	// master, voice_manager, and module are initialized in synthesizer.cpp. maybe theres a better way to structure this?
-	synthesis::voice_manager = static_cast<VoiceManager*>(synthesis::add_module(std::make_unique<VoiceManager>()));
+	synthesis::voice_manager = ADD_MODULE(VoiceManager);
 	synthesis::voice_manager->set_legato(true);
 
-	SergeWavefolder* wavefolder = static_cast<SergeWavefolder*>(synthesis::add_module(std::make_unique<SergeWavefolder>()));
+	SergeWavefolder* wavefolder{ ADD_MODULE(SergeWavefolder) };
 	wavefolder->set_gain(1.7f);
 	wavefolder->set_offset(0.05f);
 	wavefolder->add_output(master, Master::BufType::AUDIO);
 
-	Oscillator* wavefolder_lfo_0{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	Oscillator* wavefolder_lfo_0{ ADD_MODULE(Oscillator, "sine") };
 	wavefolder_lfo_0->add_output(wavefolder, SergeWavefolder::BufType::GAIN);
 	wavefolder_lfo_0->set_freq(1.0);
 	wavefolder_lfo_0->set_gain(0.4);
 	wavefolder_lfo_0->set_phase(0.3592);
 
-	Oscillator* wavefolder_lfo_1{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	Oscillator* wavefolder_lfo_1{ ADD_MODULE(Oscillator, "sine") };
 	wavefolder_lfo_1->add_output(wavefolder, SergeWavefolder::BufType::OFFSET);
 	wavefolder_lfo_1->set_freq(0.724925);
 	wavefolder_lfo_1->set_gain(0.03);
 	wavefolder_lfo_1->set_phase(0.129303);
 
-	//Schroeder* schroeder_reverb{ static_cast<Schroeder*>(synthesis::add_module(std::make_unique<Schroeder>())) };
+	//Schroeder* schroeder_reverb{ ADD_MODULE(Schroeder) };
 	//schroeder_reverb->add_output(master, Master::BufType::AUDIO);
 	//schroeder_reverb->set_decay_time(10);
 	//schroeder_reverb->wet = 0.0;
 
-	//Oscillator* schroeder_reverb_lfo{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	//Oscillator* schroeder_reverb_lfo{ ADD_MODULE(Oscillator, "sine") };
 	//schroeder_reverb_lfo->set_freq(0.5);
 	//schroeder_reverb_lfo->set_gain(50);
 	//schroeder_reverb->add_buf(schroeder_reverb_lfo->get_out_buf(), Schroeder::BufType::DECAY);
 
-	 //Luff* luff_reverb{ static_cast<Luff*>(synthesis::add_module(std::make_unique<Luff>(4))) };
+	 //Luff* luff_reverb{ ADD_MODULE(Luff, 4) };
 	 //luff_reverb->add_output(master, Master::BufType::AUDIO);
 	 //luff_reverb->wet = 0.5f;
 	 //luff_reverb->set_diffuser_delays({ 20, 40, 80, 160 });
@@ -75,51 +77,51 @@ void application() {
 	 //luff_reverb->set_decay_time(1000); // why is this in ms
 	 //luff_reverb->set_mixing_matrix(Reverb::MixingMatrix::Householder);
 
-	//Delay* delay{ static_cast<Delay*>(synthesis::add_module(std::make_unique<Delay>())) };
+	//Delay* delay{ ADD_MODULE(Delay) };
 	//delay->add_output(master, Master::BufType::AUDIO);
 	//delay->wet = 0.5;
 	//delay->set_delay(0.5);
 	//delay->set_feedback(0.5);
 
-	//Oscillator* delay_lfo{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	//Oscillator* delay_lfo{ ADD_MODULE(Oscillator, "sine") };
 	//delay_lfo->add_output(delay, true);
 	//delay->attach_mod(delay_lfo->get_out_buf(), Delay::BufType::FEEDBACK);
 	//delay_lfo->set_freq(1);
 	//delay_lfo->set_gain(0.25);
 
-	// RBJFilter::LowShelf* filter{ static_cast<RBJFilter::LowShelf*>(synthesis::add_module(std::make_unique<RBJFilter::LowShelf>())) };
+	// RBJFilter::LowShelf* filter{ ADD_MODULE(RBJFilter::LowShelf) };
 	// filter->add_output(master, RBJFilter::LowShelf::BufType::AUDIO);
 	// filter->set_cutoff(5000);
 	// filter->set_gain(0.0);
 	// filter->set_slope(1.0);
 	// filter->set_wet(1.0f);
 
-	// Phaser* phaser{ static_cast<Phaser*>(synthesis::add_module(std::make_unique<Phaser>())) };
+	// Phaser* phaser{ ADD_MODULE(Phaser) };
 	// phaser->set_wet(1.0f);
 	// phaser->set_center_freq(4000);
 	// phaser->set_stages(4);
 	// phaser->set_feedback(0.6);
 	// phaser->add_output(master, Master::BufType::AUDIO);
 
-	// Oscillator* phaser_lfo_0{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	// Oscillator* phaser_lfo_0{ ADD_MODULE(Oscillator, "sine") };
 	// phaser_lfo_0->load_waveform("sine");
 	// phaser_lfo_0->set_freq(0.5);
 	// phaser_lfo_0->set_gain(0.5);
 	// phaser_lfo_0->add_output(phaser, Phaser::BufType::WET);
 
-	// Oscillator* phaser_lfo_1{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	// Oscillator* phaser_lfo_1{ ADD_MODULE(Oscillator, "sine") };
 	// phaser_lfo_1->load_waveform("sine");
 	// phaser_lfo_1->set_freq(0.28);
 	// phaser_lfo_1->set_gain(3000);
 	// phaser_lfo_1->add_output(phaser, Phaser::BufType::CENTER_FREQ);
 
-	// Oscillator* phaser_lfo_2{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	// Oscillator* phaser_lfo_2{ ADD_MODULE(Oscillator, "sine") };
 	// phaser_lfo_2->load_waveform("sine");
 	// phaser_lfo_2->set_freq(0.82);
 	// phaser_lfo_2->set_gain(0.3);
 	// phaser_lfo_2->add_output(phaser, Phaser::BufType::FEEDBACK);
 
-	//Flanger* flanger{ static_cast<Flanger*>(synthesis::add_module(std::make_unique<Flanger>())) };
+	//Flanger* flanger{ ADD_MODULE(Flanger) };
 	//flanger->add_output(master, Master::BufType::AUDIO);
 	//flanger->set_wet(1.0f);
 	//flanger->set_delay(6);
@@ -130,35 +132,35 @@ void application() {
 	//	}
 	//);
 
-	//Oscillator* flanger_lfo{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	//Oscillator* flanger_lfo{ ADD_MODULE(Oscillator, "sine") };
 	//flanger_lfo->load_waveform("sine");
 	//flanger_lfo->set_freq(0.5);
 	//flanger_lfo->set_gain(5);
 	//flanger_lfo->add_output(flanger, true);
 	//flanger->attach_mod(flanger_lfo->get_out_buf(), Flanger::BufType::OFFSET);
 
-	//Chorus* chorus{ static_cast<Chorus*>(synthesis::add_module(std::make_unique<Chorus>())) };
+	//Chorus* chorus{ ADD_MODULE(Chorus) };
 	//chorus->set_wet(1.0f);
 	//chorus->set_delay(30);
 	//chorus->set_voice_count(6);
 	//chorus->add_output(master, Phaser::BufType::AUDIO);
 
-	//Oscillator* chorus_lfo{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	//Oscillator* chorus_lfo{ ADD_MODULE(Oscillator, "sine") };
 	//chorus_lfo->load_waveform("sine");
 	//chorus_lfo->set_freq(1);
 	//chorus_lfo->set_gain(0.5);
 	//chorus_lfo->add_output(chorus, Chorus::BufType::FREQ_RANGE);
 
-	//SoftClip* soft_clip{ static_cast<SoftClip*>(synthesis::add_module(std::make_unique<SoftClip>())) };
+	//SoftClip* soft_clip{ ADD_MODULE(SoftClip) };
 	//soft_clip->set_drive(10.0f);
 	//soft_clip->add_output(master, Master::BufType::AUDIO);
 
-	//Oscillator* soft_clip_lfo{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine"))) };
+	//Oscillator* soft_clip_lfo{ ADD_MODULE(Oscillator, "sine") };
 	//soft_clip_lfo->set_freq(1);
 	//soft_clip_lfo->set_gain(9);
 	//soft_clip_lfo->add_output(soft_clip, SoftClip::BufType::DRIVE);
 
-	Mixer* mixer{ static_cast<Mixer*>(synthesis::add_module(std::make_unique<Mixer>())) };
+	Mixer* mixer{ ADD_MODULE(Mixer) };
 	mixer->add_output(wavefolder, Master::BufType::AUDIO);
 	// mixer->add_output(luff_reverb, -1);
 	// for (uint8_t i{ 0 }; i < 8; i++) {
@@ -166,11 +168,11 @@ void application() {
 	// }
 
 	for (int i{ 0 }; i < config::num_voices; i++) {
-		PerformedOscillator* oscillator{ static_cast<PerformedOscillator*>(synthesis::add_module(std::make_unique<PerformedOscillator>("sine"))) };
+		PerformedOscillator* oscillator{ ADD_MODULE(PerformedOscillator, "sine") };
 		oscillator->add_output(mixer, Mixer::BufType::AUDIO);
 		oscillator->set_gain(0);
 
-		Envelope* envelope{ static_cast<Envelope*>(synthesis::add_module(std::make_unique<Envelope>())) };
+		Envelope* envelope{ ADD_MODULE(Envelope) };
 		envelope->add_output(oscillator, PerformedOscillator::BufType::GAIN);
 		envelope->set_attack(0.02f);
 		envelope->set_decay(0.02f);
@@ -203,16 +205,16 @@ void application() {
 			}
 		);
 
-		//Portamento* portamento{ static_cast<Portamento*>(synthesis::add_module(std::make_unique<Portamento>())) };
+		//Portamento* portamento{ ADD_MODULE(Portamento) };
 		//portamento->set_time(100);
 		//portamento->add_output(oscillator, PerformedOscillator::BufType::PITCH);
 
-		//Oscillator* pitch_lfo{ static_cast<Oscillator*>(synthesis::add_module(std::make_unique<Oscillator>("sine", true))) };
+		//Oscillator* pitch_lfo{ ADD_MODULE(Oscillator, 	"sine", true) };
 		//pitch_lfo->add_output(oscillator, PerformedOscillator::BufType::PITCH);
 		//pitch_lfo->set_freq(4.64);
 		//pitch_lfo->set_gain(100);
 
-		Voice* voice{ static_cast<Voice*>(synthesis::add_module(std::make_unique<Voice>())) };
+		Voice* voice{ ADD_MODULE(Voice) };
 		voice->add_output(oscillator);
 		voice->add_output(envelope);
 		//voice->add_output(portamento);
@@ -221,7 +223,7 @@ void application() {
 
 	synthesis::init();
 
-	// synthesis::voice_manager->note_on(60, 127);
+	synthesis::voice_manager->note_on(74, 127);
 	// #ifdef TEENSY
 	// while (true) {
 	// 	synthesis::voice_manager->note_on(60, 127);
