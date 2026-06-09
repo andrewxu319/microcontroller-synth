@@ -73,18 +73,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;C:\Users\spagh\Desktop\brain rot\C++\MicrocontrollerSynth\src;C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)build\standalone\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;C:\Users\spagh\Desktop\brain rot\C++\MicrocontrollerSynth\src;C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)build\standalone\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <OutDir>$(SolutionDir)build\standalone\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <OutDir>$(SolutionDir)build\standalone\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
