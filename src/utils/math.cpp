@@ -68,7 +68,7 @@ namespace math {
 	void vec_sub_float_s(const float_s* const in_1, const float_s* const in_2, float_s* const out, size_t len) {
 		// if standalone
 		size_t i{ 0 };
-		for (; i <= len - 16; i += 16) { // with regular avx, we can sub 16 at once
+		for (; i + 16 <= len; i += 16) { // with regular avx, we can sub 16 at once
 			const __m512 avx_in_1{ _mm512_loadu_ps(&in_1[i]) }; // change type for int or double if needed. use conditional_t
 			const __m512 avx_in_2{ _mm512_loadu_ps(&in_2[i]) };
 			const __m512 avx_result{ _mm512_sub_ps(avx_in_1, avx_in_2) };
@@ -83,7 +83,7 @@ namespace math {
 		// if standalone
 		const __m512 scalar_reg_{ _mm512_set1_ps(scalar) };
 		size_t i{ 0 };
-		for (; i <= len - 16; i += 16) { // with regular avx, we can add 16 at once
+		for (; i + 16 <= len; i += 16) { // with regular avx, we can add 16 at once
 			const __m512 avx_in{ _mm512_loadu_ps(&in[i]) }; // change type for int or double if needed. use conditional_t
 			const __m512 avx_result{ _mm512_mul_ps(avx_in, scalar_reg_) };
 			_mm512_storeu_ps(&out[i], avx_result);
@@ -97,7 +97,7 @@ namespace math {
 		// if standalone
 		const __m512 scalar_reg_{ _mm512_set1_ps(scalar) };
 		size_t i{ 0 };
-		for (; i <= len - 16; i += 16) { // with regular avx, we can add 16 at once
+		for (; i + 16 <= len; i += 16) { // with regular avx, we can add 16 at once
 			const __m512 avx_in{ _mm512_loadu_ps(&in[i]) }; // change type for int or double if needed. use conditional_t
 			const __m512 avx_result{ _mm512_add_ps(avx_in, scalar_reg_) };
 			_mm512_storeu_ps(&out[i], avx_result);
@@ -111,7 +111,7 @@ namespace math {
 	void vec_entrywise_mult_float_s(const float_s* __restrict const in_1, const float_s* const in_2, float_s* const out, size_t len) {
 		// if standalone
 		size_t i{ 0 };
-		for (; i < len - 16; i += 16) { // with regular avx, we can add 16 at once
+		for (; i + 16 <= len; i += 16) { // with regular avx, we can add 16 at once
 			const __m512 avx_in_1{ _mm512_loadu_ps(&in_1[i]) }; // change type for int or double if needed. use conditional_t
 			const __m512 avx_in_2{ _mm512_loadu_ps(&in_2[i]) };
 			const __m512 avx_result{ _mm512_mul_ps(avx_in_1, avx_in_2) };
@@ -126,7 +126,7 @@ namespace math {
 	void axpy(const float_s* const x, const float_s* const y, float_s* const out, float_s a, size_t len) { // must be signed int here, otherwise "len - 16" breaks
 		const __m512 avx_a{ _mm512_set1_ps(a) };
 		size_t i{ 0 };
-		for (; i <= len - 16; i += 16) { // with regular avx, we can add 16 at once
+		for (; i + 16 <= len; i += 16) { // with regular avx, we can add 16 at once
 			const __m512 avx_x{ _mm512_loadu_ps(&x[i]) }; // change type for int or double if needed. use conditional_t
 			const __m512 avx_y{ _mm512_loadu_ps(&y[i]) };
 			const __m512 avx_result{ _mm512_fmadd_ps(avx_x, avx_a, avx_y) };
@@ -141,7 +141,7 @@ namespace math {
 		const __m512 avx_a{ _mm512_set1_ps(a) };
 		const __m512 avx_y{ _mm512_set1_ps(y) };
 		size_t i{ 0 };
-		for (; i <= len - 16; i += 16) { // with regular avx, we can add 16 at once
+		for (; i + 16 <= len; i += 16) { // with regular avx, we can add 16 at once
 			const __m512 avx_x{ _mm512_loadu_ps(&x[i]) }; // change type for int or double if needed. use conditional_t
 			const __m512 avx_result{ _mm512_fmadd_ps(avx_x, avx_a, avx_y) };
 			_mm512_storeu_ps(&out[i], avx_result);
@@ -154,7 +154,7 @@ namespace math {
 	void abs(const float_s* const in, float_s* const out, size_t len) {
 		const __m512 SIGN_BIT_MASK{ _mm512_set1_ps(-0.0f) };
 		size_t i{ 0 };
-		for (; i <= len - 16; i += 16) { // with regular avx, we can add 16 at once
+		for (; i + 16 <= len; i += 16) { // with regular avx, we can add 16 at once
 			const __m512 avx_in{ _mm512_loadu_ps(&in[i]) }; // change type for int or double if needed. use conditional_t
 			const __m512 avx_result{ _mm512_andnot_ps(avx_in, SIGN_BIT_MASK) };
 			_mm512_storeu_ps(&out[i], avx_result);
