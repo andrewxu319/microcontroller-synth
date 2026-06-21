@@ -25,7 +25,7 @@ namespace config {
 	constexpr double latency{ 0.005 }; // seconds. now sure why but this is the lowest it'll go without sounding weird
 #endif
 	constexpr uint8_t control_rate{ 8 };
-	constexpr uint8_t num_voices{ 1 };
+	constexpr uint8_t num_voices{ 64 };
 	//constexpr float master_vol{ 0.3 };
 
 	inline std::string waveform_path{ std::string("resources\\waveforms\\32_bit\\") + std::to_string(sample_rate) + std::string("\\") };

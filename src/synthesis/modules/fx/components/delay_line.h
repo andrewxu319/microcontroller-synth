@@ -22,9 +22,9 @@ namespace synthesis {
 			FEEDBACK
 		};
 
-	protected:
 		std::vector<const float_s*> in_bufs[3];
 
+	protected:
 		struct DelayLineChannel {
 			utils::CircularArray<float_s> memory_buffer;
 			size_t delay;

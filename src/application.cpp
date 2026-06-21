@@ -13,7 +13,7 @@
 #include "synthesis/modules/fx/filter/RBJ/high_shelf.h"
 #include "synthesis/modules/fx/delay.h"
 #include "synthesis/modules/fx/phaser.h"
-#include "synthesis/modules/fx/flanger.h"
+//#include "synthesis/modules/fx/flanger.h"
 #include "synthesis/modules/fx/chorus.h"
 #include "synthesis/modules/fx/reverb/schroeder.h"
 #include "synthesis/modules/fx/reverb/luff.h"
@@ -41,73 +41,73 @@ void application() {
 	synthesis::voice_manager = ADD_MODULE(VoiceManager);
 	synthesis::voice_manager->set_legato(true);
 
+	// be careful---even slight gain causes significant distortion => sounds bad with polyphony
 	SergeWavefolder* wavefolder{ ADD_MODULE(SergeWavefolder) };
-	wavefolder->set_gain(1.7f);
-	wavefolder->set_offset(0.05f);
+	wavefolder->set_gain(0.06f);
+	wavefolder->set_offset(0.0f);
 	wavefolder->add_output(master, Master::BufType::AUDIO);
 
 	Oscillator* wavefolder_lfo_0{ ADD_MODULE(Oscillator, "sine") };
 	wavefolder_lfo_0->add_output(wavefolder, SergeWavefolder::BufType::GAIN);
 	wavefolder_lfo_0->set_freq(1.0);
-	wavefolder_lfo_0->set_gain(0.4);
+	wavefolder_lfo_0->set_gain(0.03);
 	wavefolder_lfo_0->set_phase(0.3592);
 
-	Oscillator* wavefolder_lfo_1{ ADD_MODULE(Oscillator, "sine") };
-	wavefolder_lfo_1->add_output(wavefolder, SergeWavefolder::BufType::OFFSET);
-	wavefolder_lfo_1->set_freq(0.724925);
-	wavefolder_lfo_1->set_gain(0.03);
-	wavefolder_lfo_1->set_phase(0.129303);
+	// Oscillator* wavefolder_lfo_1{ ADD_MODULE(Oscillator, "sine") };
+	// wavefolder_lfo_1->add_output(wavefolder, SergeWavefolder::BufType::OFFSET);
+	// wavefolder_lfo_1->set_freq(0.724925);
+	// wavefolder_lfo_1->set_gain(0.03);
+	// wavefolder_lfo_1->set_phase(0.129303);
 
-	//Schroeder* schroeder_reverb{ ADD_MODULE(Schroeder) };
-	//schroeder_reverb->add_output(master, Master::BufType::AUDIO);
-	//schroeder_reverb->set_decay_time(10);
-	//schroeder_reverb->wet = 0.0;
+	Schroeder* schroeder_reverb{ ADD_MODULE(Schroeder) };
+	schroeder_reverb->add_output(wavefolder, Master::BufType::AUDIO);
+	schroeder_reverb->set_decay_time(70);
+	schroeder_reverb->set_wet(0.6);
 
-	//Oscillator* schroeder_reverb_lfo{ ADD_MODULE(Oscillator, "sine") };
-	//schroeder_reverb_lfo->set_freq(0.5);
-	//schroeder_reverb_lfo->set_gain(50);
-	//schroeder_reverb->add_buf(schroeder_reverb_lfo->get_out_buf(), Schroeder::BufType::DECAY);
+	Oscillator* schroeder_reverb_lfo{ ADD_MODULE(Oscillator, "sine") };
+	schroeder_reverb_lfo->set_freq(0.5);
+	schroeder_reverb_lfo->set_gain(50);
+	schroeder_reverb->add_buf(schroeder_reverb_lfo->get_out_buf(), Schroeder::BufType::DECAY);
 
-	 //Luff* luff_reverb{ ADD_MODULE(Luff, 4) };
-	 //luff_reverb->add_output(master, Master::BufType::AUDIO);
-	 //luff_reverb->wet = 0.5f;
-	 //luff_reverb->set_diffuser_delays({ 20, 40, 80, 160 });
-	 //luff_reverb->set_feedback(0.85f);
-	 //luff_reverb->set_feedback_delay_range(100, 200);
-	 //luff_reverb->set_decay_time(1000); // why is this in ms
-	 //luff_reverb->set_mixing_matrix(Reverb::MixingMatrix::Householder);
+	//  //Luff* luff_reverb{ ADD_MODULE(Luff, 4) };
+	//  //luff_reverb->add_output(master, Master::BufType::AUDIO);
+	//  //luff_reverb->wet = 0.5f;
+	//  //luff_reverb->set_diffuser_delays({ 20, 40, 80, 160 });
+	//  //luff_reverb->set_feedback(0.85f);
+	//  //luff_reverb->set_feedback_delay_range(100, 200);
+	//  //luff_reverb->set_decay_time(1000); // why is this in ms
+	//  //luff_reverb->set_mixing_matrix(Reverb::MixingMatrix::Householder);
 
-	//Delay* delay{ ADD_MODULE(Delay) };
-	//delay->add_output(master, Master::BufType::AUDIO);
-	//delay->wet = 0.5;
-	//delay->set_delay(0.5);
-	//delay->set_feedback(0.5);
+	Delay* delay{ ADD_MODULE(Delay) };
+	delay->add_output(schroeder_reverb, Master::BufType::AUDIO);
+	delay->set_wet(0.5);
+	delay->set_delay(0.5);
+	delay->set_feedback(0.5);
 
-	//Oscillator* delay_lfo{ ADD_MODULE(Oscillator, "sine") };
-	//delay_lfo->add_output(delay, true);
-	//delay->attach_mod(delay_lfo->get_out_buf(), Delay::BufType::FEEDBACK);
-	//delay_lfo->set_freq(1);
-	//delay_lfo->set_gain(0.25);
+	Oscillator* delay_lfo{ ADD_MODULE(Oscillator, "sine") };
+	delay_lfo->add_output(delay, Delay::BufType::FEEDBACK);
+	delay_lfo->set_freq(1);
+	delay_lfo->set_gain(0.25);
 
-	// RBJFilter::LowShelf* filter{ ADD_MODULE(RBJFilter::LowShelf) };
-	// filter->add_output(master, RBJFilter::LowShelf::BufType::AUDIO);
-	// filter->set_cutoff(5000);
-	// filter->set_gain(0.0);
-	// filter->set_slope(1.0);
-	// filter->set_wet(1.0f);
+	RBJFilter::LowShelf* filter{ ADD_MODULE(RBJFilter::LowShelf) };
+	filter->add_output(delay, RBJFilter::LowShelf::BufType::AUDIO);
+	filter->set_cutoff(5000);
+	filter->set_gain(0.0);
+	filter->set_slope(1.0);
+	filter->set_wet(1.0f);
 
-	// Phaser* phaser{ ADD_MODULE(Phaser) };
-	// phaser->set_wet(1.0f);
-	// phaser->set_center_freq(4000);
-	// phaser->set_stages(4);
-	// phaser->set_feedback(0.6);
-	// phaser->add_output(master, Master::BufType::AUDIO);
+	Phaser* phaser{ ADD_MODULE(Phaser) };
+	phaser->set_wet(0.5f);
+	phaser->set_center_freq(4000);
+	phaser->set_stages(4);
+	phaser->set_feedback(0.6);
+	phaser->add_output(filter, Master::BufType::AUDIO);
 
-	// Oscillator* phaser_lfo_0{ ADD_MODULE(Oscillator, "sine") };
-	// phaser_lfo_0->load_waveform("sine");
-	// phaser_lfo_0->set_freq(0.5);
-	// phaser_lfo_0->set_gain(0.5);
-	// phaser_lfo_0->add_output(phaser, Phaser::BufType::WET);
+	Oscillator* phaser_lfo_0{ ADD_MODULE(Oscillator, "sine") };
+	phaser_lfo_0->load_waveform("sine");
+	phaser_lfo_0->set_freq(0.5);
+	phaser_lfo_0->set_gain(0.3);
+	phaser_lfo_0->add_output(phaser, Phaser::BufType::WET);
 
 	// Oscillator* phaser_lfo_1{ ADD_MODULE(Oscillator, "sine") };
 	// phaser_lfo_1->load_waveform("sine");
@@ -122,7 +122,7 @@ void application() {
 	// phaser_lfo_2->add_output(phaser, Phaser::BufType::FEEDBACK);
 
 	//Flanger* flanger{ ADD_MODULE(Flanger) };
-	//flanger->add_output(master, Master::BufType::AUDIO);
+	//flanger->add_output(phaser_lfo_0, Master::BufType::AUDIO);
 	//flanger->set_wet(1.0f);
 	//flanger->set_delay(6);
 	//synthesis::attach_cc(18,
@@ -139,11 +139,11 @@ void application() {
 	//flanger_lfo->add_output(flanger, true);
 	//flanger->attach_mod(flanger_lfo->get_out_buf(), Flanger::BufType::OFFSET);
 
-	//Chorus* chorus{ ADD_MODULE(Chorus) };
-	//chorus->set_wet(1.0f);
-	//chorus->set_delay(30);
-	//chorus->set_voice_count(6);
-	//chorus->add_output(master, Phaser::BufType::AUDIO);
+	// Chorus* chorus{ ADD_MODULE(Chorus) };
+	// chorus->set_wet(1.0f);
+	// chorus->set_delay(30);
+	// chorus->set_voice_count(6);
+	// chorus->add_output(phaser, Phaser::BufType::AUDIO);
 
 	//Oscillator* chorus_lfo{ ADD_MODULE(Oscillator, "sine") };
 	//chorus_lfo->load_waveform("sine");
@@ -161,7 +161,7 @@ void application() {
 	//soft_clip_lfo->add_output(soft_clip, SoftClip::BufType::DRIVE);
 
 	Mixer* mixer{ ADD_MODULE(Mixer) };
-	mixer->add_output(wavefolder, Master::BufType::AUDIO);
+	mixer->add_output(phaser, Master::BufType::AUDIO);
 	// mixer->add_output(luff_reverb, -1);
 	// for (uint8_t i{ 0 }; i < 8; i++) {
 	// 	luff_reverb->add_buf(mixer->get_out_buf(), MultichannelDiffuser::BufType::AUDIO);
@@ -223,7 +223,6 @@ void application() {
 
 	synthesis::init();
 
-	synthesis::voice_manager->note_on(74, 127);
 	// #ifdef TEENSY
 	// while (true) {
 	// 	synthesis::voice_manager->note_on(60, 127);

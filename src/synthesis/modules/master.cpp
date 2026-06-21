@@ -19,7 +19,7 @@ Master& Master::instance() {
 }
 
 void Master::generate_buf() {
-	//utils::timer::start();
+	utils::timer::start();
 
 	synthesis::read_messages();
 
@@ -43,7 +43,7 @@ void Master::generate_buf() {
 		memset(out_buf, 0, config::buffer_size * sizeof(float_s));
 	}
 
-	//utils::timer::end("master");
+	utils::timer::end("master");
 
 	// clip between -1.0 and 1.0
 }

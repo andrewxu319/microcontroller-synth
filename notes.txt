@@ -5,10 +5,19 @@ TEENSY TODO
 - math https://arm-software.github.io/CMSIS-DSP/latest/
 
 to do
-- various misc mods
-- turn mods on/off
 - dealing with empty audio buffers
 - time before deactivating
+- wavefolder on teensy (dual issue?)
+
+
+more ideas
+- heap allocation w/ arena
+- audio driver
+- useful util: time every buffer & report slow buffers
+- convolution reverb
+https://www.cs.cmu.edu/~rbd/doc/icmc2005workshop/real-time-systems-concepts-design-patterns.pdf
+- threads
+- spectral stuff, frequency domain, fft
 
 
 
@@ -16,14 +25,9 @@ to do
 - "active" state for modules
 - nonlinear adsr
 - interpolation for lfos (might not be needed? if low control rate)
-- two separate control rates: fast and slow?
-- delay modulations
 - make delay work with any delay time
 
-to do (features)
-- pitch shift
-- filter https://www.researchgate.net/publication/220386519_Oscillator_and_Filter_Algorithms_for_Virtual_Analog_Synthesis
-- - taken from this https://github.com/wang-edward/teensy-juno?tab=readme-ov-file
+
 
 use mtd for microcontroller?
 

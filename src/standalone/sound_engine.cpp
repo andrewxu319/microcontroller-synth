@@ -1,7 +1,9 @@
 #ifndef TEENSY
 #include "sound_engine.h"
 
+#include <chrono>
 #include <queue>
+#include <cassert>
 
 namespace standalone::sound_engine {
 	Master& master{ Master::instance() };
@@ -70,9 +72,11 @@ namespace standalone::sound_engine {
 		PaStreamCallbackFlags status_flags,
 		void* __restrict data_
 	) {
-//		if (status_flags) {
-//			printf("%x\n", status_flags);
-//		}
+#ifdef _DEBUG
+		if (status_flags) {
+			printf("PortAudio status %x\n", status_flags);
+		}
+#endif
 
 		BufferLoaderData* data = (BufferLoaderData*)data_;
 		float_s* out_buf{ (float_s*)out_buf_ };

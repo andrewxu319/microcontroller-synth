@@ -8,7 +8,7 @@ namespace utils {
 	public:
 		size_t size;
 
-		CircularArray(const size_t size_ = 0) // must be multiples of buffer_size. assert later
+		CircularArray(const size_t size_ = 0) // must be multiples of buffer_size (=> also power of 2). assert later
 			: size{ size_ },
 			data(size_, 0.0f),
 			data_array{ data.data() },
