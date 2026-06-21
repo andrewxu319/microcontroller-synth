@@ -3,14 +3,16 @@
 // #include "application.h"
 // #include "sound_engine.h"
 // #include "midi_listener.h"
+// #include "synthesis/modules/master.h"
 
 // void setup() {
 // 	Serial.begin(115200);
 // 	delay(1000);
-// 	teensy::sound_engine::init();
-// 	teensy::midi_listener::init();
+//   Master master{};
+//   SoundEngine sound_engine{ master };
+//   MidiListener midi_listener{};
 
-// 	application();
+// 	application(&master);
 // }
 
 // void loop() {

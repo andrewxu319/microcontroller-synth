@@ -1,4 +1,5 @@
 #pragma once
 
-void application();
-void close();
+#include "synthesis/modules/master.h"
+
+void application(synthesis::Master* master);

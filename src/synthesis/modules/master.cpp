@@ -13,18 +13,14 @@ Master::Master()
 {
 }
 
-Master& Master::instance() {
-	static Master master{};
-	return master;
-}
-
 void Master::generate_buf() {
 	utils::timer::start();
 
-	synthesis::read_messages();
+	Synthesizer& synthesizer{ Synthesizer::instance() };
+	synthesizer.read_messages();
 
-	for (size_t i{ 0 }; i < modules.size(); i++) {
-		modules[i]->generate_buf();
+	for (size_t i{ 0 }; i < synthesizer.modules.size(); i++) {
+		synthesizer.modules[i]->generate_buf();
 	}
 
 	bool is_empty{ true };

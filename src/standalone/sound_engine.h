@@ -9,25 +9,26 @@
 
 using namespace synthesis;
 
-namespace standalone::sound_engine {
-	typedef struct {} BufferLoaderData;
+namespace standalone {
+	class SoundEngine {
+	public:
+		SoundEngine(Master& master);
+		void close();
+		void start_stream();
 
-	extern Master& master;
-	extern const BufferLoaderData data;
-	extern PaStream* stream;
+		void pa_check_error(const PaError& error);
+		static int load_buffer(
+			const void* __restrict in_buf_,
+			void* __restrict out_buf_,
+			unsigned long buffer_size,
+			const PaStreamCallbackTimeInfo* time_info,
+			PaStreamCallbackFlags status_flags,
+			void* __restrict this_ptr
+		);
 
-	void init();
-	void close();
-	void start_stream();
-
-	void pa_check_error(const PaError& error);
-	int load_buffer(
-		const void* __restrict in_buf_,
-		void* __restrict out_buf_,
-		unsigned long buffer_size,
-		const PaStreamCallbackTimeInfo* time_info,
-		PaStreamCallbackFlags status_flags,
-		void* __restrict data_
-	);
+	private:
+		Master& master_;
+		PaStream* stream;
+	};
 }
 #endif

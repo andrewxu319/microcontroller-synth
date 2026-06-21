@@ -26,7 +26,7 @@ void Module::generate_buf() {
 
 int Module::add_input(Module* __restrict input, uint8_t buf_type) { // -1 means no buffer
 	inputs.emplace_back(input);
-	if (synthesis::topo_sort() == -1) {
+	if (Synthesizer::instance().topo_sort() == -1) {
 		printf("Failed to add input: circular in/out!\n");
 		inputs.pop_back();
 		return -1;
@@ -39,7 +39,7 @@ int Module::add_input(Module* __restrict input, uint8_t buf_type) { // -1 means 
 
 int Module::add_input(MultichannelModule* __restrict input, uint8_t buf_type) { // -1 means no buffer
 	inputs.emplace_back(input);
-	if (synthesis::topo_sort() == -1) {
+	if (Synthesizer::instance().topo_sort() == -1) {
 		printf("Failed to add input: circular in/out!\n");
 		inputs.pop_back();
 		return -1;

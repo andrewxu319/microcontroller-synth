@@ -8,25 +8,35 @@
 #include <queue>
 #include <functional>
 
-namespace synthesis {
-	extern Master* master;
-	extern VoiceManager* voice_manager;
-	extern std::vector<std::unique_ptr<Module>> modules; // unique_ptr to preserve derived classes
-	extern std::queue<midi::NoteMessage> note_messages;
-	extern std::queue<midi::CcMessage> cc_messages;
-	extern std::array<std::vector<std::function<void(uint8_t)>>, 128> cc_mappings;
+using namespace synthesis;
 
-	extern void init();
-	extern Module* add_module(std::unique_ptr<Module> module);
-	extern int topo_sort();
-	extern void read_messages();
+class Synthesizer {
+public:
+	Master* master;
+	VoiceManager* voice_manager;
+	std::queue<midi::NoteMessage> note_messages;
+	std::queue<midi::CcMessage> cc_messages;
+	std::array<std::vector<std::function<void(uint8_t)>>, 128> cc_mappings;
+	std::vector<std::unique_ptr<Module>> modules;
+
+	void init();
+	Module* add_module(std::unique_ptr<Module> module);
+	int topo_sort();
+	void read_messages();
 
 	template <typename Fn>
-	inline void attach_cc(const uint8_t cc, Fn&& fn) {
+	void attach_cc(const uint8_t cc, Fn&& fn) {
 		if (cc_mappings[cc].empty()) {
 			cc_mappings[cc] = std::vector<std::function<void(uint8_t)>>{};
 		}
 		cc_mappings[cc].emplace_back(std::function<void(uint8_t)>(std::forward<Fn>(fn)));
 	}
-	extern void reset_cc(const uint8_t cc);
-}
+	void reset_cc(const uint8_t cc);
+
+	static Synthesizer& instance();
+
+private:
+	Synthesizer();
+	Synthesizer(const Synthesizer&) = delete;
+	Synthesizer& operator =(const Synthesizer&) = delete;
+};

@@ -9,12 +9,7 @@ namespace synthesis {
 	public:
 		float_s* out_buf;
 
-		static Master& instance();
-		void generate_buf();
-		
-	private:
 		Master();
-		Master(const Master&) = delete;
-		Master& operator =(const Master&) = delete;
+		void generate_buf();
 	};
 }

@@ -34,12 +34,14 @@
 
 using namespace synthesis;
 
-#define ADD_MODULE(T, ...) static_cast<T*>(add_module(std::make_unique<T>(__VA_ARGS__)))
+#define ADD_MODULE(T, ...) static_cast<T*>(synthesizer.add_module(std::make_unique<T>(__VA_ARGS__)))
 
-void application() {
+void application(Master* master) {
 	// master, voice_manager, and module are initialized in synthesizer.cpp. maybe theres a better way to structure this?
-	synthesis::voice_manager = ADD_MODULE(VoiceManager);
-	synthesis::voice_manager->set_legato(true);
+	Synthesizer& synthesizer{ Synthesizer::instance() };
+	synthesizer.master = master;
+	synthesizer.voice_manager = ADD_MODULE(VoiceManager);
+	synthesizer.voice_manager->set_legato(true);
 
 	// be careful---even slight gain causes significant distortion => sounds bad with polyphony
 	SergeWavefolder* wavefolder{ ADD_MODULE(SergeWavefolder) };
@@ -125,7 +127,7 @@ void application() {
 	//flanger->add_output(phaser_lfo_0, Master::BufType::AUDIO);
 	//flanger->set_wet(1.0f);
 	//flanger->set_delay(6);
-	//synthesis::attach_cc(18,
+	//synthesizer.attach_cc(18,
 	//	[target = flanger]
 	//	(const uint8_t x) {
 	//		target->set_feedback((x * 2 / 127.0 - 1.0) * 0.99);
@@ -180,25 +182,25 @@ void application() {
 		envelope->set_release(0.02f);
 
 		// cannot set a/d/r to 0. add check later
-		synthesis::attach_cc(14,
+		synthesizer.attach_cc(14,
 			[target = envelope]
 			(const uint8_t x) {
 				target->set_attack(static_cast<float_s>(pow(2, 0.0181102362 * x - 1) - 0.490)); // at least 10ms to avoid popping
 			}
 		);
-		synthesis::attach_cc(15,
+		synthesizer.attach_cc(15,
 			[target = envelope]
 			(const uint8_t x) {
 				target->set_decay(static_cast<float_s>(pow(2, 0.0181102362 * x - 1) - 0.490)); // at least 10ms to avoid popping
 			}
 		);
-		synthesis::attach_cc(16,
+		synthesizer.attach_cc(16,
 			[target = envelope]
 			(const uint8_t x) {
 				target->set_sustain(x / 127.0f);
 			}
 		);
-		synthesis::attach_cc(17,
+		synthesizer.attach_cc(17,
 			[target = envelope]
 			(const uint8_t x) {
 				target->set_release(static_cast<float_s>(pow(2, 0.0181102362 * x - 1) - 0.490)); // at least 10ms to avoid popping
@@ -218,10 +220,8 @@ void application() {
 		voice->add_output(oscillator);
 		voice->add_output(envelope);
 		//voice->add_output(portamento);
-		synthesis::voice_manager->add_output(voice);
+		synthesizer.voice_manager->add_output(voice);
 	}
-
-	synthesis::init();
 
 	// #ifdef TEENSY
 	// while (true) {
