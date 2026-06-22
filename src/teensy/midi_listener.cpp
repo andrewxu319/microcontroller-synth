@@ -1,16 +1,17 @@
 #ifdef TEENSY
 #include "midi_listener.h"
 
-#include "midi/message.h"
 #include "synthesis/synthesizer.h"
 #include "utils/config.h"
 
 using namespace midi;
 using namespace teensy;
 
-MidiListener::MidiListener()
+MidiListener::MidiListener(std::queue<midi::NoteMessage>& note_messages, std::queue<midi::CcMessage>& cc_messages)
 	: serialMIDI{ config::teensy_serial },
-	MIDI{ static_cast<MIDI_NAMESPACE::SerialMIDI<HardwareSerial>&>(serialMIDI) }
+	MIDI{ static_cast<MIDI_NAMESPACE::SerialMIDI<HardwareSerial>&>(serialMIDI) },
+	note_messages_{ note_messages },
+	cc_messages_{ cc_messages }
 {
 	config::teensy_serial.begin(115200);
 	MIDI.begin(MIDI_CHANNEL_OMNI);
@@ -36,18 +37,18 @@ void MidiListener::read() {
 			switch (type) { // integer divide by 16
 			case midi::NoteOff:
 				printf("Note off: %d\n", data_1);
-				Synthesizer::instance().note_messages.push(
+				note_messages_.push(
 					NoteMessage{ NoteMessage::NoteFunction::NOTE_OFF, channel, data_1, data_2 }
 				);
 				break;
 			case midi::NoteOn:
 				printf("Note on: %d\n", data_1);
-				Synthesizer::instance().note_messages.push(
+				note_messages_.push(
 					NoteMessage{ NoteMessage::NoteFunction::NOTE_ON, channel, data_1, data_2 }
 				);
 				break;
 			case midi::ControlChange:
-				Synthesizer::instance().cc_messages.push(
+				cc_messages_.push(
 					CcMessage{ data_1, channel, data_2 }
 				);
 				break;

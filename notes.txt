@@ -8,7 +8,7 @@ to do
 - dealing with empty audio buffers
 - time before deactivating
 - wavefolder on teensy (dual issue?)
-
+- legato breaks if >2 notes are pressed down
 
 more ideas
 - heap allocation w/ arena

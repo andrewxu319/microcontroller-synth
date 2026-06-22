@@ -10,17 +10,19 @@
 using namespace synthesis;
 
 Synthesizer::Synthesizer()
-	: master{ nullptr },
-	voice_manager{ nullptr },
+	: master{},
+	voice_manager{},
 	modules{},
 	depth_0_modules{},
 	note_messages{},
 	cc_messages{},
-	cc_mappings{} { }
-
-Synthesizer& Synthesizer::instance() {
-	static Synthesizer synthesizer{};
-	return synthesizer;
+	cc_mappings{}
+{
+	add_module(std::make_unique<Master>());
+	master = static_cast<Master*>(modules.back().get());
+	
+	add_module(std::make_unique<VoiceManager>());
+	voice_manager = static_cast<VoiceManager*>(modules.back().get());
 }
 
 void Synthesizer::init() {

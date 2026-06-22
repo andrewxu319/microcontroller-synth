@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utils/global.h"
+
 namespace midi {
 	struct NoteMessage {
 		enum class NoteFunction : char {

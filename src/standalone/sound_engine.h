@@ -2,7 +2,7 @@
 #pragma once
 
 #include "utils/config.h"
-#include "synthesis/modules/master.h"
+#include "synthesis/synthesizer.h"
 #include "midi/message.h"
 
 #include <portaudio/portaudio.h>
@@ -12,7 +12,7 @@ using namespace synthesis;
 namespace standalone {
 	class SoundEngine {
 	public:
-		SoundEngine(Master& master);
+		SoundEngine(Synthesizer& synthesizer);
 		void close();
 		void start_stream();
 
@@ -27,7 +27,7 @@ namespace standalone {
 		);
 
 	private:
-		Master& master_;
+		Synthesizer& synthesizer_;
 		PaStream* stream;
 	};
 }

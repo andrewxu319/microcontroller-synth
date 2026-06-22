@@ -1,7 +1,6 @@
 #ifndef TEENSY
 #include "midi_listener.h"
 
-#include "midi/message.h"
 #include "synthesis/synthesizer.h"
 
 #include <thread>
@@ -9,10 +8,12 @@
 using namespace midi;
 using namespace standalone;
 
-MidiListener::MidiListener() 
+MidiListener::MidiListener(std::queue<midi::NoteMessage>& note_messages, std::queue<midi::CcMessage>& cc_messages) 
 	: midi_in{},
 	num_ports{},
-	port_names{}
+	port_names{},
+	note_messages_{ note_messages },
+	cc_messages_{ cc_messages }
 {
 	num_ports = midi_in.getPortCount();
 	port_names = std::vector<std::string>{ num_ports };
@@ -24,7 +25,11 @@ MidiListener::MidiListener()
 	}
 }
 
-void MidiListener::send_message(double delta_time, std::vector<unsigned char>* midi_message, void* user_data) { // delta_time unused but required by rtmidi
+void MidiListener::send_message(
+	double delta_time, 
+	std::vector<unsigned char>* midi_message, 
+	void* this_ptr)
+{ // delta_time unused but required by rtmidi
 	//utils::timer::start();
 	size_t len = midi_message->size(); // bytes
 	//for (unsigned char b : *midi_message) {
@@ -36,7 +41,7 @@ void MidiListener::send_message(double delta_time, std::vector<unsigned char>* m
 	switch ((*midi_message)[0] >> 4) { // integer divide by 16
 	case 0x8:
 		// note off
-		Synthesizer::instance().note_messages.push(
+		static_cast<MidiListener*>(this_ptr)->note_messages_.push(
 			NoteMessage{
 				NoteMessage::NoteFunction::NOTE_OFF,
 				static_cast<uint8_t>((*midi_message)[0] & 0x0f), // mod 16
@@ -47,7 +52,7 @@ void MidiListener::send_message(double delta_time, std::vector<unsigned char>* m
 		break;
 	case 0x9:
 		// note on
-		Synthesizer::instance().note_messages.push(
+		static_cast<MidiListener*>(this_ptr)->note_messages_.push(
 			NoteMessage{
 				NoteMessage::NoteFunction::NOTE_ON,
 				static_cast<uint8_t>((*midi_message)[0] & 0x0f), // mod 16
@@ -58,7 +63,7 @@ void MidiListener::send_message(double delta_time, std::vector<unsigned char>* m
 		break;
 	case 0xb:
 		// cc
-		Synthesizer::instance().cc_messages.push(
+		static_cast<MidiListener*>(this_ptr)->cc_messages_.push(
 			CcMessage{
 				(*midi_message)[1],
 				static_cast<uint8_t>((*midi_message)[0] & 0x0f), // mod 16
@@ -77,7 +82,7 @@ void MidiListener::send_message(double delta_time, std::vector<unsigned char>* m
 
 void MidiListener::open_port(const unsigned int port) {
 	midi_in.openPort(port);
-	midi_in.setCallback(&MidiListener::send_message);
+	midi_in.setCallback(&MidiListener::send_message, this);
 	printf("Using port %d: %s.\n", port, port_names[port].c_str());
 }
 

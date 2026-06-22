@@ -4,7 +4,6 @@
 #include "synthesis/synthesizer.h"
 
 #include <chrono>
-#include <queue>
 #include <cassert>
 
 using namespace standalone;
@@ -15,8 +14,8 @@ void SoundEngine::pa_check_error(const PaError& error) {
 	}
 }
 
-SoundEngine::SoundEngine(Master& master)
-	: master_{ master },
+SoundEngine::SoundEngine(Synthesizer& synthesizer)
+	: synthesizer_{ synthesizer },
 	stream{}
 {
 	PaError error;
@@ -80,8 +79,8 @@ int SoundEngine::load_buffer(
 #endif
 
 	float_s* out_buf{ (float_s*)out_buf_ };
-	static_cast<SoundEngine*>(this_ptr)->master_.out_buf = out_buf; // needs fixing
-	Synthesizer::instance().generate_buf();
+	static_cast<SoundEngine*>(this_ptr)->synthesizer_.master->out_buf = out_buf; // needs fixing
+	static_cast<SoundEngine*>(this_ptr)->synthesizer_.generate_buf();
 
 	return 0;
 }

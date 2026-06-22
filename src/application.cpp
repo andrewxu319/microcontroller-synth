@@ -36,11 +36,10 @@ using namespace synthesis;
 
 #define ADD_MODULE(T, ...) static_cast<T*>(synthesizer.add_module(std::make_unique<T>(__VA_ARGS__)))
 
-void application(Master* master) {
+void application(Synthesizer& synthesizer) {
 	// master, voice_manager, and module are initialized in synthesizer.cpp. maybe theres a better way to structure this?
-	Synthesizer& synthesizer{ Synthesizer::instance() };
-	synthesizer.master = master;
-	synthesizer.voice_manager = ADD_MODULE(VoiceManager);
+	Master* master{ synthesizer.master };
+	
 	synthesizer.voice_manager->set_legato(true);
 
 	// be careful---even slight gain causes significant distortion => sounds bad with polyphony
@@ -222,6 +221,8 @@ void application(Master* master) {
 		//voice->add_output(portamento);
 		synthesizer.voice_manager->add_output(voice);
 	}
+
+	synthesizer.init();
 
 	// #ifdef TEENSY
 	// while (true) {

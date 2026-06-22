@@ -22,6 +22,7 @@ public:
 	std::vector<std::unique_ptr<Module>> modules;
 	std::vector<Module*> depth_0_modules;
 
+	Synthesizer();
 	void init();
 	Module* add_module(std::unique_ptr<Module> module);
 	int topo_sort();
@@ -36,11 +37,4 @@ public:
 		cc_mappings[cc].emplace_back(std::function<void(uint8_t)>(std::forward<Fn>(fn)));
 	}
 	void reset_cc(const uint8_t cc);
-
-	static Synthesizer& instance();
-
-private:
-	Synthesizer();
-	Synthesizer(const Synthesizer&) = delete;
-	Synthesizer& operator =(const Synthesizer&) = delete;
 };

@@ -1,5 +1,7 @@
 #pragma once
 
-#include "synthesis/modules/master.h"
+#include "synthesis/synthesizer.h"
 
-void application(synthesis::Master* master);
+using namespace synthesis;
+
+void application(Synthesizer& synthesizer);

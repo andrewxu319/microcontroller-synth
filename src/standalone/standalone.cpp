@@ -10,13 +10,11 @@
 using namespace standalone;
 
 int main() {
-	Master master{};
-	SoundEngine sound_engine{ master };
-	MidiListener midi_listener{};
+	Synthesizer synthesizer{};
+	SoundEngine sound_engine{ synthesizer };
+	MidiListener midi_listener{ synthesizer.note_messages, synthesizer.cc_messages };
 	midi_listener.open_port(config::midi_port);
-	application(&master);
-	Synthesizer::instance().init();
-
+	application(synthesizer);
 
 	sound_engine.start_stream();
 
