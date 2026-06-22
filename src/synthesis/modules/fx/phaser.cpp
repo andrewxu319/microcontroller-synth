@@ -51,6 +51,7 @@ void Phaser::generate_buf() {
 	math::vec_add_float_s(audio_in_buf, out_buf, out_buf, config::buffer_size);
 
 	mix_dry_wet();
+	Module::generate_buf();
 }
 
 void Phaser::add_buf(const float_s* buf, uint8_t buf_type) {

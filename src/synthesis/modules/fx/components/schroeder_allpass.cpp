@@ -30,6 +30,7 @@ void SchroederAllpass::generate_buf() {
 	delay_line.generate_buf();
 	adder.generate_buf();
 	memcpy(out_buf, adder.get_out_buf(), config::buffer_size * sizeof(float_s));
+	Module::generate_buf();
 }
 
 void SchroederAllpass::set_delay(const double value_ms) {

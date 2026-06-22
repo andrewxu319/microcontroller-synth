@@ -43,6 +43,8 @@ void Portamento::generate_buf() {
 		}
 		math::vec_scal_mult_float_s(out_buf, out_buf, -1.0f, config::buffer_size);
 	}
+	
+	Module::generate_buf();
 }
 
 void Portamento::note_on(const uint8_t note, const uint8_t) {

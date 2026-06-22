@@ -64,11 +64,14 @@ void Envelope::generate_buf() {
 			break;
 		case EnvelopeState::off:
 			memset(&out_buf[t], 0, (config::buffer_size - t) * sizeof(float_s));
+			Module::generate_buf();
 			return;
 		default:
 			break;
 		}
 	}
+	
+	Module::generate_buf();
 }
 
 void Envelope::note_on(const uint8_t note, const uint8_t velocity) {

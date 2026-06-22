@@ -30,6 +30,8 @@ void Wavefolder::generate_buf() {
 	else {
 		math::vec_scal_add_float_s(out_buf, out_buf, offset, config::buffer_size);
 	}
+	
+	// Module::generate_buf(); // Wavefolder::generate_buf() goes at the start of the child function. this line goes at the end
 }
 
 // in raw factor, not dB

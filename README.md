@@ -36,6 +36,8 @@ Effects
 - PortAudio for Windows audio output
 
 ## Building
+Requires C++20.
+
 For desktop: build with MicrocontrollerSynth.sln or with something else.
 
 For Teensy: build with PlatformIO and see PlatformIO.ini. Use the `TEENSY` flag if not using PlatformIO. MIDI input pins are configurable.

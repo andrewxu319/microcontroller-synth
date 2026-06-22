@@ -4,8 +4,6 @@
 #include "utils/math.h"
 #include "utils/rng.h"
 
-
-
 using namespace synthesis;
 
 NoiseGenerator::NoiseGenerator(bool unipolar)
@@ -30,6 +28,8 @@ void NoiseGenerator::generate_buf() {
 	else {
 		math::vec_scal_mult_float_s(out_buf, out_buf, gain, config::buffer_size);
 	}
+
+	Module::generate_buf();
 
 	return;
 }

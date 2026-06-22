@@ -23,9 +23,10 @@ namespace config {
 	constexpr int channel_buffer_size{ 512 };
 	constexpr int buffer_size{ channel_buffer_size * channels }; // doubled if stereo
 	constexpr double latency{ 0.005 }; // seconds. now sure why but this is the lowest it'll go without sounding weird
+	constexpr bool multithread{ true };
 #endif
 	constexpr uint8_t control_rate{ 8 };
-	constexpr uint8_t num_voices{ 64 };
+	constexpr uint8_t num_voices{ 1 };
 	//constexpr float master_vol{ 0.3 };
 
 	inline std::string waveform_path{ std::string("resources\\waveforms\\32_bit\\") + std::to_string(sample_rate) + std::string("\\") };

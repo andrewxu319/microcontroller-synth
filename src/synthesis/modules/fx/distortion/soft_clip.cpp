@@ -31,6 +31,8 @@ void SoftClip::generate_buf() {
 	}
 
 	math::vec_scal_mult_float_s(out_buf, out_buf, 2.0f / 3.141592653589793f, config::buffer_size);
+	
+	Module::generate_buf();
 }
 
 void SoftClip::set_drive(float_s value) {

@@ -1,6 +1,8 @@
 #ifndef TEENSY
 #include "sound_engine.h"
 
+#include "synthesis/synthesizer.h"
+
 #include <chrono>
 #include <queue>
 #include <cassert>
@@ -78,8 +80,8 @@ int SoundEngine::load_buffer(
 #endif
 
 	float_s* out_buf{ (float_s*)out_buf_ };
-	static_cast<SoundEngine*>(this_ptr)->master_.out_buf = out_buf;
-	static_cast<SoundEngine*>(this_ptr)->master_.generate_buf();
+	static_cast<SoundEngine*>(this_ptr)->master_.out_buf = out_buf; // needs fixing
+	Synthesizer::instance().generate_buf();
 
 	return 0;
 }

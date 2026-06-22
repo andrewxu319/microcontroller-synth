@@ -71,8 +71,8 @@ void Delay::generate_buf() {
 	}
 
 	delay_buffer.push_back(out_buf, config::buffer_size);
-
 	mix_dry_wet();
+	Module::generate_buf();
 }
 
 void Delay::set_delay(double value) {

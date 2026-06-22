@@ -1,3 +1,5 @@
+#pragma once
+
 #include "utils/global.h"
 
 #include "modules/module.h"
@@ -18,10 +20,12 @@ public:
 	std::queue<midi::CcMessage> cc_messages;
 	std::array<std::vector<std::function<void(uint8_t)>>, 128> cc_mappings;
 	std::vector<std::unique_ptr<Module>> modules;
+	std::vector<Module*> depth_0_modules;
 
 	void init();
 	Module* add_module(std::unique_ptr<Module> module);
 	int topo_sort();
+	void generate_buf();
 	void read_messages();
 
 	template <typename Fn>

@@ -89,6 +89,8 @@ void Oscillator::generate_buf() {
 	else {
 		math::vec_scal_mult_float_s(out_buf, out_buf, gain * velocity_gain, config::buffer_size);
 	}
+	
+	Module::generate_buf();
 
 	return;
 }

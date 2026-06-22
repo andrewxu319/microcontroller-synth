@@ -189,6 +189,8 @@ void SergeStage::generate_buf() {
     }
 
     last_sample = audio_in_buf[config::buffer_size - 1];
+	
+	Module::generate_buf();
 }
 
 #elif defined(__AVX2__)
@@ -386,5 +388,7 @@ void SergeStage::generate_buf() {
     }
 
     last_sample = audio_in_buf[config::buffer_size - 1];
+	
+	Module::generate_buf();
 }
 #endif

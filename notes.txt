@@ -19,6 +19,9 @@ https://www.cs.cmu.edu/~rbd/doc/icmc2005workshop/real-time-systems-concepts-desi
 - threads
 - spectral stuff, frequency domain, fft
 
+future:
+- mutex whenever the module wiring changes
+
 
 
 - "control" vs "signal" module?

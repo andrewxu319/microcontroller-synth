@@ -1,5 +1,7 @@
 #include "synthesizer.h"
 
+#include "utils/timer.h"
+
 #include <stack>
 #include <unordered_set>
 #include <unordered_map>
@@ -11,6 +13,7 @@ Synthesizer::Synthesizer()
 	: master{ nullptr },
 	voice_manager{ nullptr },
 	modules{},
+	depth_0_modules{},
 	note_messages{},
 	cc_messages{},
 	cc_mappings{} { }
@@ -21,8 +24,17 @@ Synthesizer& Synthesizer::instance() {
 }
 
 void Synthesizer::init() {
+	if (topo_sort() != 0) {
+		printf("Cycle detected!\n");
+	}
+
+	depth_0_modules.clear();
+	depth_0_modules.resize(0);
 	for (const std::unique_ptr<Module>& module : modules) {
-		module->init();
+		if (module->inputs.size() == 0) {
+			depth_0_modules.emplace_back(module.get());
+		}
+		module->init(); // is this needed if dynamically updating the DAG?
 	}
 }
 
@@ -33,8 +45,7 @@ Module* Synthesizer::add_module(std::unique_ptr<Module> module) {
 	return ret_ptr;
 }
 
-// point of this is to figure out which modules need to have their buffers generated first, because a module needs
-// all input buffers generated before it can generate its own buffer
+// not really needed atp, but keeping it for cycle detection + for fun
 int Synthesizer::topo_sort() {
 	const size_t len{ modules.size() };
 	std::unordered_set<int> visiting{};
@@ -86,6 +97,23 @@ int Synthesizer::topo_sort() {
 	}
 	modules = std::move(sorted);
 	return 0;
+}
+
+void Synthesizer::generate_buf() {
+	read_messages();
+	
+	utils::timer::start();
+
+	for (std::unique_ptr<Module>& module : modules) {
+		module->num_dependencies_visited = 0;
+	}
+	master->num_dependencies_visited = 0;
+
+	for (Module* module : depth_0_modules) {
+		module->generate_buf();
+	}
+
+	utils::timer::end("generate_buf");
 }
 
 void Synthesizer::read_messages() {

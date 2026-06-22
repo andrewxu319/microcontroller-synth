@@ -69,6 +69,8 @@ void DelayLine::generate_buf() {
 			}
 		}
 	}
+	
+	Module::generate_buf();
 }
 
 void DelayLine::set_delay(const double value_ms, uint8_t channel) {
@@ -165,4 +167,6 @@ void WetOnlyDelayLine::generate_buf() {
 			}
 		}
 	}
+	
+	Module::generate_buf();
 }

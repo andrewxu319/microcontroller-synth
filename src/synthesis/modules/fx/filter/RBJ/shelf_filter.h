@@ -84,6 +84,7 @@ void ShelfFilter<Derived>::generate_buf() {
 	}
 
 	this->mix_dry_wet();
+	Module::generate_buf();
 }
 
 template<typename Derived>

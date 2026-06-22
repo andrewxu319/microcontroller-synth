@@ -1,6 +1,5 @@
 #include "master.h"
 
-#include "utils/timer.h"
 #include "utils/math.h"
 #include "synthesis/synthesizer.h"
 
@@ -14,15 +13,6 @@ Master::Master()
 }
 
 void Master::generate_buf() {
-	utils::timer::start();
-
-	Synthesizer& synthesizer{ Synthesizer::instance() };
-	synthesizer.read_messages();
-
-	for (size_t i{ 0 }; i < synthesizer.modules.size(); i++) {
-		synthesizer.modules[i]->generate_buf();
-	}
-
 	bool is_empty{ true };
 	for (const float_s* in_buf : in_bufs[Mixer::BufType::AUDIO]) {
 		if (in_buf[0] != EMPTY_BUF_MARKER) {
@@ -39,7 +29,7 @@ void Master::generate_buf() {
 		memset(out_buf, 0, config::buffer_size * sizeof(float_s));
 	}
 
-	utils::timer::end("master");
+	Module::generate_buf();
 
 	// clip between -1.0 and 1.0
 }

@@ -27,4 +27,6 @@ void SergeWavefolder::generate_buf() {
     }
 
     memcpy(out_buf, stages.back()->get_out_buf(), config::buffer_size * sizeof(float_s));
+	
+	Module::generate_buf();
 }

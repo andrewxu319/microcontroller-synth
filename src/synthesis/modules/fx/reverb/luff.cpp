@@ -75,7 +75,8 @@ void Luff::generate_buf() {
 
 	memcpy(out_buf, mixer.get_out_buf(), config::buffer_size * sizeof(float_s));
 
-	mix_dry_wet();
+	mix_dry_wet();	
+	Module::generate_buf();
 }
 
 void Luff::set_diffuser_delays(std::initializer_list<double> values_ms) {

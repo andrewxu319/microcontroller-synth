@@ -68,6 +68,7 @@ void Schroeder::generate_buf() {
 	memcpy(out_buf, allpass_filters[1].get_out_buf(), config::buffer_size * sizeof(float_s));
 
 	mix_dry_wet();
+	Module::generate_buf();
 }
 
 void Schroeder::set_decay_time(double value_ms) {

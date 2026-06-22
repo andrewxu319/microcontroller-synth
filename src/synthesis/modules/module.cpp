@@ -15,49 +15,46 @@ Module::Module(std::vector<const float*>* in_bufs_ptr_)
 	: inputs{},
 	outputs{},
 	in_bufs_ptr{ in_bufs_ptr_ },
-	out_buf{} // Initialize `out_buf` to nullptr
+	out_buf{}, // Initialize `out_buf` to nullptr
+	num_dependencies{},
+	num_dependencies_visited{}
 {
 }
 
 void Module::generate_buf() {
-	// do nothing by default
-	;
+	for (Module* output : outputs) {
+		output->num_dependencies_visited++;
+		assert(output->num_dependencies_visited <= output->num_dependencies);
+		if (output->num_dependencies_visited == output->num_dependencies) {
+			//output->num_dependencies_visited = 0;
+			output->generate_buf();
+		}
+	}
 }
 
 int Module::add_input(Module* __restrict input, uint8_t buf_type) { // -1 means no buffer
 	inputs.emplace_back(input);
-	if (Synthesizer::instance().topo_sort() == -1) {
-		printf("Failed to add input: circular in/out!\n");
-		inputs.pop_back();
-		return -1;
-	}
 	if (buf_type != static_cast<uint8_t>(-1)) {
 		add_buf(input->get_out_buf(), buf_type);
 	}
+	num_dependencies++;
 	return 0;
 }
 
 int Module::add_input(MultichannelModule* __restrict input, uint8_t buf_type) { // -1 means no buffer
 	inputs.emplace_back(input);
-	if (Synthesizer::instance().topo_sort() == -1) {
-		printf("Failed to add input: circular in/out!\n");
-		inputs.pop_back();
-		return -1;
-	}
 	if (buf_type != static_cast<uint8_t>(-1)) {
 		for (const MultichannelModule::Buffer& buf : input->get_out_bufs()) {
 			add_buf(buf.data(), buf_type);
 		}
 	}
+	num_dependencies++;
 	return 0;
 }
 
 int Module::add_output(Module* __restrict output, uint8_t buf_type) { // -1 means no buffer
 	outputs.emplace_back(output);
-	if (output->add_input(this, buf_type) == -1) {
-		outputs.pop_back();
-		return -1;
-	}
+	output->add_input(this, buf_type);
 	return 0;
 }
 
@@ -106,10 +103,7 @@ MultichannelModule::MultichannelModule(std::vector<const float*>* in_bufs_ptr_, 
 
 int MultichannelModule::add_output(Module* __restrict output, uint8_t buf_type) { // -1 means no buffer
 	outputs.emplace_back(output);
-	if (output->add_input(this, buf_type) == -1) {
-		outputs.pop_back();
-		return -1;
-	}
+	output->add_input(this, buf_type);
 	return 0;
 }
 

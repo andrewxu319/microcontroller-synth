@@ -70,6 +70,8 @@ void Chorus::generate_buf() {
 	}
 
 	mix_dry_wet();
+	
+	Module::generate_buf();
 }
 
 void Chorus::set_delay(const double value) { // in ms

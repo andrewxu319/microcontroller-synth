@@ -20,5 +20,6 @@ void IdealWavefolder::generate_buf() {
     }
 
     mix_dry_wet();
+	Module::generate_buf();
 }
 

@@ -17,6 +17,8 @@ namespace synthesis {
 		static constexpr float_s EMPTY_BUF_MARKER{ std::numeric_limits<float_s>::min() };
 		std::vector<const float_s*>* in_bufs_ptr; // make sure to initialize with in_bufs
 		static const float_s empty_buf[config::buffer_size];
+		size_t num_dependencies;
+		size_t num_dependencies_visited;
 
 		Module(std::vector<const float*>* in_bufs_ptr_ = nullptr);
 		int add_input(Module* __restrict input, uint8_t buf_type = -1);

@@ -98,18 +98,18 @@ void application(Master* master) {
 	filter->set_slope(1.0);
 	filter->set_wet(1.0f);
 
-	Phaser* phaser{ ADD_MODULE(Phaser) };
-	phaser->set_wet(0.5f);
-	phaser->set_center_freq(4000);
-	phaser->set_stages(4);
-	phaser->set_feedback(0.6);
-	phaser->add_output(filter, Master::BufType::AUDIO);
+	// Phaser* phaser{ ADD_MODULE(Phaser) };
+	// phaser->set_wet(0.5f);
+	// phaser->set_center_freq(4000);
+	// phaser->set_stages(4);
+	// phaser->set_feedback(0.6);
+	// phaser->add_output(filter, Master::BufType::AUDIO);
 
-	Oscillator* phaser_lfo_0{ ADD_MODULE(Oscillator, "sine") };
-	phaser_lfo_0->load_waveform("sine");
-	phaser_lfo_0->set_freq(0.5);
-	phaser_lfo_0->set_gain(0.3);
-	phaser_lfo_0->add_output(phaser, Phaser::BufType::WET);
+	// Oscillator* phaser_lfo_0{ ADD_MODULE(Oscillator, "sine") };
+	// phaser_lfo_0->load_waveform("sine");
+	// phaser_lfo_0->set_freq(0.5);
+	// phaser_lfo_0->set_gain(0.3);
+	// phaser_lfo_0->add_output(phaser, Phaser::BufType::WET);
 
 	// Oscillator* phaser_lfo_1{ ADD_MODULE(Oscillator, "sine") };
 	// phaser_lfo_1->load_waveform("sine");
@@ -163,7 +163,7 @@ void application(Master* master) {
 	//soft_clip_lfo->add_output(soft_clip, SoftClip::BufType::DRIVE);
 
 	Mixer* mixer{ ADD_MODULE(Mixer) };
-	mixer->add_output(phaser, Master::BufType::AUDIO);
+	mixer->add_output(filter, Master::BufType::AUDIO);
 	// mixer->add_output(luff_reverb, -1);
 	// for (uint8_t i{ 0 }; i < 8; i++) {
 	// 	luff_reverb->add_buf(mixer->get_out_buf(), MultichannelDiffuser::BufType::AUDIO);

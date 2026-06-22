@@ -14,6 +14,7 @@
 // 		delay_line.channels[0].memory_buffer.reset();
 // 		out_bufs[0].data()[0] = EMPTY_BUF_MARKER;
 // 		channels[0].feedback_memory = 0.0;
+//	    Module::generate_buf();
 // 		return;
 // 	}
 
