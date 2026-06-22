@@ -26,7 +26,7 @@ void Module::generate_buf() {
 		output->num_dependencies_visited++;
 		assert(output->num_dependencies_visited <= output->num_dependencies);
 		if (output->num_dependencies_visited == output->num_dependencies) {
-			//output->num_dependencies_visited = 0;
+			output->num_dependencies_visited = 0;
 			output->generate_buf();
 		}
 	}

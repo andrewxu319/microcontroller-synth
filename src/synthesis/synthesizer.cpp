@@ -104,10 +104,10 @@ void Synthesizer::generate_buf() {
 	
 	utils::timer::start();
 
-	for (std::unique_ptr<Module>& module : modules) {
-		module->num_dependencies_visited = 0;
-	}
-	master->num_dependencies_visited = 0;
+	// for (std::unique_ptr<Module>& module : modules) {
+	// 	module->num_dependencies_visited = 0;
+	// }
+	// master->num_dependencies_visited = 0;
 
 	for (Module* module : depth_0_modules) {
 		module->generate_buf();
