@@ -47,7 +47,7 @@ void SoundEngine::load_buffer() {
 	// Serial.println(micros() - start);
 	
 	// start = micros();
-	master.generate_buf();
+	synthesizer.generate_buf();
 	// Serial.print(" gen_buf. ");
 	// Serial.println(micros() - start);
 

@@ -101,7 +101,12 @@ int Synthesizer::topo_sort() {
 	return 0;
 }
 
+#ifdef TEENSY
 void Synthesizer::generate_buf() {
+#else
+void Synthesizer::generate_buf(float_s* out_buf) {
+	master->out_buf = out_buf;
+#endif
 	read_messages();
 	
 	utils::timer::start();

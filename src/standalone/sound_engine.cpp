@@ -79,8 +79,7 @@ int SoundEngine::load_buffer(
 #endif
 
 	float_s* out_buf{ (float_s*)out_buf_ };
-	static_cast<SoundEngine*>(this_ptr)->synthesizer_.master->out_buf = out_buf; // needs fixing
-	static_cast<SoundEngine*>(this_ptr)->synthesizer_.generate_buf();
+	static_cast<SoundEngine*>(this_ptr)->synthesizer_.generate_buf(out_buf);
 
 	return 0;
 }

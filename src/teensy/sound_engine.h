@@ -17,13 +17,13 @@ using namespace synthesis;
 namespace teensy {
 class SoundEngine {
 	public:
-		SoundEngine(Master& master);
+		SoundEngine(Synthesizer& synthesizer);
 		void start_stream();
 		void load_buffer();
 		void close();
 
 	private:
-		Master& master;
+		Synthesizer& synthesizer;
 		AudioPlayQueue queue;
 		AudioOutputI2S i2s;
 		AudioConnection patch_chord_1;

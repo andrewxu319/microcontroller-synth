@@ -26,7 +26,11 @@ public:
 	void init();
 	Module* add_module(std::unique_ptr<Module> module);
 	int topo_sort();
+#ifdef TEENSY
 	void generate_buf();
+#else
+	void generate_buf(float_s* out_buf);
+#endif
 	void read_messages();
 
 	template <typename Fn>
