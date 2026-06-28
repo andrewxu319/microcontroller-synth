@@ -13,7 +13,10 @@ Synthesizer::Synthesizer()
 	: master{},
 	voice_manager{},
 	modules{},
-	depth_0_modules{},
+	starting_modules{},
+#ifndef TEENSY
+	scheduler{ starting_modules },
+#endif
 	note_messages{},
 	cc_messages{},
 	cc_mappings{}
@@ -30,20 +33,27 @@ void Synthesizer::init() {
 		printf("Cycle detected!\n");
 	}
 
-	depth_0_modules.clear();
-	depth_0_modules.resize(0);
+	starting_modules.clear();
+	starting_modules.resize(0);
 	for (const std::unique_ptr<Module>& module : modules) {
 		if (module->inputs.size() == 0) {
-			depth_0_modules.emplace_back(module.get());
+			starting_modules.emplace_back(module.get());
 		}
 		module->init(); // is this needed if dynamically updating the DAG?
 	}
+
+	scheduler.launch_threads();
 }
 
 Module* Synthesizer::add_module(std::unique_ptr<Module> module) {
 	// must be adding master
 	Module* ret_ptr{ module.get() };
 	modules.emplace_back(std::move(module));
+#ifndef TEENSY
+	if constexpr (config::multithread) {
+		scheduler.set_num_tasks(modules.size());
+	}
+#endif
 	return ret_ptr;
 }
 
@@ -111,14 +121,16 @@ void Synthesizer::generate_buf(float_s* out_buf) {
 	
 	utils::timer::start();
 
-	// for (std::unique_ptr<Module>& module : modules) {
-	// 	module->num_dependencies_visited = 0;
-	// }
-	// master->num_dependencies_visited = 0;
-
-	for (Module* module : depth_0_modules) {
-		module->generate_buf();
-	}
+#ifndef TEENSY
+	if constexpr (config::multithread) {
+		scheduler.generate_buf();
+	} else
+#endif
+	{
+		for (Module* module : starting_modules) {
+			module->generate_buf();
+		}
+	}	
 
 	utils::timer::end("generate_buf");
 }

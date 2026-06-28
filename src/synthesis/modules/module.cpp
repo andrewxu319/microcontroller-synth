@@ -22,14 +22,27 @@ Module::Module(std::vector<const float*>* in_bufs_ptr_)
 }
 
 void Module::generate_buf() {
+#ifdef TEENSY
 	for (Module* output : outputs) {
 		output->num_dependencies_visited++;
-		assert(output->num_dependencies_visited <= output->num_dependencies);
+		//assert(output->num_dependencies_visited <= output->num_dependencies);
 		if (output->num_dependencies_visited == output->num_dependencies) {
 			output->num_dependencies_visited = 0;
 			output->generate_buf();
 		}
 	}
+#else
+	if constexpr(!config::multithread) { // multithreaded version does this in the scheduler
+		for (Module* output : outputs) {
+			output->num_dependencies_visited.fetch_add(1, std::memory_order_relaxed);
+			//assert(output->num_dependencies_visited <= output->num_dependencies);
+			if (output->num_dependencies_visited.load(std::memory_order_relaxed) == output->num_dependencies) {
+				output->num_dependencies_visited.store(0, std::memory_order_relaxed);
+				output->generate_buf();
+			}
+		}
+	}
+#endif
 }
 
 int Module::add_input(Module* __restrict input, uint8_t buf_type) { // -1 means no buffer

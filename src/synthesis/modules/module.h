@@ -3,6 +3,9 @@
 #include "utils/global.h"
 #include "utils/config.h"
 
+#ifndef TEENSY
+#include <atomic>
+#endif
 #include <limits>
 #include <unordered_map>
 #include <array>
@@ -18,7 +21,11 @@ namespace synthesis {
 		std::vector<const float_s*>* in_bufs_ptr; // make sure to initialize with in_bufs
 		static const float_s empty_buf[config::buffer_size];
 		size_t num_dependencies;
+#ifdef TEENSY
 		size_t num_dependencies_visited;
+#else
+		std::atomic<size_t> num_dependencies_visited;
+#endif
 
 		Module(std::vector<const float*>* in_bufs_ptr_ = nullptr);
 		int add_input(Module* __restrict input, uint8_t buf_type = -1);

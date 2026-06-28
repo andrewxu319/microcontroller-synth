@@ -79,19 +79,19 @@ void application(Synthesizer& synthesizer) {
 	//  //luff_reverb->set_decay_time(1000); // why is this in ms
 	//  //luff_reverb->set_mixing_matrix(Reverb::MixingMatrix::Householder);
 
-	Delay* delay{ ADD_MODULE(Delay) };
-	delay->add_output(schroeder_reverb, Master::BufType::AUDIO);
-	delay->set_wet(0.5);
-	delay->set_delay(0.5);
-	delay->set_feedback(0.5);
+	// Delay* delay{ ADD_MODULE(Delay) };
+	// delay->add_output(schroeder_reverb, Master::BufType::AUDIO);
+	// delay->set_wet(0.5);
+	// delay->set_delay(0.5);
+	// delay->set_feedback(0.5);
 
-	Oscillator* delay_lfo{ ADD_MODULE(Oscillator, "sine") };
-	delay_lfo->add_output(delay, Delay::BufType::FEEDBACK);
-	delay_lfo->set_freq(1);
-	delay_lfo->set_gain(0.25);
+	// Oscillator* delay_lfo{ ADD_MODULE(Oscillator, "sine") };
+	// delay_lfo->add_output(delay, Delay::BufType::FEEDBACK);
+	// delay_lfo->set_freq(1);
+	// delay_lfo->set_gain(0.25);
 
 	RBJFilter::LowShelf* filter{ ADD_MODULE(RBJFilter::LowShelf) };
-	filter->add_output(delay, RBJFilter::LowShelf::BufType::AUDIO);
+	filter->add_output(schroeder_reverb, RBJFilter::LowShelf::BufType::AUDIO);
 	filter->set_cutoff(5000);
 	filter->set_gain(0.0);
 	filter->set_slope(1.0);

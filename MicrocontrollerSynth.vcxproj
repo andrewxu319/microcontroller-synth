@@ -180,6 +180,7 @@
     <ClCompile Include="src\standalone\midi_listener.cpp" />
     <ClCompile Include="src\standalone\sound_engine.cpp" />
     <ClCompile Include="src\standalone\standalone.cpp" />
+    <ClCompile Include="src\standalone\threading\scheduler.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\chorus.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\components\delay_line.cpp" />
     <ClCompile Include="src\synthesis\modules\fx\components\multichannel_diffuser.cpp" />
@@ -227,6 +228,8 @@
     <ClInclude Include="src\standalone\file_io.h" />
     <ClInclude Include="src\standalone\midi_listener.h" />
     <ClInclude Include="src\standalone\sound_engine.h" />
+    <ClInclude Include="src\standalone\threading\atomic_circular_deque.h" />
+    <ClInclude Include="src\standalone\threading\scheduler.h" />
     <ClInclude Include="src\synthesis\modules\fx\chorus.h" />
     <ClInclude Include="src\synthesis\modules\fx\components\delay_line.h" />
     <ClInclude Include="src\synthesis\modules\fx\components\multichannel_diffuser.h" />

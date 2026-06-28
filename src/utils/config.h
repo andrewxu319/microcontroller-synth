@@ -22,8 +22,8 @@ namespace config {
 	inline int sample_rate{ 48000 };
 	constexpr int channel_buffer_size{ 512 };
 	constexpr int buffer_size{ channel_buffer_size * channels }; // doubled if stereo
-	constexpr double latency{ 0.005 }; // seconds. now sure why but this is the lowest it'll go without sounding weird
-	constexpr bool multithread{ true };
+	constexpr double latency{ 0.005 }; // seconds. not sure why but this is the lowest it'll go without sounding weird
+	constexpr bool multithread{ false };
 #endif
 	constexpr uint8_t control_rate{ 8 };
 	constexpr uint8_t num_voices{ 1 };

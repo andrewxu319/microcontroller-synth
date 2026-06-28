@@ -6,6 +6,9 @@
 #include "modules/master.h"
 #include "modules/voice_manager.h"
 #include "midi/message.h"
+#ifndef TEENSY
+#include "standalone/threading/scheduler.h"
+#endif
 
 #include <queue>
 #include <functional>
@@ -16,11 +19,14 @@ class Synthesizer {
 public:
 	Master* master;
 	VoiceManager* voice_manager;
+#ifndef TEENSY
+	Scheduler scheduler;
+#endif
 	std::queue<midi::NoteMessage> note_messages;
 	std::queue<midi::CcMessage> cc_messages;
 	std::array<std::vector<std::function<void(uint8_t)>>, 128> cc_mappings;
 	std::vector<std::unique_ptr<Module>> modules;
-	std::vector<Module*> depth_0_modules;
+	std::vector<Module*> starting_modules;
 
 	Synthesizer();
 	void init();

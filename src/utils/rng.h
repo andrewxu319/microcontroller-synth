@@ -13,6 +13,12 @@ namespace utils {
 	inline T rng_uniform(const T min, const T max) {
 		return std::uniform_real_distribution<T>{min, max}(rng_engine);
 	}
+	
+	// inclusive
+	template <typename T>
+	inline T rng_uniform_int(const T min, const T max) {
+		return std::uniform_int_distribution<T>{min, max}(rng_engine);
+	}
 
 	template <typename T>
 	inline T rng_normal(const T mean, const T stdev) {

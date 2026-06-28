@@ -59,7 +59,11 @@ namespace utils {
 				start += len;
 			}
 			else {
-				start += len - size;
+				////bug here
+				//if (start + len - size > 1000000000) {
+				//	printf("hi\n");
+				//}
+				start = start + len - size;
 			}
 			return &data_array[old_start];
 		}

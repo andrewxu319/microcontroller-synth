@@ -1,3 +1,5 @@
+delay is bugged ("start" underflow)
+
 ADD NOTE_OFF BACK TO PERFORMED_OSCILLATOR SO IT PRODUCES EMPTY BUFFERS WHEN OFF
 
 TEENSY TODO
@@ -7,7 +9,6 @@ TEENSY TODO
 to do
 - dealing with empty audio buffers
 - time before deactivating
-- wavefolder on teensy (dual issue?)
 - legato breaks if >2 notes are pressed down
 
 more ideas
@@ -21,10 +22,13 @@ https://www.cs.cmu.edu/~rbd/doc/icmc2005workshop/real-time-systems-concepts-desi
 
 future:
 - mutex whenever the module wiring changes
+- https://dl.acm.org/doi/epdf/10.1145/1594835.1504186
 
 
 
-- "control" vs "signal" module?
+
+far future & random ideas
+- "control" vs "signal" module? (wasted buffer memory)
 - "active" state for modules
 - nonlinear adsr
 - interpolation for lfos (might not be needed? if low control rate)
