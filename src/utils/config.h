@@ -26,7 +26,7 @@ namespace config {
 	constexpr bool multithread{ false };
 #endif
 	constexpr uint8_t control_rate{ 8 };
-	constexpr uint8_t num_voices{ 1 };
+	constexpr uint8_t num_voices{ 8 };
 	//constexpr float master_vol{ 0.3 };
 
 	inline std::string waveform_path{ std::string("resources\\waveforms\\32_bit\\") + std::to_string(sample_rate) + std::string("\\") };

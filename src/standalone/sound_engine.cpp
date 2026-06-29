@@ -1,8 +1,6 @@
 #ifndef TEENSY
 #include "sound_engine.h"
 
-#include "synthesis/synthesizer.h"
-
 #include <chrono>
 #include <cassert>
 
@@ -14,8 +12,10 @@ void SoundEngine::pa_check_error(const PaError& error) {
 	}
 }
 
-SoundEngine::SoundEngine(Synthesizer& synthesizer)
-	: synthesizer_{ synthesizer },
+SoundEngine::SoundEngine(std::atomic<float_s*>& out_buf, std::atomic<uint32_t>& buffer_counter, std::atomic<bool>& buffer_ready)
+	: out_buf_{ out_buf },
+	buffer_counter_{ buffer_counter },
+	buffer_ready_{ buffer_ready },
 	stream{}
 {
 	PaError error;
@@ -59,14 +59,14 @@ SoundEngine::SoundEngine(Synthesizer& synthesizer)
 		device_info->defaultSampleRate,
 		config::channel_buffer_size,
 		0, // flags. clipping on by default
-		&SoundEngine::load_buffer,
+		&SoundEngine::callback,
 		static_cast<void*>(this) // communicate with load_buffer through this data structure. avoid sharing complex data structures that can be easily corrupted. avoid locks
 	);
 }
 
-int SoundEngine::load_buffer(
-	const void* __restrict in_buf_,
-	void* __restrict out_buf_,
+int SoundEngine::callback(
+	const void* __restrict in_buf,
+	void* __restrict out_buf,
 	unsigned long buffer_size,
 	const PaStreamCallbackTimeInfo* time_info,
 	PaStreamCallbackFlags status_flags,
@@ -78,8 +78,15 @@ int SoundEngine::load_buffer(
 	}
 #endif
 
-	float_s* out_buf{ (float_s*)out_buf_ };
-	static_cast<SoundEngine*>(this_ptr)->synthesizer_.generate_buf(out_buf);
+	SoundEngine* this_ptr_{ static_cast<SoundEngine*>(this_ptr) };
+
+	if (!this_ptr_->buffer_ready_.load(std::memory_order_acquire)) {
+		printf("Buffer underflow!\n");
+	}
+
+	this_ptr_->out_buf_.store(static_cast<float_s*>(out_buf), std::memory_order_release);
+	this_ptr_->buffer_counter_.fetch_add(1, std::memory_order_release);
+	this_ptr_->buffer_counter_.notify_one();
 
 	return 0;
 }

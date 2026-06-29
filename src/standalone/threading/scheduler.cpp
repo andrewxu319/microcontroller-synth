@@ -1,6 +1,7 @@
 #include "scheduler.h"
 
 #include "utils/rng.h"
+#include "utils/timer.h"
 
 #include <functional>
 
@@ -10,13 +11,14 @@
 
 using namespace synthesis;
 
-Scheduler::Scheduler(const std::vector<Module*>& starting_tasks)
-    : starting_tasks_{ starting_tasks },
-    num_tasks{},
+Scheduler::Scheduler(Synthesizer& synthesizer)
+    : synthesizer_{ synthesizer },
     threads{},
     worker_data{},
+    scheduler_buffer_counter{},
+    sound_engine_buffer_counter{},
     tasks_remaining{},
-    all_tasks_completed{ false }
+    buffer_ready{ false }
 {}
 
 void Scheduler::launch_threads() {
@@ -38,12 +40,13 @@ void Scheduler::worker_loop(std::stop_token stop_token, std::barrier<>* init_syn
     init_sync->arrive_and_wait();
 
     while (!stop_token.stop_requested()) {
-        uint32_t scheduler_buffer_counter{ buffer_counter.load(std::memory_order_acquire) };
+        uint32_t local_scheduler_buffer_counter{ scheduler_buffer_counter.load(std::memory_order_acquire) };
         
-        while (scheduler_buffer_counter == completed_buffer_counter) {
-            buffer_counter.wait(scheduler_buffer_counter, std::memory_order_acquire); // wait while
+        // scheduler_buffer_counter needs to be ahead by 1 to proceed
+        while (local_scheduler_buffer_counter <= completed_buffer_counter) {
+            scheduler_buffer_counter.wait(local_scheduler_buffer_counter, std::memory_order_acquire); // wait while
             if (stop_token.stop_requested()) return;
-            scheduler_buffer_counter = buffer_counter.load(std::memory_order_acquire);
+            local_scheduler_buffer_counter = scheduler_buffer_counter.load(std::memory_order_acquire);
         }
 
         // generate buffer
@@ -71,30 +74,52 @@ void Scheduler::worker_loop(std::stop_token stop_token, std::barrier<>* init_syn
                         data.work_deque.push_back(next_task);
                     }
                 }
-                tasks_remaining.fetch_sub(1, std::memory_order_release);
-                if (tasks_remaining.load(std::memory_order_acquire) == 0) {
-                    all_tasks_completed.store(true, std::memory_order_release);
-                    all_tasks_completed.notify_one();
+                if (tasks_remaining.fetch_sub(1, std::memory_order_release) == 1) { // fetch_sub returns previous value
+                    buffer_ready.store(true, std::memory_order_release);
+                    buffer_ready.notify_one();
                 }
             }
         }
 
-        completed_buffer_counter = scheduler_buffer_counter;
+        completed_buffer_counter = local_scheduler_buffer_counter;
     }
 }
 
-void Scheduler::generate_buf() {
-    all_tasks_completed.store(false, std::memory_order_release);
-    for (size_t i{}; i < starting_tasks_.size(); i++) {
-        worker_data[i % num_threads].work_deque.push_back(starting_tasks_[i]);
+void Scheduler::scheduler_loop() {
+    uint32_t completed_buffer_counter{ 0 };
+    
+    while (true) { // while (!stop_token.stop_requested())
+        uint32_t local_sound_engine_buffer_counter{ sound_engine_buffer_counter.load(std::memory_order_acquire) };
+        
+        while (local_sound_engine_buffer_counter == completed_buffer_counter) {
+            sound_engine_buffer_counter.wait(local_sound_engine_buffer_counter, std::memory_order_acquire); // wait while
+            //if (stop_token.stop_requested()) return;
+            local_sound_engine_buffer_counter = sound_engine_buffer_counter.load(std::memory_order_acquire);
+        }
+
+        buffer_ready.store(false, std::memory_order_release);
+
+        synthesizer_.generate_buf(out_buf.load(std::memory_order_relaxed));
+
+        if constexpr (config::multithread) {
+            for (size_t i{}; i < synthesizer_.starting_modules.size(); i++) {
+                worker_data[i % num_threads].work_deque.push_back(synthesizer_.starting_modules[i]);
+            }
+            tasks_remaining.store(synthesizer_.modules.size(), std::memory_order_release);
+            scheduler_buffer_counter.fetch_add(1, std::memory_order_release);
+            scheduler_buffer_counter.notify_all();
+
+            // workers do work
+
+            buffer_ready.wait(false, std::memory_order_seq_cst); // wait until it's no longer false
+        }
+        else {
+            buffer_ready.store(true, std::memory_order_release);
+        }
+
+        completed_buffer_counter = local_sound_engine_buffer_counter;
+
+        utils::timer::end("generate_buf");
+        utils::timer::start();
     }
-    tasks_remaining.store(num_tasks, std::memory_order_release);
-    buffer_counter.fetch_add(1, std::memory_order_release);
-    buffer_counter.notify_all();
-
-    all_tasks_completed.wait(false, std::memory_order_seq_cst); // wait until it's no longer false
-}
-
-void Scheduler::set_num_tasks(size_t value) {
-    num_tasks = value;
 }

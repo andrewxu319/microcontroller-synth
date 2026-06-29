@@ -14,9 +14,6 @@ Synthesizer::Synthesizer()
 	voice_manager{},
 	modules{},
 	starting_modules{},
-#ifndef TEENSY
-	scheduler{ starting_modules },
-#endif
 	note_messages{},
 	cc_messages{},
 	cc_mappings{}
@@ -41,19 +38,12 @@ void Synthesizer::init() {
 		}
 		module->init(); // is this needed if dynamically updating the DAG?
 	}
-
-	scheduler.launch_threads();
 }
 
 Module* Synthesizer::add_module(std::unique_ptr<Module> module) {
 	// must be adding master
 	Module* ret_ptr{ module.get() };
 	modules.emplace_back(std::move(module));
-#ifndef TEENSY
-	if constexpr (config::multithread) {
-		scheduler.set_num_tasks(modules.size());
-	}
-#endif
 	return ret_ptr;
 }
 
@@ -119,20 +109,11 @@ void Synthesizer::generate_buf(float_s* out_buf) {
 #endif
 	read_messages();
 	
-	utils::timer::start();
-
-#ifndef TEENSY
-	if constexpr (config::multithread) {
-		scheduler.generate_buf();
-	} else
-#endif
-	{
+	if constexpr (!config::multithread) {
 		for (Module* module : starting_modules) {
 			module->generate_buf();
 		}
-	}	
-
-	utils::timer::end("generate_buf");
+	}
 }
 
 void Synthesizer::read_messages() {
