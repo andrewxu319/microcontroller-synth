@@ -25,7 +25,7 @@ namespace synthesis {
             bool busy;
         };
 
-        static constexpr size_t num_threads = 8;
+        static constexpr size_t num_threads = 4;
         alignas(std::hardware_destructive_interference_size)
             std::atomic<float_s*> out_buf;
         alignas(std::hardware_destructive_interference_size)

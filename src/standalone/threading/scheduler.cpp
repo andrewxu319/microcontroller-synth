@@ -3,6 +3,7 @@
 #include "utils/rng.h"
 #include "utils/timer.h"
 
+
 #include <functional>
 
 #if defined(_DEBUG) && defined(_MSC_VER)
@@ -34,6 +35,7 @@ void Scheduler::worker_loop(std::stop_token stop_token, std::barrier<>* init_syn
 #if defined(_DEBUG) && defined (_MSC_VER)
     SetThreadDescription(GetCurrentThread(), (L"Synth worker " + std::to_wstring(id)).c_str());
 #endif
+
     WorkerData& data{ worker_data[id] };
     uint32_t completed_buffer_counter{};
 
@@ -48,6 +50,10 @@ void Scheduler::worker_loop(std::stop_token stop_token, std::barrier<>* init_syn
             if (stop_token.stop_requested()) return;
             local_scheduler_buffer_counter = scheduler_buffer_counter.load(std::memory_order_acquire);
         }
+
+#ifdef TRACY_ENABLE
+        ZoneScopedN;
+#endif
 
         // generate buffer
         while (tasks_remaining.load(std::memory_order_acquire) > 0) {
@@ -99,6 +105,12 @@ void Scheduler::scheduler_loop() {
 
         buffer_ready.store(false, std::memory_order_release);
 
+#ifdef TRACY_ENABLE
+        ZoneScopedN;
+#endif
+
+        //utils::timer::start();
+
         synthesizer_.generate_buf(out_buf.load(std::memory_order_relaxed));
 
         if constexpr (config::multithread) {
@@ -119,7 +131,6 @@ void Scheduler::scheduler_loop() {
 
         completed_buffer_counter = local_sound_engine_buffer_counter;
 
-        utils::timer::end("generate_buf");
-        utils::timer::start();
+        //utils::timer::end("generate_buf");
     }
 }

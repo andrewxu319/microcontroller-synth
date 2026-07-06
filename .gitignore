@@ -63,6 +63,7 @@ vcpkg_installed/
 
 # debug information files
 *.dwo
+*.tracy
 
 # test output & cache
 Testing/
@@ -72,5 +73,7 @@ test/
 .vs/**
 .vscode/**
 .git/**
+tracy/**
+tracy
 
 Microcon.265ce554/**

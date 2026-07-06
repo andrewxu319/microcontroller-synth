@@ -17,6 +17,14 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Tracy|Win32">
+      <Configuration>Tracy</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Tracy|x64">
+      <Configuration>Tracy</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -39,6 +47,13 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Tracy|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -46,6 +61,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Tracy|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -63,10 +85,16 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Tracy|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Tracy|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -74,21 +102,37 @@
     <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;C:\Users\spagh\Desktop\brain rot\C++\MicrocontrollerSynth\src;C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)build\standalone\$(Configuration)\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;C:\Users\spagh\Desktop\brain rot\C++\MicrocontrollerSynth\src;C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)build\standalone\$(Configuration)\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Tracy|x64'">
+    <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;C:\Users\spagh\Desktop\brain rot\C++\MicrocontrollerSynth\tracy\public\;C:\Users\spagh\Desktop\brain rot\C++\MicrocontrollerSynth\src;C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)build\standalone\$(Configuration)\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <OutDir>$(SolutionDir)build\standalone\$(Configuration)\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <OutDir>$(SolutionDir)build\standalone\$(Configuration)\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Tracy|Win32'">
+    <IncludePath>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;C:\Users\spagh\Desktop\brain rot\C++\MicrocontrollerSynth\tracy\public\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\Users\spagh\Desktop\brain rot\C++\libraries\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <OutDir>$(SolutionDir)build\standalone\$(Configuration)\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -98,13 +142,17 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <UndefinePreprocessorDefinitions>TEENSY</UndefinePreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions512</EnableEnhancedInstructionSet>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\DSPFilters.lib";$(CoreLibraryDependencies);%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -118,15 +166,39 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <UndefinePreprocessorDefinitions>TEENSY</UndefinePreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions512</EnableEnhancedInstructionSet>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\DSPFilters.lib";$(CoreLibraryDependencies);%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Tracy|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);TRACY_ENABLE;TRACY_HAS_SYSCALL</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <UndefinePreprocessorDefinitions>TEENSY</UndefinePreprocessorDefinitions>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions512</EnableEnhancedInstructionSet>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\DSPFilters.lib";$(CoreLibraryDependencies);%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -138,13 +210,17 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(ProjectDir)src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <UndefinePreprocessorDefinitions>TEENSY</UndefinePreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions512</EnableEnhancedInstructionSet>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\DSPFilters.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
@@ -160,15 +236,41 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(ProjectDir)src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <UndefinePreprocessorDefinitions>TEENSY</UndefinePreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions512</EnableEnhancedInstructionSet>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\DSPFilters.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Tracy|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);TRACY_ENABLE;TRACY_HAS_SYSCALL</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\spagh\Desktop\brain rot\C++\libraries\include;$(ProjectDir)src</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <UndefinePreprocessorDefinitions>TEENSY</UndefinePreprocessorDefinitions>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions512</EnableEnhancedInstructionSet>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\DSPFilters.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\bass.lib";%(AdditionalDependencies);C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib;"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\portaudio_x64.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\rtmidilib.lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WinMM.Lib";"C:\Users\spagh\Desktop\brain rot\C++\libraries\lib\WindowsApp.lib"</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
@@ -220,6 +322,7 @@
     <ClCompile Include="src\teensy\teensy.cpp" />
     <ClCompile Include="src\utils\math.cpp" />
     <ClCompile Include="src\utils\timer.cpp" />
+    <ClCompile Include="tracy\public\TracyClient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\application.h" />
@@ -277,6 +380,7 @@
     <ClInclude Include="src\utils\global.h" />
     <ClInclude Include="src\utils\rng.h" />
     <ClInclude Include="src\utils\timer.h" />
+    <ClInclude Include="tracy\public\tracy\Tracy.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

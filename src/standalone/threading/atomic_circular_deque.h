@@ -31,6 +31,9 @@ namespace synthesis {
 
 		// owner
 		int pop_back(T* out) {
+#ifdef TRACY_ENABLE
+			ZoneScopedN;
+#endif
 			uint32_t back_local{ back.load(std::memory_order_relaxed) };
 			back_local--;
 			back.store(back_local, std::memory_order_relaxed);
@@ -59,9 +62,17 @@ namespace synthesis {
 
 		// thief
 		int pop_front(T* out) {
+#ifdef TRACY_ENABLE
+			ZoneScopedN;
+#endif
 			uint32_t front_local{ front.load(std::memory_order_relaxed) };
+			uint32_t back_local{ back.load(std::memory_order_relaxed) };
+			if (front_local >= back_local) {
+				return 1;
+			}
+
 			std::atomic_thread_fence(std::memory_order_seq_cst);
-			uint32_t back_local{ back.load(std::memory_order_acquire) }; // acquire means i pull the variable for subsequent instructions to see
+			back_local = back.load(std::memory_order_acquire); // acquire means i pull the variable for subsequent instructions to see
 
 			if (front_local < back_local) {
 				T item{ data[front_local % N] };

@@ -150,6 +150,9 @@
     <ClCompile Include="src\standalone\threading\scheduler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tracy\public\TracyClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\standalone\sound_engine.h">
@@ -315,6 +318,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\standalone\threading\atomic_circular_deque.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tracy\public\tracy\Tracy.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -32,6 +32,11 @@ void Module::generate_buf() {
 		}
 	}
 #else
+
+#ifdef TRACY_ENABLE
+	ZoneScopedN;
+#endif
+
 	if constexpr(!config::multithread) { // multithreaded version does this in the scheduler
 		for (Module* output : outputs) {
 			output->num_dependencies_visited.fetch_add(1, std::memory_order_relaxed);
