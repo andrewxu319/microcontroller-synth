@@ -60,13 +60,32 @@ void Scheduler::worker_loop(std::stop_token stop_token, std::barrier<>* init_syn
             Module* current_task{};
             if (data.work_deque.pop_back(&current_task) != 0) {
                 // steal
+                size_t fail_counter{};
                 size_t target{ utils::rng_uniform_int<size_t>(0, num_threads - 1) };
                 while (tasks_remaining.load(std::memory_order_acquire) > 0)
                 {
+#ifdef TRACY_ENABLE
+                    ZoneScopedN;
+#endif
+                    if (fail_counter == num_threads) {
+#ifdef TRACY_ENABLE
+                        ZoneScopedN;
+#endif
+                        fail_counter = 0;
+#if defined(_MSC_VER) || defined(__x86_64__) || defined(_M_X64)
+                        _mm_pause(); // Provides a hint to the CPU that it's a spin-loop (X86/X64)
+#elif defined(__arm__) || defined(__aarch64__)
+                        asm volatile("yield" ::: "memory"); // ARM hint (doesn't cede to OS)
+#else
+                        std::this_thread::yield(); // Fallback
+#endif
+                    }
                     // rng
                     if (worker_data[target].work_deque.pop_front(&current_task) == 0) {
+                        fail_counter = 0;
                         break;
                     } else {
+                        fail_counter++;
                         target = (target + 1) % num_threads;
                     }
                 }
