@@ -9,6 +9,7 @@
 #include <atomic>
 #include <barrier>
 #include <deque>   
+#include <memory>
 #include <thread>
 
 namespace synthesis {
@@ -16,13 +17,12 @@ namespace synthesis {
     public:
         Scheduler(Synthesizer& synthesizer);
         void launch_threads();
-        void worker_loop(std::stop_token stop_token, std::barrier<>* init_sync, size_t id);
+        void worker_loop(std::stop_token stop_token, std::shared_ptr<std::barrier<>> init_sync, size_t id);
         void scheduler_loop();
 
         struct WorkerData {
             AtomicCircularDeque<Module*, 64> work_deque;
             size_t id;
-            bool busy;
         };
 
         static constexpr size_t num_threads = 4;
@@ -41,5 +41,9 @@ namespace synthesis {
             std::atomic<uint32_t> scheduler_buffer_counter; // feels like pipeline latches
         alignas(std::hardware_destructive_interference_size)
             std::atomic<size_t> tasks_remaining;
+        alignas(std::hardware_destructive_interference_size)
+            std::atomic<size_t> num_idle_threads;
+        alignas(std::hardware_destructive_interference_size)
+            std::atomic<uint32_t> task_publish_counter; // to notify idle threads that a new task has been queued
     };
 }

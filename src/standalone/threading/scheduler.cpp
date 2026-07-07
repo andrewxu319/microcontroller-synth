@@ -3,7 +3,6 @@
 #include "utils/rng.h"
 #include "utils/timer.h"
 
-
 #include <functional>
 
 #if defined(_DEBUG) && defined(_MSC_VER)
@@ -19,19 +18,21 @@ Scheduler::Scheduler(Synthesizer& synthesizer)
     scheduler_buffer_counter{},
     sound_engine_buffer_counter{},
     tasks_remaining{},
-    buffer_ready{ false }
+    buffer_ready{ false },
+    num_idle_threads{},
+    task_publish_counter{}
 {}
 
 void Scheduler::launch_threads() {
-    std::barrier worker_init_sync(num_threads + 1);
+    std::shared_ptr<std::barrier<>> worker_init_sync{ std::make_shared<std::barrier<>>(num_threads + 1) };
     for (size_t i{}; i < num_threads; i++) {
-        threads[i] = std::jthread(std::bind_front(&Scheduler::worker_loop, this), &worker_init_sync, i);
+        threads[i] = std::jthread(std::bind_front(&Scheduler::worker_loop, this), worker_init_sync, i);
     }
-    worker_init_sync.arrive_and_wait();
+    worker_init_sync->arrive_and_wait();
 }
 
 // TODO: make modules with internal modules create input-output relationships
-void Scheduler::worker_loop(std::stop_token stop_token, std::barrier<>* init_sync, size_t id) {
+void Scheduler::worker_loop(std::stop_token stop_token, std::shared_ptr<std::barrier<>> init_sync, size_t id) {
 #if defined(_DEBUG) && defined (_MSC_VER)
     SetThreadDescription(GetCurrentThread(), (L"Synth worker " + std::to_wstring(id)).c_str());
 #endif
@@ -71,14 +72,16 @@ void Scheduler::worker_loop(std::stop_token stop_token, std::barrier<>* init_syn
 #ifdef TRACY_ENABLE
                         ZoneScopedN;
 #endif
+                        num_idle_threads.fetch_add(1, std::memory_order_seq_cst);
+                        uint32_t local_task_publish_counter{ task_publish_counter.load(std::memory_order_acquire) };
+                        if (tasks_remaining.load(std::memory_order_acquire) > 0 && data.work_deque.empty()) {
+                            task_publish_counter.wait(local_task_publish_counter, std::memory_order_acquire);
+                        }
+
+                        num_idle_threads.fetch_sub(1, std::memory_order_relaxed);
                         fail_counter = 0;
-#if defined(_MSC_VER) || defined(__x86_64__) || defined(_M_X64)
-                        _mm_pause(); // Provides a hint to the CPU that it's a spin-loop (X86/X64)
-#elif defined(__arm__) || defined(__aarch64__)
-                        asm volatile("yield" ::: "memory"); // ARM hint (doesn't cede to OS)
-#else
-                        std::this_thread::yield(); // Fallback
-#endif
+
+                        if (tasks_remaining.load(std::memory_order_acquire) <= 0) break;
                     }
                     // rng
                     if (worker_data[target].work_deque.pop_front(&current_task) == 0) {
@@ -100,8 +103,17 @@ void Scheduler::worker_loop(std::stop_token stop_token, std::barrier<>* init_syn
                     }
                 }
                 if (tasks_remaining.fetch_sub(1, std::memory_order_release) == 1) { // fetch_sub returns previous value
+                    if (num_idle_threads.load(std::memory_order_acquire) > 0) {
+                        task_publish_counter.fetch_add(1, std::memory_order_release);
+                        task_publish_counter.notify_all(); // wake up idle threads so they don't get stuck forever, even when the next buffer comes
+                    }
                     buffer_ready.store(true, std::memory_order_release);
                     buffer_ready.notify_one();
+                } else if (current_task->outputs.size() > 1) {
+                    if (num_idle_threads.load(std::memory_order_acquire) > 0) {
+                        task_publish_counter.fetch_add(1, std::memory_order_release);
+                        task_publish_counter.notify_all();
+                    }
                 }
             }
         }
@@ -128,7 +140,7 @@ void Scheduler::scheduler_loop() {
         ZoneScopedN;
 #endif
 
-        //utils::timer::start();
+        utils::timer::start();
 
         synthesizer_.generate_buf(out_buf.load(std::memory_order_relaxed));
 
@@ -150,6 +162,6 @@ void Scheduler::scheduler_loop() {
 
         completed_buffer_counter = local_sound_engine_buffer_counter;
 
-        //utils::timer::end("generate_buf");
+        utils::timer::end("generate_buf");
     }
 }

@@ -87,6 +87,15 @@ namespace synthesis {
 			return 1;
 		}
 
+		bool empty() {
+			uint32_t front_local{ front.load(std::memory_order_relaxed) };
+			uint32_t back_local{ back.load(std::memory_order_relaxed) };
+			if (front_local >= back_local) {
+				return true;
+			}
+			return false;
+		}
+
 	private:
 		std::array<T, N> data;
 
