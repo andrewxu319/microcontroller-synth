@@ -72,16 +72,14 @@ void Scheduler::worker_loop(std::stop_token stop_token, std::shared_ptr<std::bar
 #ifdef TRACY_ENABLE
                         ZoneScopedN;
 #endif
-                        num_idle_threads.fetch_add(1, std::memory_order_seq_cst);
                         uint32_t local_task_publish_counter{ task_publish_counter.load(std::memory_order_acquire) };
+                        num_idle_threads.fetch_add(1, std::memory_order_relaxed);
                         if (tasks_remaining.load(std::memory_order_acquire) > 0 && data.work_deque.empty()) {
                             task_publish_counter.wait(local_task_publish_counter, std::memory_order_acquire);
                         }
 
                         num_idle_threads.fetch_sub(1, std::memory_order_relaxed);
                         fail_counter = 0;
-
-                        if (tasks_remaining.load(std::memory_order_acquire) <= 0) break;
                     }
                     // rng
                     if (worker_data[target].work_deque.pop_front(&current_task) == 0) {
@@ -140,7 +138,7 @@ void Scheduler::scheduler_loop() {
         ZoneScopedN;
 #endif
 
-        utils::timer::start();
+        //utils::timer::start();
 
         synthesizer_.generate_buf(out_buf.load(std::memory_order_relaxed));
 
@@ -162,6 +160,6 @@ void Scheduler::scheduler_loop() {
 
         completed_buffer_counter = local_sound_engine_buffer_counter;
 
-        utils::timer::end("generate_buf");
+        //utils::timer::end("generate_buf");
     }
 }

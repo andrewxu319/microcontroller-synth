@@ -38,14 +38,16 @@ Effects
 ## Building
 Requires C++20.
 
-For desktop: build with MicrocontrollerSynth.sln or with something else.
+For desktop: build with MicrocontrollerSynth.sln.
 
 For Teensy: build with PlatformIO and see PlatformIO.ini. Use the `TEENSY` flag if not using PlatformIO. MIDI input pins are configurable.
+
+I have dependencies in `../libraries/include/`, `../libraries/lib/Debug`, and `../libraries/lib/Release`. These paths can be reconfigured in the Visual Studio project. Maybe one day I will turn this into a proper CMake project.
 
 ## Usage
 All configurations are found in `src/utils/config.h`.
 
-To set up the synthesizer, edit `src/applications.cpp` to set up all modules, map midi CC, and route their inputs & outputs (in this step they can be made modular and made to be modulated by other modules).
+To set up the synthesizer, edit `src/applications.cpp` to set up all modules, map midi CC, and route their inputs & outputs (in this step they can be made modular and made to be modulated by other modules). Everything is compile-time and will most likely stay that way.
 
 MIDI keyboard required. For Windows, just plug it into USB, and the application will automatically detect the first input device.
 

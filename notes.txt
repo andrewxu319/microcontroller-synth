@@ -13,11 +13,8 @@ to do
 
 more ideas
 - heap allocation w/ arena
-- audio driver
-- useful util: time every buffer & report slow buffers
 - convolution reverb
 https://www.cs.cmu.edu/~rbd/doc/icmc2005workshop/real-time-systems-concepts-design-patterns.pdf
-- threads
 - spectral stuff, frequency domain, fft
 
 future:
