@@ -2,8 +2,6 @@
 
 #include "utils/math.h"
 
-
-
 using namespace synthesis;
 
 DelayLine::DelayLine(size_t capacity, uint8_t num_channels_)

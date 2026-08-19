@@ -36,7 +36,7 @@ SoundEngine::SoundEngine(std::atomic<float_s*>& out_buf, std::atomic<uint32_t>& 
 	const PaDeviceInfo* device_info{ Pa_GetDeviceInfo(device) };
 	config::sample_rate = static_cast<int>(device_info->defaultSampleRate);
 	config::waveform_path = std::string("resources\\waveforms\\32_bit\\") + std::to_string(config::sample_rate) + std::string("\\");
-	printf("Using audio device %s: index %d, host API %d, max channels %d, default latency %f, sample rate %d\n",
+	printf("Using audio device %s: index %d, host API %d, max channels %d, default latency %f, sample rate %f\n",
 		device_info->name,
 		device,
 		Pa_GetHostApiInfo(device_info->hostApi)->type,

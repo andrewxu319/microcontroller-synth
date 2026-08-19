@@ -38,7 +38,14 @@ Effects
 ## Building
 Requires C++20.
 
-For desktop: build with MicrocontrollerSynth.sln.
+For desktop: build with MicrocontrollerSynth.sln, or
+```
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Debug # or Release
+cmake --build .
+```
+Only tested on Windows.
 
 For Teensy: build with PlatformIO and see PlatformIO.ini. Use the `TEENSY` flag if not using PlatformIO. MIDI input pins are configurable.
 

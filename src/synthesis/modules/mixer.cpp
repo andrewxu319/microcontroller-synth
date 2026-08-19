@@ -46,6 +46,6 @@ void Mixer::add_buf(const float_s* buf, uint8_t buf_type) {
 	Module::add_buf(buf, buf_type);
 }
 
-void Mixer::set_in_buf_gain(const float_s* __restrict in_buf, const float_s value) {
+void Mixer::set_in_buf_gain(const float_s* in_buf, const float_s value) {
 	gains[in_buf] = value;
 }

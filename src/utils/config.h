@@ -6,7 +6,7 @@
 #ifdef TEENSY
 	#include <MIDI.h>
 #else
-	#include <portaudio/portaudio.h>
+	#include <portaudio.h>
 #endif
 
 namespace config {

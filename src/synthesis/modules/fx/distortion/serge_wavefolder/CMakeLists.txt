@@ -1,0 +1,2 @@
+add_library(serge_wavefolder serge_wavefolder.cpp serge_stage.cpp)
+target_link_libraries(serge_wavefolder PRIVATE wavefolder utils)

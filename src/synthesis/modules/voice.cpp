@@ -1,8 +1,6 @@
 #include "voice.h"
 #include "midi/notes.h"
 
-
-
 using namespace synthesis;
 
 Voice::Voice()

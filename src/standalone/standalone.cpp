@@ -6,7 +6,7 @@
 #include "synthesis/modules/master.h"
 #include "synthesis/synthesizer.h"
 
-#include <portaudio/portaudio.h>
+#include <portaudio.h>
 
 using namespace standalone;
 

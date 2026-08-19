@@ -2,6 +2,7 @@
 
 #include "utils/global.h"
 
+#include <atomic>
 #include <new>
 
 // https://andreleite.com/posts/2025/deque/work-stealing-deque-part-1-locks-and-contention/

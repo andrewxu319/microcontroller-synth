@@ -49,3 +49,7 @@ amp has 52V going in
 
 330
 4.7k, 4.7k
+
+
+
+target_include_directories(... PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}) gives other modules access to all subdirectories 

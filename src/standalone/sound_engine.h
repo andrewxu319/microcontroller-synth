@@ -5,7 +5,7 @@
 #include "midi/message.h"
 
 #include <atomic>
-#include <portaudio/portaudio.h>
+#include <portaudio.h>
 
 namespace standalone {
 	class SoundEngine {

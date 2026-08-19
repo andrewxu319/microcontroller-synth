@@ -3,7 +3,7 @@
 
 #include "utils/math.h"
 
-#include <AudioFile/AudioFile.h>
+#include <AudioFile.h>
 
 #include <fstream>
 #include <cstdio>
