@@ -13,7 +13,7 @@ void PerformedOscillator::generate_buf() {
 }
 
 void PerformedOscillator::note_on(const uint8_t note) {
-	const int16_t transposed_note{ note + transpose };
+	const int16_t transposed_note{ static_cast<int16_t>(note + transpose) };
 
 	// // we could do all this, but tbh those frequencies are too extreme to be useful
 	//if (transposed_note < 0) {

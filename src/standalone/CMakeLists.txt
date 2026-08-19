@@ -4,6 +4,7 @@ add_executable(MicrocontrollerSynth
     midi_listener.cpp
     sound_engine.cpp
 )
+set_target_properties(MicrocontrollerSynth PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}") # put binary in build/ instead of build/src/
 
 add_subdirectory(threading)
 
