@@ -99,7 +99,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)..\libraries\include;$(ProjectDir)src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\libraries\include;$(ProjectDir)src;$(ProjectDir)include\AudioFile;$(ProjectDir)..\libraries\include\portaudio;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\libraries\lib\Debug;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)build\standalone\$(Configuration)\</OutDir>
     <LinkIncremental>false</LinkIncremental>

@@ -177,7 +177,7 @@ void SergeStage::generate_buf() {
     __m512i permutation_idx{ _mm512_setr_epi32(0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14) };
     __m512 suffix{ _mm512_permutexvar_ps(permutation_idx, x) };
     __mmask16 load_mask{ _mm512_int2mask(0b0000000000000001) };
-    __m512 x_prev{ _mm512_mask_load_ps(suffix, load_mask, &last_sample) };
+    __m512 x_prev{ _mm512_mask_loadu_ps(suffix, load_mask, &last_sample) };
     _mm512_storeu_ps(out_buf, compute_block(x, x_prev));
 
     for (size_t i{ 16 }; i < config::buffer_size; i += 16) {
